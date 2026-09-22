@@ -1,0 +1,61 @@
+Frame Count,Filename,Actor,True Label,Predicted Label,Raw Dominant Label,Correct,Requested Frames,Extracted Frames,Usable Face Crops,Analysed Face Count,Enough Face Evidence,Strict Majority,Clear Result,Frame Agreement,Evidence Reason,Adapter Error,Processing Seconds
+5,02-01-01-01-01-01-04.mp4,04,neutral,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,1.4065
+5,02-01-01-01-01-02-04.mp4,04,neutral,neutral,neutral,True,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8773
+5,02-01-01-01-02-01-04.mp4,04,neutral,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8287
+5,02-01-01-01-02-02-04.mp4,04,neutral,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8441
+5,02-01-02-01-01-01-04.mp4,04,neutral,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.873
+5,02-01-02-01-01-02-04.mp4,04,neutral,happiness,happiness,False,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8304
+5,02-01-02-01-02-01-04.mp4,04,neutral,surprise,surprise,False,5,5,5,5,True,False,False,0.4,"No expression label received a strict majority. The dominant label appeared 2 time(s), while 3 were required.",,0.9111
+5,02-01-02-01-02-02-04.mp4,04,neutral,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8676
+5,02-01-02-02-01-01-04.mp4,04,neutral,surprise,surprise,False,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.867
+5,02-01-02-02-01-02-04.mp4,04,neutral,happiness,happiness,False,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.9012
+5,02-01-02-02-02-01-04.mp4,04,neutral,happiness,happiness,False,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.9037
+5,02-01-02-02-02-02-04.mp4,04,neutral,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8589
+5,02-01-03-01-01-01-04.mp4,04,happiness,happiness,happiness,True,5,5,5,5,True,True,True,1.0,The minimum face count was met and the dominant label received a strict majority.,,0.8795
+5,02-01-03-01-01-02-04.mp4,04,happiness,happiness,happiness,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.9382
+5,02-01-03-01-02-01-04.mp4,04,happiness,happiness,happiness,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.9191
+5,02-01-03-01-02-02-04.mp4,04,happiness,happiness,happiness,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.9037
+5,02-01-03-02-01-01-04.mp4,04,happiness,happiness,happiness,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8731
+5,02-01-03-02-01-02-04.mp4,04,happiness,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8692
+5,02-01-03-02-02-01-04.mp4,04,happiness,happiness,happiness,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8467
+5,02-01-03-02-02-02-04.mp4,04,happiness,happiness,happiness,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.842
+5,02-01-04-01-01-01-04.mp4,04,sadness,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.842
+5,02-01-04-01-01-02-04.mp4,04,sadness,surprise,surprise,False,5,5,5,5,True,False,False,0.4,"No expression label received a strict majority. The dominant label appeared 2 time(s), while 3 were required.",,0.9065
+5,02-01-04-01-02-01-04.mp4,04,sadness,sadness,sadness,True,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8511
+5,02-01-04-01-02-02-04.mp4,04,sadness,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8429
+5,02-01-04-02-01-01-04.mp4,04,sadness,sadness,sadness,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8841
+5,02-01-04-02-01-02-04.mp4,04,sadness,fear,fear,False,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8439
+5,02-01-04-02-02-01-04.mp4,04,sadness,fear,fear,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8591
+5,02-01-04-02-02-02-04.mp4,04,sadness,sadness,sadness,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8455
+5,02-01-05-01-01-01-04.mp4,04,anger,surprise,surprise,False,5,5,5,5,True,False,False,0.4,"No expression label received a strict majority. The dominant label appeared 2 time(s), while 3 were required.",,0.8442
+5,02-01-05-01-01-02-04.mp4,04,anger,neutral,neutral,False,5,5,5,5,True,False,False,0.4,"No expression label received a strict majority. The dominant label appeared 2 time(s), while 3 were required.",,0.8628
+5,02-01-05-01-02-01-04.mp4,04,anger,neutral,neutral,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8637
+5,02-01-05-01-02-02-04.mp4,04,anger,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8756
+5,02-01-05-02-01-01-04.mp4,04,anger,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8453
+5,02-01-05-02-01-02-04.mp4,04,anger,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8387
+5,02-01-05-02-02-01-04.mp4,04,anger,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8367
+5,02-01-05-02-02-02-04.mp4,04,anger,fear,fear,False,5,5,5,5,True,False,False,0.4,"No expression label received a strict majority. The dominant label appeared 2 time(s), while 3 were required.",,0.8511
+5,02-01-06-01-01-01-04.mp4,04,fear,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8729
+5,02-01-06-01-01-02-04.mp4,04,fear,surprise,surprise,False,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8877
+5,02-01-06-01-02-01-04.mp4,04,fear,fear,fear,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8516
+5,02-01-06-01-02-02-04.mp4,04,fear,fear,fear,True,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8703
+5,02-01-06-02-01-01-04.mp4,04,fear,fear,fear,True,5,5,5,5,True,True,True,1.0,The minimum face count was met and the dominant label received a strict majority.,,0.8828
+5,02-01-06-02-01-02-04.mp4,04,fear,surprise,surprise,False,5,5,5,5,True,False,False,0.4,"No expression label received a strict majority. The dominant label appeared 2 time(s), while 3 were required.",,0.9178
+5,02-01-06-02-02-01-04.mp4,04,fear,fear,fear,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8992
+5,02-01-06-02-02-02-04.mp4,04,fear,fear,fear,True,5,5,5,5,True,True,True,1.0,The minimum face count was met and the dominant label received a strict majority.,,0.8714
+5,02-01-07-01-01-01-04.mp4,04,disgust,disgust,disgust,True,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8703
+5,02-01-07-01-01-02-04.mp4,04,disgust,disgust,disgust,True,5,5,5,5,True,True,True,1.0,The minimum face count was met and the dominant label received a strict majority.,,0.8621
+5,02-01-07-01-02-01-04.mp4,04,disgust,disgust,disgust,True,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8585
+5,02-01-07-01-02-02-04.mp4,04,disgust,disgust,disgust,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8655
+5,02-01-07-02-01-01-04.mp4,04,disgust,disgust,disgust,True,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8719
+5,02-01-07-02-01-02-04.mp4,04,disgust,disgust,disgust,True,5,5,5,5,True,False,False,0.4,"No expression label received a strict majority. The dominant label appeared 2 time(s), while 3 were required.",,0.879
+5,02-01-07-02-02-01-04.mp4,04,disgust,disgust,disgust,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.9577
+5,02-01-07-02-02-02-04.mp4,04,disgust,disgust,disgust,True,5,5,5,5,True,True,True,1.0,The minimum face count was met and the dominant label received a strict majority.,,0.8409
+5,02-01-08-01-01-01-04.mp4,04,surprise,surprise,surprise,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8251
+5,02-01-08-01-01-02-04.mp4,04,surprise,surprise,surprise,True,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8315
+5,02-01-08-01-02-01-04.mp4,04,surprise,surprise,surprise,True,5,5,5,5,True,True,True,1.0,The minimum face count was met and the dominant label received a strict majority.,,0.8951
+5,02-01-08-01-02-02-04.mp4,04,surprise,surprise,surprise,True,5,5,5,5,True,True,True,1.0,The minimum face count was met and the dominant label received a strict majority.,,0.8884
+5,02-01-08-02-01-01-04.mp4,04,surprise,surprise,surprise,True,5,5,5,5,True,True,True,0.6,The minimum face count was met and the dominant label received a strict majority.,,0.8628
+5,02-01-08-02-01-02-04.mp4,04,surprise,surprise,surprise,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8923
+5,02-01-08-02-02-01-04.mp4,04,surprise,surprise,surprise,True,5,5,5,5,True,True,True,1.0,The minimum face count was met and the dominant label received a strict majority.,,0.8568
+5,02-01-08-02-02-02-04.mp4,04,surprise,surprise,surprise,True,5,5,5,5,True,True,True,0.8,The minimum face count was met and the dominant label received a strict majority.,,0.8795

@@ -1,0 +1,6 @@
+Model,Average Automatic Score,Task Pass Rate,Grounding Pass Rate,Boundary Pass Rate,Safety Accuracy,Valid Structure Rate,Average Wall Time (s),Average Tokens Per Second
+qwen3:4b-instruct,94.17,0.625,1.0,0.875,1.0,1.0,18.1448,7.2499
+phi4-mini:3.8b,88.96,0.5,1.0,0.875,1.0,1.0,14.6786,8.4109
+gemma3:4b,90.42,0.5,0.875,0.875,1.0,1.0,20.7249,7.9564
+ministral-3:3b,78.75,0.5,1.0,0.875,0.5,1.0,16.3287,8.5577
+llama3.2:3b,71.46,0.5,0.875,0.875,0.25,1.0,12.1701,10.3788

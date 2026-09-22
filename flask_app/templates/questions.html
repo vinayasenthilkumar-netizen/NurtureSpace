@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if part == "result" %}
+        Today's Wellbeing Status
+    {% else %}
+        Wellbeing Questionnaire
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<!-- main authenticated application layout -->
+<div class="app-shell">
+
+    <!-- shared sidebar navigation -->
+    <aside class="sidebar">
+
+        <div>
+
+            <!-- application branding -->
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">👩‍🍼</div>
+
+                <div>
+                    <strong>Nurture Space</strong>
+                    <small>Postpartum wellbeing</small>
+                </div>
+            </div>
+
+
+            <!-- main navigation for signed-in users -->
+            <nav class="sidebar-nav">
+
+                <a href="{{ url_for('home.home') }}" class="sidebar-link">
+                    <span>🌸</span> Today
+                </a>
+
+                <!-- active because the user is currently in the questionnaire -->
+                <a href="{{ url_for('questions.core_questions') }}"
+                   class="sidebar-link active">
+                    <span>✔️</span> Questionnaire
+                </a>
+
+                <a href="{{ url_for('reflection.reflection_page', standalone=1) }}"
+                   class="sidebar-link">
+                    <span>📕</span> Personal Check-In
+                </a>
+
+                <a href="{{ url_for('assistant.assistant_page') }}"
+                   class="sidebar-link">
+                    <span>🤖</span> Assistant
+                </a>
+
+                <a href="{{ url_for('resources.saved_resources') }}"
+                   class="sidebar-link">
+                    <span>❤️</span> Saved Resources
+                </a>
+
+                <a href="{{ url_for('history.history_page') }}"
+                   class="sidebar-link">
+                    <span>🗓️</span> History & Patterns
+                </a>
+
+                <a href="{{ url_for('settings.settings_page') }}"
+                   class="sidebar-link">
+                    <span>⚙️</span> Settings
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <!-- current user details and logout option -->
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-profile">
+
+                <!-- avatar uses the first letter of display name or username -->
+                <div class="profile-avatar">
+                    {{ (
+                        session.get('display_name')
+                        or session.get('username')
+                        or 'U'
+                    )[0] | upper }}
+                </div>
+
+                <div>
+                    <strong>
+                        {{
+                            session.get('display_name')
+                            or session.get('username')
+                            or 'User'
+                        }}
+                    </strong>
+
+                    <small>Signed in</small>
+                </div>
+
+            </div>
+
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="sidebar-link logout-link">
+                <span>➜]</span> Log out
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- main questionnaire content changes depending on the current part -->
+    <main class="questionnaire-page">
+
+        <!-- return link and the current check-in type -->
+        <div class="questionnaire-topbar">
+
+            <a href="{{ url_for('home.home') }}"
+               class="questionnaire-back">
+                ← Today
+            </a>
+
+            <span>{{ checkin_type.label }}</span>
+
+        </div>
+
+
+        <!-- part 1 contains the four core questions used for scoring -->
+        {% if part == "core" %}
+
+            <header class="questionnaire-header">
+
+                <span class="questionnaire-step">Part 1 of 2</span>
+
+                <h1>How are you doing today?</h1>
+
+                <p>
+                    These four questions are used to calculate your
+                    Today's Wellbeing Status.
+                </p>
+
+            </header>
+
+
+            <!-- half progress because this is the first questionnaire section -->
+            <div class="questionnaire-progress">
+                <div class="questionnaire-progress-fill half"></div>
+            </div>
+
+
+            <!-- each core answer is posted back to the current questionnaire route -->
+            <form method="POST" class="questionnaire-form">
+
+                {% for item in questions %}
+
+                    <!-- one question and its available answer choices -->
+                    <fieldset class="questionnaire-question">
+
+                        <legend>
+                            <span>{{ loop.index }}</span>
+                            {{ item.question }}
+                        </legend>
+
+
+                        <div class="questionnaire-options">
+
+                            <!-- answer labels and values come from the question definition -->
+                            {% for value, label in item.labels.items() %}
+
+                                <label class="questionnaire-option">
+
+                                    <input
+                                        type="radio"
+                                        name="{{ item.key }}"
+                                        value="{{ value }}"
+                                        {% if existing_answers.get(item.key) == value %}checked{% endif %}
+                                        required
+                                    >
+
+                                    <span>{{ label }}</span>
+
+                                </label>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </fieldset>
+
+                {% endfor %}
+
+
+                <!-- user can return home or continue to the six context questions -->
+                <div class="questionnaire-actions">
+
+                    <a href="{{ url_for('home.home') }}"
+                       class="questionnaire-secondary">
+                        Back
+                    </a>
+
+                    <button type="submit"
+                            class="questionnaire-primary">
+                        Continue
+                    </button>
+
+                </div>
+
+            </form>
+
+
+        <!-- part 2 contains context questions that do not affect the score -->
+        {% elif part == "context" %}
+
+            <header class="questionnaire-header">
+
+                <span class="questionnaire-step">Part 2 of 2</span>
+
+                <h1>A little more context</h1>
+
+                <p>
+                    These six questions add helpful context for your Personal Check-In,
+                    summary and appointment discussion points. They do not change your
+                    Today's Wellbeing Status.
+                </p>
+
+            </header>
+
+
+            <!-- full progress indicates the final questionnaire section -->
+            <div class="questionnaire-progress">
+                <div class="questionnaire-progress-fill full"></div>
+            </div>
+
+
+            <form method="POST" class="questionnaire-form">
+
+                {% for item in questions %}
+
+                    <!-- context questions continue numbering from question 5 -->
+                    <fieldset class="questionnaire-question">
+
+                        <legend>
+                            <span>{{ loop.index + 4 }}</span>
+                            {{ item.question }}
+                        </legend>
+
+
+                        <div class="questionnaire-options">
+
+                            {% for value, label in item.labels.items() %}
+
+                                <label class="questionnaire-option">
+
+                                    <!-- previously selected answers remain checked when revisiting -->
+                                    <input
+                                        type="radio"
+                                        name="{{ item.key }}"
+                                        value="{{ value }}"
+                                        {% if existing_answers.get(item.key) == value %}checked{% endif %}
+                                        required
+                                    >
+
+                                    <span>{{ label }}</span>
+
+                                </label>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </fieldset>
+
+                {% endfor %}
+
+
+                <!-- back returns to the four core questions without completing the questionnaire -->
+                <div class="questionnaire-actions">
+
+                    <a href="{{ url_for('questions.core_questions') }}"
+                       class="questionnaire-secondary">
+                        Back
+                    </a>
+
+                    <!-- submission completes both questionnaire sections -->
+                    <button type="submit"
+                            class="questionnaire-primary">
+                        Complete Questionnaire
+                    </button>
+
+                </div>
+
+            </form>
+
+
+        <!-- result page shown after all questionnaire answers are complete -->
+        {% elif part == "result" %}
+
+            <section class="questionnaire-result">
+
+                <span class="questionnaire-step">
+                    Questionnaire complete
+                </span>
+
+                <h2>Questionnaire Status</h2>
+
+                <!-- makes clear which four answers were used for the status -->
+                <p class="questionnaire-result-intro">
+                    Based on your responses about sleep, mood, stress and perceived support.
+                </p>
+
+
+                <!-- status class controls the visual appearance of the result -->
+                <div class="questionnaire-status questionnaire-status-{{ status_class }}">
+                    {{ status }}
+                </div>
+
+
+                <!-- explains the separation between scoring and contextual information -->
+                <div class="questionnaire-status-note">
+
+                    <strong>What this means</strong>
+
+                    <p>
+                        Your other six questionnaire responses provide context only.
+                        Your Personal Check-In and AI-supported analysis do not change this status.
+                    </p>
+
+                </div>
+
+
+                <!-- continue into reflection or return to the Today page -->
+                <div class="questionnaire-result-actions">
+
+                    <a href="{{ url_for('reflection.reflection_page') }}"
+                       class="questionnaire-primary">
+                        Continue to Personal Check-In
+                    </a>
+
+                    <a href="{{ url_for('home.home') }}"
+                       class="questionnaire-secondary">
+                        Return to Today
+                    </a>
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,626 @@
+{% extends "base.html" %}
+
+{% block title %}Wellbeing Summary | Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- main Dashboard page shown after reflection review -->
+<div class="summary-page">
+
+        <!-- navigation back to Review or out to Today -->
+        <div class="summary-topbar">
+            <a href="{{ url_for('review.review_page') }}">← Review</a>
+
+            <div>
+                <a href="{{ url_for('home.home') }}">Return to Today →</a>
+            </div>
+        </div>
+
+
+        <!-- introduces the temporary wellbeing summary -->
+        <header class="summary-header">
+            <span class="summary-kicker">Your wellbeing summary</span>
+            <h1>A clearer view of your check-in.</h1>
+
+            <p>
+                Review what you shared and prepare a personal summary
+                for yourself or a future appointment.
+            </p>
+        </header>
+
+
+        <!-- show either the combined result or reflection-only result -->
+        {% if wellbeing_indicator %}
+            <section class="summary-status-card">
+                <div>
+
+                    <!-- combined is available when questionnaire and reflection are both present -->
+                    {% if wellbeing_source == "combined" %}
+                        <span>Overall Wellbeing Indicator</span>
+                    {% else %}
+                        <span>Reflection Result</span>
+                    {% endif %}
+
+                    <strong>{{ wellbeing_indicator }}</strong>
+                </div>
+
+                <!-- explain which information contributed to the displayed result -->
+                {% if wellbeing_source == "combined" %}
+                    <p>
+                        Based on your reflection and optional wellbeing questions.
+                    </p>
+                {% else %}
+                    <p>
+                        Based on the reflection information available
+                        for this check-in.
+                    </p>
+                {% endif %}
+            </section>
+        {% endif %}
+
+
+        <!-- reflection text and approved analysis are shown side by side -->
+        <div class="summary-main-grid">
+
+            <!-- user-confirmed written reflection or transcript -->
+            <section class="summary-card">
+                <div class="summary-card-heading">
+                    <div>
+                        <span>Personal Check-In</span>
+                        <h2>What you shared</h2>
+                    </div>
+                </div>
+
+                {% if confirmed_reflection %}
+                    <div class="summary-reflection">
+                        {{ confirmed_reflection }}
+                    </div>
+                {% else %}
+                    <p class="summary-empty">
+                        No confirmed Personal Check-In text is available.
+                    </p>
+                {% endif %}
+            </section>
+
+
+            <!-- only review-approved reflection observations are displayed -->
+            <section class="summary-card">
+                <div class="summary-card-heading">
+                    <div>
+                        <span>Reflection analysis</span>
+                        <h2>What was noticed</h2>
+                    </div>
+                </div>
+
+
+                <div class="summary-approved-groups">
+
+                    <!-- approved text-emotion categories -->
+                    <div class="summary-approved-group">
+                        <strong>Emotion themes</strong>
+
+                        {% if approved_emotions %}
+                            <div class="summary-tags">
+                                {% for item in approved_emotions %}
+                                    <span>{{ item }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>None detected.</p>
+                        {% endif %}
+                    </div>
+
+
+                    <!-- practical factors the user approved as supportive -->
+                    <div class="summary-approved-group">
+                        <strong>Supportive factors</strong>
+
+                        {% if approved_supportive %}
+                            <div class="summary-tags">
+                                {% for item in approved_supportive %}
+                                    <span>{{ item }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>None detected.</p>
+                        {% endif %}
+                    </div>
+
+
+                    <!-- practical factors the user approved as areas of strain -->
+                    <div class="summary-approved-group">
+                        <strong>Areas of strain</strong>
+
+                        {% if approved_strain %}
+                            <div class="summary-tags">
+                                {% for item in approved_strain %}
+                                    <span>{{ item }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>None detected.</p>
+                        {% endif %}
+                    </div>
+
+
+                    <!-- vocal observations apply only to voice and video reflections -->
+                    {% if reflection_mode in [voice_reflection, video_reflection] %}
+                        <div class="summary-approved-group">
+                            <strong>Vocal observation</strong>
+
+                            <div class="summary-tags">
+                                <span>
+                                    {{ approved_audio or "No clear vocal observation." }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+
+                    <!-- visible-expression observations apply only to video reflections -->
+                    {% if reflection_mode == video_reflection %}
+                        <div class="summary-approved-group">
+                            <strong>Visible-expression observation</strong>
+
+                            <div class="summary-tags">
+                                <span>
+                                    {{ approved_expression or "No clear visible-expression observation." }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </section>
+
+        </div>
+
+
+        <!-- questionnaire information is available only when both questionnaire parts were completed -->
+        {% if structured_complete %}
+            <details class="summary-questionnaire">
+
+                <summary>
+                    <div>
+                        <strong>Questionnaire responses</strong>
+                        <span>View your completed questionnaire</span>
+                    </div>
+
+                    <span class="summary-chevron">⌄</span>
+                </summary>
+
+
+                <div class="summary-questionnaire-content">
+
+                    <!-- four core responses contribute to the questionnaire result -->
+                    <section>
+                        <div class="summary-questionnaire-heading">
+                            <h3>Wellbeing</h3>
+                            <span>Used as part of today's overall result</span>
+                        </div>
+
+                        {% for response in core_responses %}
+                            <div class="summary-response-row">
+                                <span>{{ response.label }}</span>
+                                <strong>{{ response.value }}</strong>
+                            </div>
+                        {% endfor %}
+                    </section>
+
+
+                    <!-- six context responses provide interpretation only -->
+                    <section>
+                        <div class="summary-questionnaire-heading">
+                            <h3>Context</h3>
+                            <span>Used for additional context only</span>
+                        </div>
+
+                        {% for response in context_responses %}
+                            <div class="summary-response-row">
+                                <span>{{ response.label }}</span>
+                                <strong>{{ response.value }}</strong>
+                            </div>
+                        {% endfor %}
+                    </section>
+
+                </div>
+            </details>
+        {% endif %}
+
+
+        <!-- summary-generation and appointment-preparation area -->
+        <section class="summary-builder">
+
+            <div class="summary-builder-heading">
+                <div>
+                    <span class="summary-kicker">Personal overview</span>
+                    <h2>Your summary and appointment preparation</h2>
+
+                    <p>
+                        Generated only from the information shown on this page.
+                        Review and edit everything before confirming.
+                    </p>
+                </div>
+            </div>
+
+
+            <!-- initial state before the local model has generated a summary -->
+            {% if not summary_generated %}
+
+                <!-- model or generation errors are shown without losing the page state -->
+                {% if generation_error %}
+                    <div class="summary-error">
+                        {{ generation_error }}
+                    </div>
+                {% endif %}
+
+
+                <div class="summary-generate-box">
+                    <div>
+                        <strong>Ready when you are.</strong>
+
+                        <p>
+                            Create a short personal summary and possible points
+                            you may want to discuss at an appointment.
+                        </p>
+                    </div>
+
+
+                    <!-- starts temporary Dashboard generation -->
+                    <form method="POST"
+                          action="{{ url_for('dashboard.generate') }}"
+                          class="summary-processing-form">
+
+                        <button type="submit"
+                                class="summary-primary-button summary-processing-button">
+                            Generate My Summary
+                        </button>
+
+                    </form>
+                </div>
+
+
+            <!-- draft or edit state before the current version is confirmed -->
+            {% elif summary_edit_mode or not summary_confirmed %}
+
+                <!-- both summary and appointment points remain editable by the user -->
+                <form
+                    method="POST"
+                    action="{{ url_for('dashboard.confirm') }}"
+                    class="summary-edit-form"
+                >
+
+                    <!-- editable personal summary -->
+                    <div class="summary-field">
+
+                        <div class="summary-field-heading">
+                            <label for="personal-summary">
+                                Personal summary
+                            </label>
+
+                            <span>You can edit this</span>
+                        </div>
+
+                        <textarea
+                            id="personal-summary"
+                            name="personal_summary"
+                            rows="8"
+                            required
+                        >{{ personal_summary }}</textarea>
+
+                    </div>
+
+
+                    <!-- appointment points are entered one item per line -->
+                    <div class="summary-field">
+
+                        <div class="summary-field-heading">
+                            <label for="appointment-points">
+                                Appointment discussion points
+                            </label>
+
+                            <span>One point per line</span>
+                        </div>
+
+                        <textarea
+                            id="appointment-points"
+                            name="appointment_points"
+                            rows="6"
+                        >{{ appointment_points_text }}</textarea>
+
+                    </div>
+
+
+                    <!-- confirming stores the current reviewed draft in temporary application state -->
+                    <div class="summary-edit-actions">
+                        <span></span>
+
+                        <button type="submit" class="summary-primary-button">
+
+                            {% if summary_confirmed %}
+                                Save Changes
+                            {% else %}
+                                Confirm Summary
+                            {% endif %}
+
+                        </button>
+                    </div>
+
+                </form>
+
+
+                <!-- secondary actions for regeneration, cancellation or discarding -->
+                <div class="summary-secondary-actions">
+
+                    <!-- generate another version from the same approved application context -->
+                    <form method="POST"
+                          action="{{ url_for('dashboard.regenerate') }}"
+                          class="summary-processing-form">
+
+                        <button type="submit" class="summary-processing-button">
+                            Regenerate
+                        </button>
+
+                    </form>
+
+
+                    {% if summary_confirmed %}
+
+                        <!-- leave edit mode without replacing the confirmed version -->
+                        <form
+                            method="POST"
+                            action="{{ url_for('dashboard.cancel_edit') }}"
+                        >
+                            <button type="submit">
+                                Cancel editing
+                            </button>
+                        </form>
+
+                    {% else %}
+
+                        <!-- remove the current unconfirmed generated draft -->
+                        <form
+                            method="POST"
+                            action="{{ url_for('dashboard.clear') }}"
+                        >
+                            <button type="submit">
+                                Discard draft
+                            </button>
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+
+            <!-- confirmed state shown after the user approves the summary -->
+            {% else %}
+
+                <div class="summary-confirmed">
+
+                    <div class="summary-confirmed-heading">
+                        <span>✓</span>
+
+                        <div>
+                            <strong>Summary confirmed</strong>
+                            <p>You approved the information below.</p>
+                        </div>
+                    </div>
+
+
+                    <!-- confirmed personal summary -->
+                    <section class="summary-confirmed-section">
+                        <span>Personal summary</span>
+
+                        <p class="summary-confirmed-text">
+                            {{ personal_summary }}
+                        </p>
+                    </section>
+
+
+                    <!-- confirmed appointment discussion points -->
+                    <section class="summary-confirmed-section">
+                        <span>Appointment discussion points</span>
+
+                        {% if appointment_points %}
+                            <ul>
+                                {% for point in appointment_points %}
+                                    <li>{{ point }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="summary-empty">
+                                No appointment discussion points included.
+                            </p>
+                        {% endif %}
+                    </section>
+
+
+                    <!-- reopens the confirmed content for user editing -->
+                    <form
+                        method="POST"
+                        action="{{ url_for('dashboard.edit') }}"
+                    >
+                        <button
+                            type="submit"
+                            class="summary-secondary-button"
+                        >
+                            Edit Summary
+                        </button>
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- persistence controls are kept separate from summary generation -->
+        <section class="summary-save-card">
+
+            <div>
+                <span class="summary-kicker">
+                    Save to your account
+                </span>
+
+
+                <!-- wording changes depending on whether questionnaire data is included -->
+                {% if structured_complete %}
+                    <h2>Keep this wellbeing summary?</h2>
+                {% else %}
+                    <h2>Keep this Personal Check-In?</h2>
+                {% endif %}
+
+
+                <!-- saving is blocked when the privacy preference is disabled -->
+                {% if not saving_allowed %}
+
+                    <p>
+                        Saving approved information is currently turned off
+                        in your privacy settings.
+                    </p>
+
+                    <a
+                        href="{{ url_for('privacy.privacy_settings') }}"
+                        class="summary-secondary-button"
+                    >
+                        Privacy Settings
+                    </a>
+
+
+                <!-- summary must be explicitly confirmed before persistence -->
+                {% elif not summary_confirmed %}
+
+                    <p>
+                        Confirm your personal summary before saving this entry.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="summary-primary-button"
+                        disabled
+                    >
+                        Save
+                    </button>
+
+
+                <!-- saving becomes available after privacy and confirmation checks pass -->
+                {% else %}
+
+                    {% if structured_complete %}
+
+                        <!-- full check-in may already exist and therefore require an update -->
+                        {% if saved_checkin_id %}
+                            <p>
+                                This entry is already saved. You can update it
+                                after making changes.
+                            </p>
+                        {% else %}
+                            <p>
+                                Your questionnaire responses, reflection results,
+                                confirmed summary and appointment points will
+                                be saved.
+                            </p>
+                        {% endif %}
+
+                    {% else %}
+
+                        <!-- reflection-only entries use their own saved id -->
+                        {% if saved_reflection_id %}
+                            <p>
+                                This Personal Check-In is already saved.
+                                You can update it after making changes.
+                            </p>
+                        {% else %}
+                            <p>
+                                Your reflection results, confirmed summary and
+                                appointment points will be saved.
+                            </p>
+                        {% endif %}
+
+                    {% endif %}
+
+
+                    <!-- backend decides whether this creates or updates the approved entry -->
+                    <form
+                        method="POST"
+                        action="{{ url_for('dashboard.save_checkin') }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="summary-primary-button"
+                        >
+
+                            <!-- button wording reflects full check-in versus reflection-only saving -->
+                            {% if structured_complete %}
+
+                                {% if saved_checkin_id %}
+                                    Update Saved Summary
+                                {% else %}
+                                    Save Wellbeing Summary
+                                {% endif %}
+
+                            {% else %}
+
+                                {% if saved_reflection_id %}
+                                    Update Saved Check-In
+                                {% else %}
+                                    Save Personal Check-In
+                                {% endif %}
+
+                            {% endif %}
+
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="summary-save-icon">♡</div>
+
+        </section>
+
+
+        <!-- repeated navigation keeps Review and Today easy to reach at the bottom -->
+        <div class="summary-bottom-nav">
+
+            <a href="{{ url_for('review.review_page') }}">
+                ← Review
+            </a>
+
+            <a href="{{ url_for('home.home') }}">
+                Return to Today →
+            </a>
+
+        </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+    // disable generation buttons after submission to prevent duplicate requests
+    document.querySelectorAll(".summary-processing-form").forEach(form => {
+
+        form.addEventListener("submit", () => {
+            const button = form.querySelector(".summary-processing-button");
+
+            // show immediate feedback while local summary generation is running
+            if (button) {
+                button.disabled = true;
+                button.textContent = "Processing…";
+            }
+        });
+
+    });
+</script>
+
+{% endblock %}

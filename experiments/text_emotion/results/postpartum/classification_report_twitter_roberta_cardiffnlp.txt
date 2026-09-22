@@ -1,0 +1,12 @@
+              precision    recall  f1-score   support
+
+    Low Mood       0.36      1.00      0.53         5
+    Positive       0.56      1.00      0.71         5
+      Warmth       0.00      0.00      0.00         5
+ Frustration       1.00      1.00      1.00         5
+       Worry       1.00      0.40      0.57         5
+     Neutral       0.00      0.00      0.00         5
+
+    accuracy                           0.57        30
+   macro avg       0.49      0.57      0.47        30
+weighted avg       0.49      0.57      0.47        30

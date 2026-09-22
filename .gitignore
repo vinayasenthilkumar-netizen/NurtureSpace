@@ -1,0 +1,32 @@
+# local python environment
+.venv/
+
+# python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# pytest cache
+.pytest_cache/
+
+# editor settings
+.vscode/
+
+# local flask session data
+flask_session/
+
+# temporary reflection uploads and processing files
+data/temp/
+
+# private runtime databases
+data/database/*.db
+
+# environment and secret files
+.env
+.env.*
+!.env.example
+
+# operating system files
+.DS_Store
+Thumbs.db
+desktop.ini

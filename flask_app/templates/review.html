@@ -1,0 +1,637 @@
+{% extends "base.html" %}
+
+{% block title %}Review Your Check-In | Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- main review page shown after reflection processing -->
+<div class="review-simple-page">
+
+    <!-- simple top navigation back to the selected reflection mode -->
+    <div class="review-simple-topbar">
+        <a href="{{ url_for('reflection.reflection_page', mode=mode_slug) }}">
+            ← Personal Check-In
+        </a>
+
+        <span>Review</span>
+    </div>
+
+
+    <!-- explains that model findings should be reviewed before continuing -->
+    <header class="review-simple-header">
+        <span class="review-kicker">Review your check-in</span>
+        <h1>Your reflection analysis</h1>
+
+        <p>
+            Review the information identified from your Personal Check-In
+            before continuing to your Wellbeing Summary.
+        </p>
+
+        <!-- reminder that these outputs are tentative model observations -->
+        <p class="review-small-note">
+            These are tentative model observations and are not diagnoses.
+        </p>
+    </header>
+
+
+    <!-- show the overall result only after reflection analysis is complete -->
+    {% if analysis_complete %}
+
+        <!-- combined result takes priority when questionnaire and reflection are available -->
+        {% if overall_checkin_indicator %}
+            <div class="review-wellbeing-strip">
+                <span>Overall Check-In Indicator</span>
+                <strong>{{ overall_checkin_indicator }}</strong>
+            </div>
+
+        <!-- otherwise show the reflection-only result -->
+        {% elif reflection_indicator %}
+            <div class="review-wellbeing-strip">
+                <span>Reflection Result</span>
+                <strong>{{ reflection_indicator }}</strong>
+            </div>
+        {% endif %}
+
+    {% endif %}
+
+
+    <!-- shows the original type of personal check-in completed by the user -->
+    <section class="review-your-checkin">
+
+        <div class="review-card-heading">
+            <div>
+                <span>Your Personal Check-In</span>
+
+                <!-- heading changes depending on text, voice or video reflection -->
+                {% if reflection_mode == text_reflection %}
+                    <h2>What you wrote</h2>
+
+                {% elif reflection_mode == voice_reflection %}
+                    <h2>Your voice check-in</h2>
+
+                {% else %}
+                    <h2>Your video check-in</h2>
+                {% endif %}
+            </div>
+
+            <!-- recording duration is shown when media duration is available -->
+            {% if duration_seconds %}
+                <small>{{ "%.1f"|format(duration_seconds) }} sec</small>
+            {% endif %}
+        </div>
+
+
+        <!-- text reflections can be shown directly because the user entered the text -->
+        {% if reflection_mode == text_reflection %}
+            <div class="review-user-text">
+                {{ typed_reflection }}
+            </div>
+
+        <!-- raw voice media is temporary and is not stored with the check-in -->
+        {% elif reflection_mode == voice_reflection %}
+            <p class="review-media-summary">
+                Your voice recording was processed temporarily.
+                The recording itself is not stored with your account.
+            </p>
+
+        <!-- raw video, audio and sampled frames are also temporary -->
+        {% elif reflection_mode == video_reflection %}
+            <p class="review-media-summary">
+                Your video was processed temporarily.
+                Raw video, audio and sampled frames are not stored
+                with your account.
+            </p>
+        {% endif %}
+
+    </section>
+
+
+    <!-- voice and video reflections require transcript review before text analysis -->
+    {% if transcript_required %}
+        <section class="review-transcript-card">
+
+            <div class="review-card-heading">
+                <div>
+                    <span>Transcript</span>
+                    <h2>Check what was captured</h2>
+                </div>
+
+                <!-- confirms that the user has already reviewed this transcript -->
+                {% if transcript_confirmed %}
+                    <span class="review-confirmed-badge">
+                        ✓ Confirmed
+                    </span>
+                {% endif %}
+            </div>
+
+            <p class="review-card-help">
+                Speech-to-text can make mistakes. Correct anything that
+                does not match what you said before continuing.
+            </p>
+
+
+            <!-- confirmed transcript is sent back for analysis instead of raw Whisper text -->
+            <form method="POST"
+                  action="{{ url_for('review.confirm_transcript') }}"
+                  class="review-processing-form">
+
+                <textarea
+                    id="confirmed-transcript"
+                    name="confirmed_transcript"
+                    rows="6"
+                    required
+                >{{ confirmed_transcript or transcript }}</textarea>
+
+                <div class="review-single-action">
+
+                    <!-- the same action can also be used after editing a confirmed transcript -->
+                    <button type="submit"
+                            class="review-primary-button review-processing-button">
+
+                        {% if transcript_confirmed %}
+                            Update & Analyse Again
+                        {% else %}
+                            Confirm & Analyse
+                        {% endif %}
+
+                    </button>
+                </div>
+
+            </form>
+        </section>
+    {% endif %}
+
+
+    <!-- analysis is intentionally blocked until voice/video transcript confirmation -->
+    {% if transcript_required and not transcript_confirmed %}
+
+        <div class="review-soft-message">
+            <span>1</span>
+
+            <p>
+                <strong>Confirm your transcript first.</strong>
+                Your reflection analysis will appear after the
+                transcript matches what you said.
+            </p>
+        </div>
+
+
+    <!-- text reflection or confirmed transcript can be analysed from here -->
+    {% elif not analysis_complete %}
+
+        <div class="review-soft-message">
+            <span>✦</span>
+
+            <div>
+                <p>
+                    <strong>Your reflection analysis is not ready yet.</strong>
+                    Analyse your Personal Check-In when you are ready.
+                </p>
+
+                <!-- manually starts or repeats the temporary review analysis -->
+                <form method="POST"
+                      action="{{ url_for('review.analyse_again') }}"
+                      class="review-processing-form">
+
+                    <button type="submit"
+                            class="review-primary-button review-processing-button">
+                        Analyse Check-In
+                    </button>
+                </form>
+            </div>
+        </div>
+
+
+    <!-- once analysis finishes, show all suggestions for user approval -->
+    {% else %}
+
+        <div class="review-suggestions-heading">
+
+            <!-- all keep/ignore choices are submitted together at the end -->
+            <form method="POST"
+                  action="{{ url_for('review.save_review') }}"
+                  class="review-decisions-form">
+
+                <div>
+                    <span class="review-kicker">
+                        Identified from your check-in
+                    </span>
+
+                    <h2>Reflection details</h2>
+
+                    <p>
+                        These results are generated from your reflection
+                        and provide broad observations only.
+                    </p>
+                </div>
+
+        </div>
+
+
+        <!-- text-emotion model suggestions -->
+        <section class="review-choice-card review-choice-card-wide">
+
+            <div class="review-choice-card-heading">
+                <div>
+                    <span>01</span>
+
+                    <div>
+                        <h3>Emotion themes</h3>
+
+                        <p>
+                            Broad emotional themes identified from
+                            the words in your reflection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            {% if emotions %}
+                <div class="review-choice-list">
+
+                    <!-- each suggestion must be explicitly kept or ignored -->
+                    {% for suggestion in emotions %}
+
+                        <div class="review-choice-row">
+
+                            <!-- user-facing emotion category rather than raw model label -->
+                            <strong class="review-theme-pill">
+                                {{ suggestion.category }}
+                            </strong>
+
+                            <div class="review-choice-actions">
+
+                                <!-- keep includes this suggestion in the approved review data -->
+                                <label class="review-decision keep">
+                                    <input
+                                        type="radio"
+                                        name="emotion_decision_{{ loop.index0 }}"
+                                        value="keep"
+                                        required
+                                    >
+
+                                    <span>✓ Keep</span>
+                                </label>
+
+                                <!-- ignore prevents this suggestion from being approved -->
+                                <label class="review-decision ignore">
+                                    <input
+                                        type="radio"
+                                        name="emotion_decision_{{ loop.index0 }}"
+                                        value="ignore"
+                                        required
+                                    >
+
+                                    <span>Ignore</span>
+                                </label>
+
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+                <p class="review-simple-empty">
+                    No clear emotion theme was identified.
+                </p>
+            {% endif %}
+
+        </section>
+
+
+        <!-- practical themes are separated into supportive and strain factors -->
+        <div class="review-two-column">
+
+            <!-- supportive factors identified from the confirmed reflection text -->
+            <section class="review-choice-card">
+
+                <div class="review-choice-card-heading">
+                    <div>
+                        <span>02</span>
+
+                        <div>
+                            <h3>Supportive factors</h3>
+
+                            <p>
+                                Things in your reflection that may be
+                                helping or supporting you.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+
+                {% if supportive_factors %}
+                    <div class="review-choice-list">
+
+                        {% for suggestion in supportive_factors %}
+
+                            <div class="review-choice-row stacked">
+
+                                <strong class="review-theme-pill">
+                                    {{ suggestion.name }}
+                                </strong>
+
+                                <div class="review-choice-actions">
+
+                                    <!-- every displayed factor requires an explicit decision -->
+                                    <label class="review-decision keep">
+                                        <input
+                                            type="radio"
+                                            name="supportive_decision_{{ loop.index0 }}"
+                                            value="keep"
+                                            required
+                                        >
+
+                                        <span>✓ Keep</span>
+                                    </label>
+
+                                    <label class="review-decision ignore">
+                                        <input
+                                            type="radio"
+                                            name="supportive_decision_{{ loop.index0 }}"
+                                            value="ignore"
+                                            required
+                                        >
+
+                                        <span>Ignore</span>
+                                    </label>
+
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+                    <p class="review-simple-empty">
+                        No clear supportive factor was identified.
+                    </p>
+                {% endif %}
+
+            </section>
+
+
+            <!-- practical strain factors detected from the reflection -->
+            <section class="review-choice-card">
+
+                <div class="review-choice-card-heading">
+                    <div>
+                        <span>03</span>
+
+                        <div>
+                            <h3>Areas of strain</h3>
+
+                            <p>
+                                Things in your reflection that may be
+                                making things more difficult.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+
+                {% if strain_factors %}
+                    <div class="review-choice-list">
+
+                        {% for suggestion in strain_factors %}
+
+                            <div class="review-choice-row stacked">
+
+                                <strong class="review-theme-pill">
+                                    {{ suggestion.name }}
+                                </strong>
+
+                                <div class="review-choice-actions">
+
+                                    <!-- kept strain factors may later support summary generation -->
+                                    <label class="review-decision keep">
+                                        <input
+                                            type="radio"
+                                            name="strain_decision_{{ loop.index0 }}"
+                                            value="keep"
+                                            required
+                                        >
+
+                                        <span>✓ Keep</span>
+                                    </label>
+
+                                    <label class="review-decision ignore">
+                                        <input
+                                            type="radio"
+                                            name="strain_decision_{{ loop.index0 }}"
+                                            value="ignore"
+                                            required
+                                        >
+
+                                        <span>Ignore</span>
+                                    </label>
+
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+                    <p class="review-simple-empty">
+                        No clear area of strain was identified.
+                    </p>
+                {% endif %}
+
+            </section>
+
+        </div>
+
+
+        <!-- audio observations are relevant only to voice and video reflections -->
+        {% if reflection_mode in [voice_reflection, video_reflection] %}
+
+            <section class="review-observation-card">
+
+                <div class="review-observation-heading">
+                    <span class="review-observation-icon">♪</span>
+
+                    <div>
+                        <h3>Vocal observation</h3>
+
+                        <p>
+                            A broad model observation based on vocal
+                            features only. It does not determine your
+                            actual emotion.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- only clear audio-model results are offered for approval -->
+                {% if audio_observation
+                      and audio_observation.clear_result
+                      and audio_observation.observation != "Unclear" %}
+
+                    <div class="review-observation-choice">
+
+                        <strong class="review-theme-pill">
+                            {{ audio_observation.observation }}
+                        </strong>
+
+                        <div class="review-choice-actions">
+
+                            <!-- user decides whether the tentative audio observation is retained -->
+                            <label class="review-decision keep">
+                                <input
+                                    type="radio"
+                                    name="audio_decision"
+                                    value="keep"
+                                    required
+                                >
+
+                                <span>✓ Keep</span>
+                            </label>
+
+                            <label class="review-decision ignore">
+                                <input
+                                    type="radio"
+                                    name="audio_decision"
+                                    value="ignore"
+                                    required
+                                >
+
+                                <span>Ignore</span>
+                            </label>
+
+                        </div>
+                    </div>
+
+                {% else %}
+                    <!-- unclear or low-confidence model output is not presented as a choice -->
+                    <p class="review-simple-empty">
+                        No clear vocal pattern was identified.
+                    </p>
+                {% endif %}
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- visible-expression review appears only for video reflections -->
+        {% if reflection_mode == video_reflection %}
+
+            <section class="review-observation-card">
+
+                <div class="review-observation-heading">
+                    <span class="review-observation-icon">◉</span>
+
+                    <div>
+                        <h3>Visible-expression observation</h3>
+
+                        <p>
+                            A broad model observation based on sampled
+                            video frames. It does not determine your
+                            actual feelings.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- only a clear expression result is shown as an approval choice -->
+                {% if visible_expression
+                      and visible_expression.clear_result %}
+
+                    <div class="review-observation-choice">
+
+                        <strong class="review-theme-pill">
+                            {{ visible_expression.observation }}
+                        </strong>
+
+                        <div class="review-choice-actions">
+
+                            <!-- user remains in control of whether the observation is retained -->
+                            <label class="review-decision keep">
+                                <input
+                                    type="radio"
+                                    name="expression_decision"
+                                    value="keep"
+                                    required
+                                >
+
+                                <span>✓ Keep</span>
+                            </label>
+
+                            <label class="review-decision ignore">
+                                <input
+                                    type="radio"
+                                    name="expression_decision"
+                                    value="ignore"
+                                    required
+                                >
+
+                                <span>Ignore</span>
+                            </label>
+
+                        </div>
+                    </div>
+
+                {% else %}
+                    <p class="review-simple-empty">
+                        No clear visible-expression pattern was identified.
+                    </p>
+                {% endif %}
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- final confirmation submits all review choices before Dashboard generation -->
+        <div class="review-save-bar">
+
+            <div>
+                <strong>Analysis complete</strong>
+
+                <p>
+                    Your reflection details are ready for your
+                    Wellbeing Summary.
+                </p>
+            </div>
+
+            <button type="submit" class="review-primary-button">
+                Confirm Choices & Continue
+            </button>
+
+            </form>
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+    // prevent repeated submissions while reflection analysis is running
+    document.querySelectorAll(".review-processing-form").forEach(form => {
+
+        form.addEventListener("submit", () => {
+            const button = form.querySelector(".review-processing-button");
+
+            // disable the submitted button and show immediate processing feedback
+            if (button) {
+                button.disabled = true;
+                button.textContent = "Analysing…";
+            }
+        });
+
+    });
+</script>
+
+{% endblock %}

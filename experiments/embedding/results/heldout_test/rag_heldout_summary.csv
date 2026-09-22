@@ -1,0 +1,2 @@
+Model,Retriever,Held-out Version,Resource Count,Held-out Queries,Hit@1,Hit@3,Precision@3,MRR,Average Query Time (ms),Median Query Time (ms),Model Load Time (s)
+BAAI/bge-small-en-v1.5,FAISS IndexFlatIP with normalised embeddings,heldout_v1,350,15,1.0,1.0,0.6667,1.0,96.01,36.878,21.868

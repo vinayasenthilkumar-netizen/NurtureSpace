@@ -1,0 +1,2 @@
+Phase,Model,Frame Count,Videos,Raw Dominant Accuracy,Macro F1,Weighted F1,Sufficient Face Evidence Rate,Strict Majority Rate,Clear Result Rate,Accuracy Among Clear Results,Average Usable Face Crops,Average Frame Agreement,Average Processing Seconds,Median Processing Seconds,Processing Failures
+Held-out Test,enet_b0_8_va_mtl,5,60,0.5333,0.5037,0.479,1.0,0.8833,0.8833,0.5849,5.0,0.6967,0.8788,0.8684,0

@@ -1,0 +1,7 @@
+,Pred Low Mood,Pred Positive,Pred Warmth,Pred Frustration,Pred Worry,Pred Neutral
+True Low Mood,5,0,0,0,0,0
+True Positive,0,5,0,0,0,0
+True Warmth,1,1,2,0,0,1
+True Frustration,1,0,1,3,0,0
+True Worry,0,0,0,0,4,1
+True Neutral,0,0,0,0,0,5

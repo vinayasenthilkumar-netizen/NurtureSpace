@@ -1,0 +1,31 @@
+Scenario,Type,Text,Expected,Predicted,Correct,Top 3,Expected in Top 3,Top 1 Score
+1,Clear,I felt cheerful and hopeful after getting a little rest.,Positive,Positive,True,Positive | Warmth | Neutral,True,0.8047
+2,Clear,Today went better than I expected and I feel relieved.,Positive,Positive,True,Positive | Neutral | Warmth,True,0.7435
+3,Clear,I felt proud that I managed the morning routine.,Positive,Positive,True,Positive | Neutral | Warmth,True,0.8344
+4,Mixed,"I am tired, but I still feel optimistic about tomorrow.",Positive,Positive,True,Positive | Neutral | Warmth,True,0.7457
+5,Clear,I enjoyed a quiet moment and felt genuinely happy.,Positive,Positive,True,Positive | Warmth | Neutral,True,0.7529
+6,Clear,My partner listened to me and I felt cared for.,Warmth,Warmth,True,Warmth | Positive | Neutral,True,0.5673
+7,Clear,My sister checked in and I felt less alone.,Warmth,Positive,False,Positive | Neutral | Warmth,True,0.4601
+8,Clear,I felt close to my baby during feeding today.,Warmth,Warmth,True,Warmth | Positive | Neutral,True,0.3054
+9,Mixed,"I was stressed, but my family made me feel supported.",Warmth,Positive,False,Positive | Neutral | Warmth,True,0.4464
+10,Clear,A friend sat with me and I felt understood.,Warmth,Positive,False,Positive | Neutral | Warmth,True,0.4126
+11,Clear,I felt down and tearful for most of the day.,Low Mood,Low Mood,True,Low Mood | Warmth | Neutral,True,0.8098
+12,Mixed,"Even with help around me, I still felt very low.",Low Mood,Low Mood,True,Low Mood | Neutral | Frustration,True,0.5561
+13,Clear,Nothing felt enjoyable today and I felt empty.,Low Mood,Low Mood,True,Low Mood | Frustration | Neutral,True,0.6168
+14,Clear,I felt discouraged when the day became difficult.,Low Mood,Low Mood,True,Low Mood | Frustration | Worry,True,0.3762
+15,Clear,I have been feeling sad and withdrawn today.,Low Mood,Low Mood,True,Low Mood | Neutral | Frustration,True,0.8529
+16,Clear,I keep worrying that I will not manage tomorrow.,Worry,Worry,True,Worry | Low Mood | Neutral,True,0.488
+17,Clear,I felt nervous about whether the baby was feeding enough.,Worry,Worry,True,Worry | Low Mood | Neutral,True,0.7057
+18,Mixed,"I slept well, but I am anxious about returning to work.",Worry,Worry,True,Worry | Neutral | Low Mood,True,0.6057
+19,Clear,My mind kept going over everything that might go wrong.,Worry,Neutral,False,Neutral | Frustration | Positive,False,0.506
+20,Mixed,I feel uneasy and uncertain about the next few days.,Worry,Worry,True,Worry | Neutral | Low Mood,True,0.6366
+21,Clear,I felt frustrated when nothing went as planned.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,0.4463
+22,Clear,The constant interruptions made me irritated.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,0.7605
+23,Mixed,"I love my baby, but I felt angry with how difficult today was.",Frustration,Low Mood,False,Low Mood | Frustration | Neutral,True,0.4191
+24,Clear,I became annoyed because I could not get a moment to myself.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,0.6529
+25,Clear,I felt upset and impatient when the same problem happened again.,Frustration,Frustration,True,Frustration | Low Mood | Worry,True,0.5714
+26,Ambiguous,I am not sure how I feel today.,Neutral,Neutral,True,Neutral | Low Mood | Frustration,True,0.6818
+27,Ambiguous,"Today felt different, but I cannot explain why.",Neutral,Neutral,True,Neutral | Low Mood | Positive,True,0.7465
+28,Mixed,"Some moments felt good and others difficult, so my feelings are unclear.",Neutral,Neutral,True,Neutral | Positive | Warmth,True,0.6921
+29,Ambiguous,I feel a mixture of things and cannot name one emotion.,Neutral,Neutral,True,Neutral | Positive | Low Mood,True,0.5843
+30,Ambiguous,"I noticed a change in how I felt, but I do not know what it means.",Neutral,Neutral,True,Neutral | Positive | Low Mood,True,0.8069

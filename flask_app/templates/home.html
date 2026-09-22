@@ -1,0 +1,482 @@
+{% extends "base.html" %}
+
+{% block title %}Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- public landing page shown when the user is not signed in -->
+{% if not is_logged_in %}
+
+<section class="landing-screen">
+
+    <!-- main introduction and account actions -->
+    <div class="landing-copy">
+        <span class="landing-kicker">Private postpartum wellbeing</span>
+
+        <h1>Nurture Space</h1>
+
+        <p class="landing-tagline">
+            A calm space to check in, reflect, and feel supported.
+        </p>
+
+        <p class="landing-description">
+            Take a moment for yourself with simple wellbeing questionnaires,
+            personal check-ins and supportive resources.
+        </p>
+
+        <!-- account entry points for existing and new users -->
+        <div class="landing-actions">
+            <a href="{{ url_for('auth.login') }}"
+               class="button landing-primary">
+                Log In
+            </a>
+
+            <a href="{{ url_for('auth.register') }}"
+               class="button landing-secondary">
+                Sign Up
+            </a>
+        </div>
+
+        <!-- keeps the non-diagnostic boundary visible before sign-in -->
+        <p class="landing-boundary">
+            Nurture Space is a non-diagnostic wellbeing tool and does not replace professional healthcare.
+        </p>
+    </div>
+
+
+    <!-- simple visual summary of the main application features -->
+    <div class="landing-visual">
+        <div class="landing-visual-inner">
+
+            <span class="landing-flower">🌸</span>
+            <h2>A little space for you.</h2>
+
+            <div class="landing-feature">
+                <span>01</span>
+
+                <div>
+                    <strong>Questionnaire</strong>
+                    <p>Notice how you have been feeling.</p>
+                </div>
+            </div>
+
+            <div class="landing-feature">
+                <span>02</span>
+
+                <div>
+                    <strong>Personal Check-In</strong>
+                    <p>Write, speak or record what is on your mind.</p>
+                </div>
+            </div>
+
+            <div class="landing-feature">
+                <span>03</span>
+
+                <div>
+                    <strong>Prepare</strong>
+                    <p>Keep useful notes for reflection or appointments.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+<!-- authenticated Today page -->
+{% else %}
+
+<div class="app-shell">
+
+    <!-- shared signed-in navigation -->
+    <aside class="sidebar">
+        <div>
+
+            <!-- application branding -->
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">👩‍🍼</div>
+
+                <div>
+                    <strong>Nurture Space</strong>
+                    <small>Postpartum wellbeing</small>
+                </div>
+            </div>
+
+
+            <!-- main application pages -->
+            <nav class="sidebar-nav">
+
+                <!-- Today is active on the home page -->
+                <a href="{{ url_for('home.home') }}"
+                   class="sidebar-link active">
+                    <span>🌸</span> Today
+                </a>
+
+                <a href="{{ url_for('questions.core_questions') }}"
+                   class="sidebar-link">
+                    <span>✔️</span> Questionnaire
+                </a>
+
+                <a href="{{ url_for('reflection.reflection_page', standalone=1) }}"
+                   class="sidebar-link">
+                    <span>📕</span> Personal Check-In
+                </a>
+
+                <a href="{{ url_for('assistant.assistant_page') }}"
+                   class="sidebar-link">
+                    <span>🤖</span> Assistant
+                </a>
+
+                <a href="{{ url_for('resources.saved_resources') }}"
+                   class="sidebar-link">
+                    <span>❤️</span> Saved Resources
+                </a>
+
+                <a href="{{ url_for('history.history_page') }}"
+                   class="sidebar-link">
+                    <span>🗓️</span> History & Patterns
+                </a>
+
+                <a href="{{ url_for('settings.settings_page') }}"
+                   class="sidebar-link">
+                    <span>⚙️</span> Settings
+                </a>
+
+            </nav>
+        </div>
+
+
+        <!-- current signed-in user and logout option -->
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-profile">
+
+                <!-- profile avatar uses the first letter of the welcome name -->
+                <div class="profile-avatar">
+                    {{ welcome_name[0] | upper }}
+                </div>
+
+                <div>
+                    <strong>{{ welcome_name }}</strong>
+                    <small>Signed in</small>
+                </div>
+
+            </div>
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="sidebar-link logout-link">
+                <span>➜]</span> Log out
+            </a>
+
+        </div>
+    </aside>
+
+
+    <!-- main Today dashboard -->
+    <main class="today-simple">
+
+        <!-- personalised date and welcome heading -->
+        <header class="today-simple-header">
+            <p>{{ day_name }}, {{ date_text }}</p>
+            <h1>Welcome back, {{ welcome_name }}</h1>
+            <span>Your space for today.</span>
+        </header>
+
+
+        <!-- on non-Mondays the optional questionnaire may already have been skipped -->
+        {% if questionnaire_skipped_today and not is_monday %}
+
+            <section class="questionnaire-skipped">
+                <span class="questionnaire-skipped-icon">✔️</span>
+
+                <div>
+                    <strong>Questionnaire skipped for today</strong>
+
+                    <!-- reflection remains available even when the questionnaire is skipped -->
+                    <p>
+                        You can still start a Personal Check-In whenever you want.
+                    </p>
+                </div>
+            </section>
+
+
+        <!-- otherwise show the current questionnaire action -->
+        {% else %}
+
+            <section class="questionnaire-panel">
+
+                <div>
+                    <span class="today-section-label">
+                        {{ checkin_label }}
+                    </span>
+
+                    <h2>{{ checkin_title }}</h2>
+                    <p>{{ checkin_message }}</p>
+                </div>
+
+
+                <div class="questionnaire-actions">
+
+                    <!-- button text can change depending on the current questionnaire state -->
+                    <a href="{{ url_for('questions.core_questions') }}"
+                       class="button privacy-pink-button">
+                        {{ primary_button_text }}
+                    </a>
+
+
+                    <!-- skipping is available only when the backend allows it -->
+                    {% if allow_daily_skip %}
+
+                        <form method="POST"
+                              action="{{ url_for('questions.skip_today') }}">
+
+                            <button type="submit"
+                                    class="today-skip-button">
+                                Skip Today
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+            </section>
+
+        {% endif %}
+
+
+        <!-- Personal Check-In is always available separately from the questionnaire -->
+        <section class="personal-checkin-row">
+
+            <div class="personal-checkin-icon">📕</div>
+
+            <div class="personal-checkin-copy">
+                <span>Personal Check-In</span>
+
+                <strong>
+                    Want to express how today has been for you?
+                </strong>
+
+                <p>
+                    Write, speak or record in whichever way feels easiest.
+                </p>
+            </div>
+
+            <!-- standalone mode opens reflection directly -->
+            <a href="{{ url_for('reflection.reflection_page', standalone=1) }}"
+               class="personal-checkin-link">
+                Start →
+            </a>
+
+        </section>
+
+
+        <!-- small curated resource selection shown on the Today page -->
+        <section class="today-resources-simple">
+
+            <div class="today-simple-section-heading">
+
+                <div>
+                    <span class="today-section-label">For you today</span>
+                    <h2>Supportive resources</h2>
+
+                    <p>
+                        A small selection you can explore when you feel ready.
+                    </p>
+                </div>
+
+                <!-- opens the user's bookmarked-resource collection -->
+                <a href="{{ url_for('resources.saved_resources') }}">
+                    View saved →
+                </a>
+
+            </div>
+
+
+            <!-- resource cards are shown only when the backend supplied daily resources -->
+            {% if daily_resources %}
+
+                <div class="today-resource-cards">
+
+                    {% for resource in daily_resources %}
+
+                        <article class="today-resource-card-simple">
+
+                            <!-- optional resource type and duration information -->
+                            <div class="resource-simple-meta">
+
+                                {% if resource.resource_type %}
+                                    <span>
+                                        {{ resource.resource_type | title }}
+                                    </span>
+                                {% endif %}
+
+                                {% if resource.duration_label %}
+                                    <span>
+                                        {{ resource.duration_label }}
+                                    </span>
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- resource title is always displayed -->
+                            <h3>{{ resource.title }}</h3>
+
+
+                            <!-- source and description are optional -->
+                            {% if resource.source %}
+                                <p class="resource-simple-source">
+                                    {{ resource.source }}
+                                </p>
+                            {% endif %}
+
+                            {% if resource.content %}
+                                <p class="resource-simple-description">
+                                    {{ resource.content }}
+                                </p>
+                            {% endif %}
+
+
+                            <!-- actions for opening and saving the resource -->
+                            <div class="resource-simple-actions">
+
+                                <!-- external link appears only when the resource has a URL -->
+                                {% if resource.url %}
+
+                                    <a href="{{ resource.url }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="resource-open-link">
+                                        Open resource →
+                                    </a>
+
+                                {% endif %}
+
+
+                                <!-- bookmarking requires a stored resource id -->
+                                {% if resource.id %}
+
+                                    <!-- already-saved resources can be removed -->
+                                    {% if resource.id in bookmarked_resource_ids %}
+
+                                        <form method="POST"
+                                              action="{{ url_for('resources.remove_resource') }}">
+
+                                            <!-- identifies the resource to remove -->
+                                            <input type="hidden"
+                                                   name="resource_id"
+                                                   value="{{ resource.id }}">
+
+                                            <!-- returns the user to Today after the action -->
+                                            <input type="hidden"
+                                                   name="return_to"
+                                                   value="today">
+
+                                            <button type="submit"
+                                                    class="resource-bookmark-button saved"
+                                                    aria-label="Remove {{ resource.title }} from saved resources">
+                                                ♥ Saved
+                                            </button>
+
+                                        </form>
+
+
+                                    <!-- unsaved resources can be bookmarked when privacy settings allow it -->
+                                    {% elif bookmark_saving_allowed %}
+
+                                        <form method="POST"
+                                              action="{{ url_for('resources.save_resource') }}">
+
+                                            <input type="hidden"
+                                                   name="resource_id"
+                                                   value="{{ resource.id }}">
+
+                                            <input type="hidden"
+                                                   name="return_to"
+                                                   value="today">
+
+                                            <button type="submit"
+                                                    class="resource-bookmark-button"
+                                                    aria-label="Save {{ resource.title }}">
+                                                ♡ Save
+                                            </button>
+
+                                        </form>
+
+
+                                    <!-- direct the user to Settings when bookmark saving is disabled -->
+                                    {% else %}
+
+                                        <a href="{{ url_for('settings.settings_page') }}"
+                                           class="resource-enable-link">
+                                            Enable saving
+                                        </a>
+
+                                    {% endif %}
+
+                                {% endif %}
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+            <!-- clear fallback when no curated resources are available -->
+            {% else %}
+
+                <p class="today-no-resources">
+                    No resources are available today.
+                </p>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- fixed support information remains visible on the Today page -->
+        <section class="support-simple-strip">
+
+            <div>
+                <strong>Need support?</strong>
+
+                <span>
+                    Nurture Space does not replace professional or emergency care.
+                </span>
+            </div>
+
+
+            <!-- support numbers are presented separately from normal app features -->
+            <div class="support-simple-links">
+
+                <span>
+                    <small>Emotional support</small>
+                    SOS 1771
+                </span>
+
+                <span>
+                    <small>Crisis support</small>
+                    SOS 1767
+                </span>
+
+                <span class="support-emergency">
+                    <small>Emergency</small>
+                    995
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

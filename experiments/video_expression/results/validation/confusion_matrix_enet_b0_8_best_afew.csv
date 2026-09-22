@@ -1,0 +1,11 @@
+,Pred neutral,Pred happy,Pred sad,Pred angry,Pred fearful,Pred disgust,Pred surprised,Pred other,Pred no_face,Pred error
+True neutral,3,12,10,0,0,8,3,0,0,0
+True happy,0,16,3,0,0,4,1,0,0,0
+True sad,4,0,11,0,8,1,0,0,0,0
+True angry,0,0,0,11,5,7,1,0,0,0
+True fearful,3,0,5,1,10,3,2,0,0,0
+True disgust,0,0,0,0,0,24,0,0,0,0
+True surprised,5,3,0,0,0,8,8,0,0,0
+True other,0,0,0,0,0,0,0,0,0,0
+True no_face,0,0,0,0,0,0,0,0,0,0
+True error,0,0,0,0,0,0,0,0,0,0

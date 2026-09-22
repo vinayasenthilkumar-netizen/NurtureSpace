@@ -1,0 +1,17 @@
+Row,Text,True Label,Predicted Label,Score,Correct
+1,i really feel like writing about or supporting their product in the payperpost marketplace,love,joy,0.7203,False
+4,i want to commit to continuing to post here once a week or so but i want those posts to only be about books i feel completely passionate about or have a diversionary story to connect to them that might make you laugh,joy,love,0.9067,False
+17,i feel they are amazing unique people and i love them so very much,surprise,joy,0.9039,False
+21,i feel so amazing and i m so by a href http yourweightlossmethods,joy,surprise,0.9094,False
+23,i spent a lot of time feeling overwhelmed with the amount of information he provided while reading the textbook,fear,surprise,0.6179,False
+29,i know she feels helpless but that kiss that cuddle the hug every morning and the love you every night,sadness,fear,0.5279,False
+32,i didn t consider that she maybe had difficulty in feeling accepted into a certain group of people and she was afraid of being rejected,love,joy,0.8367,False
+55,i cant stop the joyful tears from flowing as i feel this sweet baby moving,love,joy,0.8437,False
+96,i touched them and boy did they feel weird like jelly,fear,surprise,0.5722,False
+98,i feel like the little dorky nerdy kid sitting in his backyard all by himself listening and watching through fence to the little popular kid having his birthday party with all his cool friends that youve always wished were yours,joy,surprise,0.7283,False
+106,i feel not having a generous spirit or a forgiving nature closes me off from accepting gifts from the universe,joy,love,0.8631,False
+112,i feel at this point i have to give some credit to my beloved former teacher ajahn brahmavamso as well as all other little and big gurus and lovers i had in my life,love,joy,0.6101,False
+118,im feeling generous ill show you when its done,love,joy,0.6184,False
+125,i drew this because i feel hated,sadness,anger,0.9627,False
+173,i as representative of everything thats wrong with corporate america and feel that sending him to washington is a ludicrous idea,surprise,sadness,0.9955,False
+187,i just feel too overwhelmed i can t see the forest for the trees as the saying goes,fear,surprise,0.5228,False

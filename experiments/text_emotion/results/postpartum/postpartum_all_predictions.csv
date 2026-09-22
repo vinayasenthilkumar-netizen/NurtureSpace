@@ -1,0 +1,151 @@
+Scenario,Type,Text,Expected,Predicted,Correct,Top 3,Expected in Top 3,Top 1 Score,Model
+1,Clear,I felt cheerful and hopeful after getting a little rest.,Positive,Positive,True,Positive | Neutral | Frustration,True,0.9913,DistilRoBERTa j-hartmann
+2,Clear,Today went better than I expected and I feel relieved.,Positive,Positive,True,Positive | Low Mood | Neutral,True,0.9908,DistilRoBERTa j-hartmann
+3,Clear,I felt proud that I managed the morning routine.,Positive,Positive,True,Positive | Neutral | Frustration,True,0.9606,DistilRoBERTa j-hartmann
+4,Mixed,"I am tired, but I still feel optimistic about tomorrow.",Positive,Positive,True,Positive | Neutral | Low Mood,True,0.9889,DistilRoBERTa j-hartmann
+5,Clear,I enjoyed a quiet moment and felt genuinely happy.,Positive,Positive,True,Positive | Low Mood | Frustration,True,0.9943,DistilRoBERTa j-hartmann
+6,Clear,My partner listened to me and I felt cared for.,Warmth,Positive,False,Positive | Frustration | Neutral,False,0.8808,DistilRoBERTa j-hartmann
+7,Clear,My sister checked in and I felt less alone.,Warmth,Low Mood,False,Low Mood | Worry | Neutral,False,0.9844,DistilRoBERTa j-hartmann
+8,Clear,I felt close to my baby during feeding today.,Warmth,Positive,False,Positive | Frustration | Low Mood,False,0.7861,DistilRoBERTa j-hartmann
+9,Mixed,"I was stressed, but my family made me feel supported.",Warmth,Positive,False,Positive | Neutral | Low Mood,False,0.9845,DistilRoBERTa j-hartmann
+10,Clear,A friend sat with me and I felt understood.,Warmth,Positive,False,Positive | Frustration | Neutral,False,0.9612,DistilRoBERTa j-hartmann
+11,Clear,I felt down and tearful for most of the day.,Low Mood,Low Mood,True,Low Mood | Neutral | Frustration,True,0.9812,DistilRoBERTa j-hartmann
+12,Mixed,"Even with help around me, I still felt very low.",Low Mood,Low Mood,True,Low Mood | Worry | Frustration,True,0.7666,DistilRoBERTa j-hartmann
+13,Clear,Nothing felt enjoyable today and I felt empty.,Low Mood,Low Mood,True,Low Mood | Positive | Neutral,True,0.9567,DistilRoBERTa j-hartmann
+14,Clear,I felt discouraged when the day became difficult.,Low Mood,Low Mood,True,Low Mood | Worry | Neutral,True,0.956,DistilRoBERTa j-hartmann
+15,Clear,I have been feeling sad and withdrawn today.,Low Mood,Low Mood,True,Low Mood | Neutral | Frustration,True,0.9899,DistilRoBERTa j-hartmann
+16,Clear,I keep worrying that I will not manage tomorrow.,Worry,Worry,True,Worry | Low Mood | Neutral,True,0.9001,DistilRoBERTa j-hartmann
+17,Clear,I felt nervous about whether the baby was feeding enough.,Worry,Worry,True,Worry | Neutral | Frustration,True,0.9935,DistilRoBERTa j-hartmann
+18,Mixed,"I slept well, but I am anxious about returning to work.",Worry,Worry,True,Worry | Low Mood | Positive,True,0.9813,DistilRoBERTa j-hartmann
+19,Clear,My mind kept going over everything that might go wrong.,Worry,Neutral,False,Neutral | Frustration | Worry,True,0.5517,DistilRoBERTa j-hartmann
+20,Mixed,I feel uneasy and uncertain about the next few days.,Worry,Worry,True,Worry | Neutral | Frustration,True,0.992,DistilRoBERTa j-hartmann
+21,Clear,I felt frustrated when nothing went as planned.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,0.9901,DistilRoBERTa j-hartmann
+22,Clear,The constant interruptions made me irritated.,Frustration,Frustration,True,Frustration | Neutral | Low Mood,True,0.9701,DistilRoBERTa j-hartmann
+23,Mixed,"I love my baby, but I felt angry with how difficult today was.",Frustration,Frustration,True,Frustration | Worry | Low Mood,True,0.9898,DistilRoBERTa j-hartmann
+24,Clear,I became annoyed because I could not get a moment to myself.,Frustration,Frustration,True,Frustration | Neutral | Low Mood,True,0.9321,DistilRoBERTa j-hartmann
+25,Clear,I felt upset and impatient when the same problem happened again.,Frustration,Frustration,True,Frustration | Worry | Neutral,True,0.989,DistilRoBERTa j-hartmann
+26,Ambiguous,I am not sure how I feel today.,Neutral,Neutral,True,Neutral | Low Mood | Worry,True,0.4575,DistilRoBERTa j-hartmann
+27,Ambiguous,"Today felt different, but I cannot explain why.",Neutral,Neutral,True,Neutral | Frustration | Low Mood,True,0.7317,DistilRoBERTa j-hartmann
+28,Mixed,"Some moments felt good and others difficult, so my feelings are unclear.",Neutral,Low Mood,False,Low Mood | Positive | Neutral,True,0.4484,DistilRoBERTa j-hartmann
+29,Ambiguous,I feel a mixture of things and cannot name one emotion.,Neutral,Frustration,False,Frustration | Neutral | Worry,True,0.6718,DistilRoBERTa j-hartmann
+30,Ambiguous,"I noticed a change in how I felt, but I do not know what it means.",Neutral,Frustration,False,Frustration | Neutral | Worry,True,0.5842,DistilRoBERTa j-hartmann
+1,Clear,I felt cheerful and hopeful after getting a little rest.,Positive,Positive,True,Positive | Warmth | Low Mood,True,0.9989,DistilBERT bhadresh
+2,Clear,Today went better than I expected and I feel relieved.,Positive,Positive,True,Positive | Low Mood | Warmth,True,0.9989,DistilBERT bhadresh
+3,Clear,I felt proud that I managed the morning routine.,Positive,Positive,True,Positive | Warmth | Low Mood,True,0.9988,DistilBERT bhadresh
+4,Mixed,"I am tired, but I still feel optimistic about tomorrow.",Positive,Positive,True,Positive | Warmth | Low Mood,True,0.9988,DistilBERT bhadresh
+5,Clear,I enjoyed a quiet moment and felt genuinely happy.,Positive,Positive,True,Positive | Warmth | Low Mood,True,0.999,DistilBERT bhadresh
+6,Clear,My partner listened to me and I felt cared for.,Warmth,Warmth,True,Warmth | Positive | Low Mood,True,0.9888,DistilBERT bhadresh
+7,Clear,My sister checked in and I felt less alone.,Warmth,Low Mood,False,Low Mood | Worry | Frustration,False,0.9983,DistilBERT bhadresh
+8,Clear,I felt close to my baby during feeding today.,Warmth,Warmth,True,Warmth | Worry | Positive,True,0.4393,DistilBERT bhadresh
+9,Mixed,"I was stressed, but my family made me feel supported.",Warmth,Positive,False,Positive | Warmth | Low Mood,True,0.5482,DistilBERT bhadresh
+10,Clear,A friend sat with me and I felt understood.,Warmth,Positive,False,Positive | Frustration | Low Mood,False,0.9977,DistilBERT bhadresh
+11,Clear,I felt down and tearful for most of the day.,Low Mood,Low Mood,True,Low Mood | Warmth | Positive,True,0.9931,DistilBERT bhadresh
+12,Mixed,"Even with help around me, I still felt very low.",Low Mood,Low Mood,True,Low Mood | Frustration | Worry,True,0.999,DistilBERT bhadresh
+13,Clear,Nothing felt enjoyable today and I felt empty.,Low Mood,Positive,False,Positive | Low Mood | Warmth,True,0.9986,DistilBERT bhadresh
+14,Clear,I felt discouraged when the day became difficult.,Low Mood,Low Mood,True,Low Mood | Frustration | Worry,True,0.9985,DistilBERT bhadresh
+15,Clear,I have been feeling sad and withdrawn today.,Low Mood,Low Mood,True,Low Mood | Warmth | Frustration,True,0.999,DistilBERT bhadresh
+16,Clear,I keep worrying that I will not manage tomorrow.,Worry,Worry,True,Worry | Low Mood | Frustration,True,0.9004,DistilBERT bhadresh
+17,Clear,I felt nervous about whether the baby was feeding enough.,Worry,Worry,True,Worry | Frustration | Neutral,True,0.9978,DistilBERT bhadresh
+18,Mixed,"I slept well, but I am anxious about returning to work.",Worry,Worry,True,Worry | Frustration | Positive,True,0.9921,DistilBERT bhadresh
+19,Clear,My mind kept going over everything that might go wrong.,Worry,Frustration,False,Frustration | Worry | Low Mood,True,0.8715,DistilBERT bhadresh
+20,Mixed,I feel uneasy and uncertain about the next few days.,Worry,Worry,True,Worry | Neutral | Frustration,True,0.9977,DistilBERT bhadresh
+21,Clear,I felt frustrated when nothing went as planned.,Frustration,Frustration,True,Frustration | Worry | Low Mood,True,0.9977,DistilBERT bhadresh
+22,Clear,The constant interruptions made me irritated.,Frustration,Frustration,True,Frustration | Worry | Low Mood,True,0.998,DistilBERT bhadresh
+23,Mixed,"I love my baby, but I felt angry with how difficult today was.",Frustration,Frustration,True,Frustration | Worry | Low Mood,True,0.998,DistilBERT bhadresh
+24,Clear,I became annoyed because I could not get a moment to myself.,Frustration,Frustration,True,Frustration | Worry | Low Mood,True,0.9979,DistilBERT bhadresh
+25,Clear,I felt upset and impatient when the same problem happened again.,Frustration,Frustration,True,Frustration | Worry | Low Mood,True,0.9929,DistilBERT bhadresh
+26,Ambiguous,I am not sure how I feel today.,Neutral,Positive,False,Positive | Worry | Low Mood,False,0.997,DistilBERT bhadresh
+27,Ambiguous,"Today felt different, but I cannot explain why.",Neutral,Positive,False,Positive | Low Mood | Worry,False,0.9206,DistilBERT bhadresh
+28,Mixed,"Some moments felt good and others difficult, so my feelings are unclear.",Neutral,Positive,False,Positive | Worry | Low Mood,False,0.5029,DistilBERT bhadresh
+29,Ambiguous,I feel a mixture of things and cannot name one emotion.,Neutral,Low Mood,False,Low Mood | Worry | Positive,False,0.5751,DistilBERT bhadresh
+30,Ambiguous,"I noticed a change in how I felt, but I do not know what it means.",Neutral,Positive,False,Positive | Low Mood | Frustration,False,0.8487,DistilBERT bhadresh
+1,Clear,I felt cheerful and hopeful after getting a little rest.,Positive,Positive,True,Positive | Warmth | Neutral,True,1.2008,RoBERTa GoEmotions SamLowe
+2,Clear,Today went better than I expected and I feel relieved.,Positive,Positive,True,Positive | Neutral | Warmth,True,1.2505,RoBERTa GoEmotions SamLowe
+3,Clear,I felt proud that I managed the morning routine.,Positive,Positive,True,Positive | Neutral | Low Mood,True,1.0647,RoBERTa GoEmotions SamLowe
+4,Mixed,"I am tired, but I still feel optimistic about tomorrow.",Positive,Positive,True,Positive | Warmth | Low Mood,True,0.9929,RoBERTa GoEmotions SamLowe
+5,Clear,I enjoyed a quiet moment and felt genuinely happy.,Positive,Positive,True,Positive | Neutral | Warmth,True,1.0174,RoBERTa GoEmotions SamLowe
+6,Clear,My partner listened to me and I felt cared for.,Warmth,Warmth,True,Warmth | Positive | Neutral,True,0.9572,RoBERTa GoEmotions SamLowe
+7,Clear,My sister checked in and I felt less alone.,Warmth,Low Mood,False,Low Mood | Positive | Neutral,False,0.345,RoBERTa GoEmotions SamLowe
+8,Clear,I felt close to my baby during feeding today.,Warmth,Neutral,False,Neutral | Warmth | Positive,True,0.3969,RoBERTa GoEmotions SamLowe
+9,Mixed,"I was stressed, but my family made me feel supported.",Warmth,Warmth,True,Warmth | Low Mood | Positive,True,0.2745,RoBERTa GoEmotions SamLowe
+10,Clear,A friend sat with me and I felt understood.,Warmth,Positive,False,Positive | Neutral | Warmth,True,0.7134,RoBERTa GoEmotions SamLowe
+11,Clear,I felt down and tearful for most of the day.,Low Mood,Low Mood,True,Low Mood | Neutral | Positive,True,0.9604,RoBERTa GoEmotions SamLowe
+12,Mixed,"Even with help around me, I still felt very low.",Low Mood,Low Mood,True,Low Mood | Neutral | Positive,True,0.9238,RoBERTa GoEmotions SamLowe
+13,Clear,Nothing felt enjoyable today and I felt empty.,Low Mood,Low Mood,True,Low Mood | Positive | Frustration,True,0.6311,RoBERTa GoEmotions SamLowe
+14,Clear,I felt discouraged when the day became difficult.,Low Mood,Low Mood,True,Low Mood | Neutral | Frustration,True,0.9224,RoBERTa GoEmotions SamLowe
+15,Clear,I have been feeling sad and withdrawn today.,Low Mood,Low Mood,True,Low Mood | Neutral | Positive,True,1.0291,RoBERTa GoEmotions SamLowe
+16,Clear,I keep worrying that I will not manage tomorrow.,Worry,Worry,True,Worry | Low Mood | Neutral,True,0.6754,RoBERTa GoEmotions SamLowe
+17,Clear,I felt nervous about whether the baby was feeding enough.,Worry,Worry,True,Worry | Neutral | Warmth,True,0.8043,RoBERTa GoEmotions SamLowe
+18,Mixed,"I slept well, but I am anxious about returning to work.",Worry,Worry,True,Worry | Positive | Warmth,True,0.5491,RoBERTa GoEmotions SamLowe
+19,Clear,My mind kept going over everything that might go wrong.,Worry,Neutral,False,Neutral | Worry | Low Mood,True,0.6684,RoBERTa GoEmotions SamLowe
+20,Mixed,I feel uneasy and uncertain about the next few days.,Worry,Worry,True,Worry | Neutral | Low Mood,True,0.6774,RoBERTa GoEmotions SamLowe
+21,Clear,I felt frustrated when nothing went as planned.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,0.7842,RoBERTa GoEmotions SamLowe
+22,Clear,The constant interruptions made me irritated.,Frustration,Frustration,True,Frustration | Neutral | Low Mood,True,0.9279,RoBERTa GoEmotions SamLowe
+23,Mixed,"I love my baby, but I felt angry with how difficult today was.",Frustration,Warmth,False,Warmth | Frustration | Low Mood,True,0.7755,RoBERTa GoEmotions SamLowe
+24,Clear,I became annoyed because I could not get a moment to myself.,Frustration,Frustration,True,Frustration | Neutral | Low Mood,True,0.9797,RoBERTa GoEmotions SamLowe
+25,Clear,I felt upset and impatient when the same problem happened again.,Frustration,Low Mood,False,Low Mood | Frustration | Neutral,True,0.7174,RoBERTa GoEmotions SamLowe
+26,Ambiguous,I am not sure how I feel today.,Neutral,Neutral,True,Neutral | Positive | Frustration,True,1.055,RoBERTa GoEmotions SamLowe
+27,Ambiguous,"Today felt different, but I cannot explain why.",Neutral,Neutral,True,Neutral | Frustration | Low Mood,True,1.1943,RoBERTa GoEmotions SamLowe
+28,Mixed,"Some moments felt good and others difficult, so my feelings are unclear.",Neutral,Neutral,True,Neutral | Positive | Low Mood,True,0.8746,RoBERTa GoEmotions SamLowe
+29,Ambiguous,I feel a mixture of things and cannot name one emotion.,Neutral,Neutral,True,Neutral | Positive | Frustration,True,0.8253,RoBERTa GoEmotions SamLowe
+30,Ambiguous,"I noticed a change in how I felt, but I do not know what it means.",Neutral,Neutral,True,Neutral | Positive | Low Mood,True,1.3127,RoBERTa GoEmotions SamLowe
+1,Clear,I felt cheerful and hopeful after getting a little rest.,Positive,Positive,True,Positive | Warmth | Neutral,True,1.8936,Twitter RoBERTa CardiffNLP
+2,Clear,Today went better than I expected and I feel relieved.,Positive,Positive,True,Positive | Warmth | Neutral,True,1.8306,Twitter RoBERTa CardiffNLP
+3,Clear,I felt proud that I managed the morning routine.,Positive,Positive,True,Positive | Warmth | Neutral,True,1.795,Twitter RoBERTa CardiffNLP
+4,Mixed,"I am tired, but I still feel optimistic about tomorrow.",Positive,Positive,True,Positive | Warmth | Neutral,True,1.6609,Twitter RoBERTa CardiffNLP
+5,Clear,I enjoyed a quiet moment and felt genuinely happy.,Positive,Positive,True,Positive | Warmth | Neutral,True,1.8583,Twitter RoBERTa CardiffNLP
+6,Clear,My partner listened to me and I felt cared for.,Warmth,Positive,False,Positive | Warmth | Low Mood,True,1.8406,Twitter RoBERTa CardiffNLP
+7,Clear,My sister checked in and I felt less alone.,Warmth,Low Mood,False,Low Mood | Worry | Positive,False,1.38,Twitter RoBERTa CardiffNLP
+8,Clear,I felt close to my baby during feeding today.,Warmth,Positive,False,Positive | Low Mood | Neutral,False,0.9913,Twitter RoBERTa CardiffNLP
+9,Mixed,"I was stressed, but my family made me feel supported.",Warmth,Positive,False,Positive | Low Mood | Warmth,True,1.7504,Twitter RoBERTa CardiffNLP
+10,Clear,A friend sat with me and I felt understood.,Warmth,Positive,False,Positive | Warmth | Neutral,True,1.8187,Twitter RoBERTa CardiffNLP
+11,Clear,I felt down and tearful for most of the day.,Low Mood,Low Mood,True,Low Mood | Worry | Frustration,True,1.5538,Twitter RoBERTa CardiffNLP
+12,Mixed,"Even with help around me, I still felt very low.",Low Mood,Low Mood,True,Low Mood | Positive | Worry,True,1.4871,Twitter RoBERTa CardiffNLP
+13,Clear,Nothing felt enjoyable today and I felt empty.,Low Mood,Low Mood,True,Low Mood | Frustration | Worry,True,1.6138,Twitter RoBERTa CardiffNLP
+14,Clear,I felt discouraged when the day became difficult.,Low Mood,Low Mood,True,Low Mood | Frustration | Worry,True,1.6705,Twitter RoBERTa CardiffNLP
+15,Clear,I have been feeling sad and withdrawn today.,Low Mood,Low Mood,True,Low Mood | Frustration | Worry,True,1.6465,Twitter RoBERTa CardiffNLP
+16,Clear,I keep worrying that I will not manage tomorrow.,Worry,Low Mood,False,Low Mood | Worry | Frustration,True,1.1457,Twitter RoBERTa CardiffNLP
+17,Clear,I felt nervous about whether the baby was feeding enough.,Worry,Worry,True,Worry | Low Mood | Neutral,True,0.9716,Twitter RoBERTa CardiffNLP
+18,Mixed,"I slept well, but I am anxious about returning to work.",Worry,Worry,True,Worry | Low Mood | Neutral,True,0.9638,Twitter RoBERTa CardiffNLP
+19,Clear,My mind kept going over everything that might go wrong.,Worry,Low Mood,False,Low Mood | Worry | Positive,True,1.0555,Twitter RoBERTa CardiffNLP
+20,Mixed,I feel uneasy and uncertain about the next few days.,Worry,Low Mood,False,Low Mood | Worry | Frustration,True,1.2037,Twitter RoBERTa CardiffNLP
+21,Clear,I felt frustrated when nothing went as planned.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,1.7836,Twitter RoBERTa CardiffNLP
+22,Clear,The constant interruptions made me irritated.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,1.9231,Twitter RoBERTa CardiffNLP
+23,Mixed,"I love my baby, but I felt angry with how difficult today was.",Frustration,Frustration,True,Frustration | Low Mood | Positive,True,1.5152,Twitter RoBERTa CardiffNLP
+24,Clear,I became annoyed because I could not get a moment to myself.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,1.8791,Twitter RoBERTa CardiffNLP
+25,Clear,I felt upset and impatient when the same problem happened again.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,1.4943,Twitter RoBERTa CardiffNLP
+26,Ambiguous,I am not sure how I feel today.,Neutral,Low Mood,False,Low Mood | Worry | Frustration,False,1.5647,Twitter RoBERTa CardiffNLP
+27,Ambiguous,"Today felt different, but I cannot explain why.",Neutral,Low Mood,False,Low Mood | Neutral | Worry,True,1.0076,Twitter RoBERTa CardiffNLP
+28,Mixed,"Some moments felt good and others difficult, so my feelings are unclear.",Neutral,Low Mood,False,Low Mood | Positive | Warmth,False,1.1517,Twitter RoBERTa CardiffNLP
+29,Ambiguous,I feel a mixture of things and cannot name one emotion.,Neutral,Low Mood,False,Low Mood | Positive | Neutral,True,1.0892,Twitter RoBERTa CardiffNLP
+30,Ambiguous,"I noticed a change in how I felt, but I do not know what it means.",Neutral,Low Mood,False,Low Mood | Neutral | Worry,True,0.7969,Twitter RoBERTa CardiffNLP
+1,Clear,I felt cheerful and hopeful after getting a little rest.,Positive,Positive,True,Positive | Warmth | Neutral,True,0.8047,DistilBERT GoEmotions joeddav
+2,Clear,Today went better than I expected and I feel relieved.,Positive,Positive,True,Positive | Neutral | Warmth,True,0.7435,DistilBERT GoEmotions joeddav
+3,Clear,I felt proud that I managed the morning routine.,Positive,Positive,True,Positive | Neutral | Warmth,True,0.8344,DistilBERT GoEmotions joeddav
+4,Mixed,"I am tired, but I still feel optimistic about tomorrow.",Positive,Positive,True,Positive | Neutral | Warmth,True,0.7457,DistilBERT GoEmotions joeddav
+5,Clear,I enjoyed a quiet moment and felt genuinely happy.,Positive,Positive,True,Positive | Warmth | Neutral,True,0.7529,DistilBERT GoEmotions joeddav
+6,Clear,My partner listened to me and I felt cared for.,Warmth,Warmth,True,Warmth | Positive | Neutral,True,0.5673,DistilBERT GoEmotions joeddav
+7,Clear,My sister checked in and I felt less alone.,Warmth,Positive,False,Positive | Neutral | Warmth,True,0.4601,DistilBERT GoEmotions joeddav
+8,Clear,I felt close to my baby during feeding today.,Warmth,Warmth,True,Warmth | Positive | Neutral,True,0.3054,DistilBERT GoEmotions joeddav
+9,Mixed,"I was stressed, but my family made me feel supported.",Warmth,Positive,False,Positive | Neutral | Warmth,True,0.4464,DistilBERT GoEmotions joeddav
+10,Clear,A friend sat with me and I felt understood.,Warmth,Positive,False,Positive | Neutral | Warmth,True,0.4126,DistilBERT GoEmotions joeddav
+11,Clear,I felt down and tearful for most of the day.,Low Mood,Low Mood,True,Low Mood | Warmth | Neutral,True,0.8098,DistilBERT GoEmotions joeddav
+12,Mixed,"Even with help around me, I still felt very low.",Low Mood,Low Mood,True,Low Mood | Neutral | Frustration,True,0.5561,DistilBERT GoEmotions joeddav
+13,Clear,Nothing felt enjoyable today and I felt empty.,Low Mood,Low Mood,True,Low Mood | Frustration | Neutral,True,0.6168,DistilBERT GoEmotions joeddav
+14,Clear,I felt discouraged when the day became difficult.,Low Mood,Low Mood,True,Low Mood | Frustration | Worry,True,0.3762,DistilBERT GoEmotions joeddav
+15,Clear,I have been feeling sad and withdrawn today.,Low Mood,Low Mood,True,Low Mood | Neutral | Frustration,True,0.8529,DistilBERT GoEmotions joeddav
+16,Clear,I keep worrying that I will not manage tomorrow.,Worry,Worry,True,Worry | Low Mood | Neutral,True,0.488,DistilBERT GoEmotions joeddav
+17,Clear,I felt nervous about whether the baby was feeding enough.,Worry,Worry,True,Worry | Low Mood | Neutral,True,0.7057,DistilBERT GoEmotions joeddav
+18,Mixed,"I slept well, but I am anxious about returning to work.",Worry,Worry,True,Worry | Neutral | Low Mood,True,0.6057,DistilBERT GoEmotions joeddav
+19,Clear,My mind kept going over everything that might go wrong.,Worry,Neutral,False,Neutral | Frustration | Positive,False,0.506,DistilBERT GoEmotions joeddav
+20,Mixed,I feel uneasy and uncertain about the next few days.,Worry,Worry,True,Worry | Neutral | Low Mood,True,0.6366,DistilBERT GoEmotions joeddav
+21,Clear,I felt frustrated when nothing went as planned.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,0.4463,DistilBERT GoEmotions joeddav
+22,Clear,The constant interruptions made me irritated.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,0.7605,DistilBERT GoEmotions joeddav
+23,Mixed,"I love my baby, but I felt angry with how difficult today was.",Frustration,Low Mood,False,Low Mood | Frustration | Neutral,True,0.4191,DistilBERT GoEmotions joeddav
+24,Clear,I became annoyed because I could not get a moment to myself.,Frustration,Frustration,True,Frustration | Low Mood | Neutral,True,0.6529,DistilBERT GoEmotions joeddav
+25,Clear,I felt upset and impatient when the same problem happened again.,Frustration,Frustration,True,Frustration | Low Mood | Worry,True,0.5714,DistilBERT GoEmotions joeddav
+26,Ambiguous,I am not sure how I feel today.,Neutral,Neutral,True,Neutral | Low Mood | Frustration,True,0.6818,DistilBERT GoEmotions joeddav
+27,Ambiguous,"Today felt different, but I cannot explain why.",Neutral,Neutral,True,Neutral | Low Mood | Positive,True,0.7465,DistilBERT GoEmotions joeddav
+28,Mixed,"Some moments felt good and others difficult, so my feelings are unclear.",Neutral,Neutral,True,Neutral | Positive | Warmth,True,0.6921,DistilBERT GoEmotions joeddav
+29,Ambiguous,I feel a mixture of things and cannot name one emotion.,Neutral,Neutral,True,Neutral | Positive | Low Mood,True,0.5843,DistilBERT GoEmotions joeddav
+30,Ambiguous,"I noticed a change in how I felt, but I do not know what it means.",Neutral,Neutral,True,Neutral | Positive | Low Mood,True,0.8069,DistilBERT GoEmotions joeddav

@@ -1,0 +1,9 @@
+,Pred neutral,Pred happiness,Pred sadness,Pred anger,Pred fear,Pred disgust,Pred surprise,Pred unclear
+True neutral,1,3,0,0,0,0,8,0
+True happiness,0,7,0,0,0,0,1,0
+True sadness,0,0,3,0,2,0,3,0
+True anger,2,0,0,0,1,0,5,0
+True fear,0,0,0,0,5,0,3,0
+True disgust,0,0,0,0,0,8,0,0
+True surprise,0,0,0,0,0,0,8,0
+True unclear,0,0,0,0,0,0,0,0

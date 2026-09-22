@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Log In | Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- login page for returning users -->
+<div class="auth-screen">
+
+    <!-- short introduction and privacy reminders -->
+    <section class="auth-copy">
+
+        <span class="landing-kicker">Welcome back</span>
+
+        <h1>Return to your space.</h1>
+
+        <p class="auth-lead">
+            Continue your questionnaire, personal check-ins and saved wellbeing resources.
+        </p>
+
+
+        <!-- reminders about the application's privacy approach -->
+        <div class="auth-points">
+
+            <!-- raw media is used temporarily during reflection processing -->
+            <p>
+                <span>✓</span>
+                Raw audio and video are not saved to your account.
+            </p>
+
+            <!-- saved information remains controlled by the user's choices -->
+            <p>
+                <span>✓</span>
+                You decide what information you want to keep.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- account login form -->
+    <section class="auth-panel">
+
+        <div class="auth-card-header">
+            <h2>Log in</h2>
+            <p>Enter your account details to continue.</p>
+        </div>
+
+
+        <!-- login details are posted to the current Flask route -->
+        <form method="POST" class="auth-form">
+
+            <!-- username is kept in the field if login validation returns the page -->
+            <div class="form-group">
+
+                <label for="username">Username</label>
+
+                <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    value="{{ username }}"
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+
+            <!-- password is entered again for each login and is not pre-filled by the template -->
+            <div class="form-group">
+
+                <label for="password">Password</label>
+
+                <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            <!-- submit credentials for backend authentication -->
+            <button
+                type="submit"
+                class="button landing-primary button-full"
+            >
+                Log In
+            </button>
+
+        </form>
+
+
+        <!-- new users can move directly to account registration -->
+        <div class="auth-switch">
+
+            Don't have an account?
+
+            <a href="{{ url_for('auth.register') }}">
+                Sign up
+            </a>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

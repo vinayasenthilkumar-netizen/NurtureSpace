@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy | Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- main privacy page used during first setup and later settings changes -->
+<section class="privacy-simple-page">
+
+    <!-- heading changes depending on whether this is the user's first privacy setup -->
+    <header class="privacy-simple-header">
+        <span class="landing-kicker">Your information</span>
+
+        {% if first_setup %}
+            <h1>How your information is handled</h1>
+
+            <p>
+                Nurture Space saves your completed check-in information and reviewed
+                results to support your history and personalised features.
+            </p>
+
+        {% else %}
+            <h1>Privacy</h1>
+
+            <p>
+                Review how information from your check-ins and reflections is handled.
+            </p>
+        {% endif %}
+    </header>
+
+
+    <!-- short privacy reminders before the user chooses any settings -->
+    <div class="privacy-reassurance">
+
+        <!-- approved information is controlled by the user's privacy choices -->
+        <div>
+            <span class="privacy-reassurance-icon">✓</span>
+
+            <p>
+                <strong>You choose what is saved</strong>
+                Your privacy settings control whether approved check-ins,
+                saved-history personalisation and bookmarked resources are
+                stored or used.
+            </p>
+        </div>
+
+        <!-- raw reflection media is temporary regardless of the selected preferences -->
+        <div>
+            <span class="privacy-reassurance-icon">♡</span>
+
+            <p>
+                <strong>Raw media stays temporary</strong>
+                Voice recordings, videos and transcripts are used only during
+                reflection processing and are not permanently stored.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- all privacy choices are submitted together -->
+    <form method="POST" class="privacy-simple-card">
+
+        <div class="privacy-choice-heading">
+            <h2>Choose your privacy preferences</h2>
+
+            <p>
+                You can change these choices later in Settings.
+                Your reflection media remains temporary regardless
+                of the choices below.
+            </p>
+        </div>
+
+
+        <!-- controls whether approved check-in information may be persisted -->
+        <label class="privacy-choice">
+
+            <input
+                type="checkbox"
+                name="save_approved_checkins"
+                {% if preferences.get("save_approved_checkins", false) %}
+                    checked
+                {% endif %}
+            >
+
+            <span>
+                <strong>Save my approved check-ins</strong>
+
+                <small>
+                    Allow completed check-ins and information you have
+                    reviewed and approved to be saved to your account.
+                    Saved entries can appear in your history and Personal
+                    Pattern Analysis.
+                </small>
+            </span>
+
+        </label>
+
+
+        <!-- controls whether previously saved history may be used for personalisation -->
+        <label class="privacy-choice">
+
+            <input
+                type="checkbox"
+                name="use_saved_history_for_personalisation"
+                {% if preferences.get(
+                    "use_saved_history_for_personalisation",
+                    false
+                ) %}
+                    checked
+                {% endif %}
+            >
+
+            <span>
+                <strong>Use my saved history for personalisation</strong>
+
+                <small>
+                    Allow your previously saved check-ins and Personal
+                    Patterns to provide context for personalised Assistant
+                    responses and resource retrieval.
+                </small>
+            </span>
+
+        </label>
+
+
+        <!-- controls whether bookmarked resources remain saved to the account -->
+        <label class="privacy-choice">
+
+            <input
+                type="checkbox"
+                name="save_bookmarked_resources"
+                {% if preferences.get("save_bookmarked_resources", false) %}
+                    checked
+                {% endif %}
+            >
+
+            <span>
+                <strong>Save my bookmarked resources</strong>
+
+                <small>
+                    Allow resources you choose to bookmark to remain
+                    available in your Saved Resources page.
+                </small>
+            </span>
+
+        </label>
+
+
+        <!-- gives the user a clearer breakdown of saved and temporary information -->
+        <div class="privacy-more-content">
+
+            <!-- information

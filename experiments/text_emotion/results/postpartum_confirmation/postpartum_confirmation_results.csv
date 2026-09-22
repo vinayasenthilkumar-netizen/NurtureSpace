@@ -1,0 +1,3 @@
+Model,Model ID,Top 1 Accuracy,Top 3 Coverage,Macro F1,Weighted F1,Average Inference Time (s),Total Time (s)
+DistilBERT GoEmotions joeddav,joeddav/distilbert-base-uncased-go-emotions-student,0.7333,0.9333,0.712,0.712,0.0185,1.11
+DistilBERT bhadresh,bhadresh-savani/distilbert-base-uncased-emotion,0.6833,0.7667,0.6378,0.6378,0.0222,1.33

@@ -1,0 +1,870 @@
+{% extends "base.html" %}
+
+{% block title %}Wellbeing Assistant | Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- main authenticated application layout -->
+<div class="app-shell">
+
+    <!-- shared sidebar navigation -->
+    <aside class="sidebar">
+        <div>
+
+            <!-- application branding -->
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">👩‍🍼</div>
+
+                <div>
+                    <strong>Nurture Space</strong>
+                    <small>Postpartum wellbeing</small>
+                </div>
+            </div>
+
+
+            <!-- main signed-in navigation -->
+            <nav class="sidebar-nav">
+
+                <a href="{{ url_for('home.home') }}" class="sidebar-link">
+                    <span>🌸</span> Today
+                </a>
+
+                <a href="{{ url_for('questions.core_questions') }}" class="sidebar-link">
+                    <span>✔️</span> Questionnaire
+                </a>
+
+                <a href="{{ url_for('reflection.reflection_page', standalone=1) }}" class="sidebar-link">
+                    <span>📕</span> Personal Check-In
+                </a>
+
+                <!-- active because the user is currently using the Assistant -->
+                <a href="{{ url_for('assistant.assistant_page') }}" class="sidebar-link active">
+                    <span>🤖</span> Assistant
+                </a>
+
+                <a href="{{ url_for('resources.saved_resources') }}" class="sidebar-link">
+                    <span>❤️</span> Saved Resources
+                </a>
+
+                <a href="{{ url_for('history.history_page') }}" class="sidebar-link">
+                    <span>🗓️</span> History & Patterns
+                </a>
+
+                <a href="{{ url_for('settings.settings_page') }}" class="sidebar-link">
+                    <span>⚙️</span> Settings
+                </a>
+
+            </nav>
+        </div>
+
+
+        <!-- current signed-in user -->
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-profile">
+
+                <!-- use display name first, then username, then a simple fallback -->
+                <div class="profile-avatar">
+                    {{ (session.get('display_name') or session.get('username') or 'U')[0] | upper }}
+                </div>
+
+                <div>
+                    <strong>{{ session.get('display_name') or session.get('username') or 'User' }}</strong>
+                    <small>Signed in</small>
+                </div>
+
+            </div>
+
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-link logout-link">
+                <span>➜]</span> Log out
+            </a>
+
+        </div>
+    </aside>
+
+
+    <!-- main Assistant interface -->
+    <main class="nurture-assistant-page">
+
+    <!-- return navigation and temporary conversation reset -->
+    <div class="nurture-assistant-topbar">
+
+        <a href="{{ url_for('home.home') }}">← Today</a>
+
+        <!-- clears only the current Assistant conversation state -->
+        <form method="POST" action="{{ url_for('assistant.clear_conversation') }}">
+            <button type="submit">Clear conversation</button>
+        </form>
+
+    </div>
+
+
+    <!-- explains the intended scope of the Assistant -->
+    <header class="nurture-assistant-header">
+
+        <span class="nurture-assistant-kicker">Optional support</span>
+        <h1>Wellbeing Assistant</h1>
+
+        <p>
+            Ask about your approved Personal Check-In, explore supportive
+            resources, or prepare your Wellbeing Summary and appointment points.
+        </p>
+
+    </header>
+
+
+    <!-- boundaries and current application context -->
+    <div class="nurture-assistant-info">
+
+        <!-- the Assistant supports reflection but does not diagnose -->
+        <div>
+            <span>❤️</span>
+
+            <p>
+                <strong>Support, not diagnosis</strong>
+                The Assistant cannot diagnose or change your Wellbeing Status.
+            </p>
+        </div>
+
+
+        <!-- describes which approved or saved context is currently available -->
+        <div>
+            <span>✅</span>
+
+            <p>
+                <strong>Current context</strong>
+                {{ context_message }}
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- conversation history -->
+    <section class="nurture-chat">
+
+        <!-- show a welcome message before the first user message -->
+        {% if not messages %}
+
+            <div class="nurture-chat-row assistant-row">
+                <div class="nurture-chat-avatar">👩‍🍼</div>
+
+                <div class="nurture-chat-content">
+                    <span class="nurture-chat-name">Nurture AI</span>
+
+                    <div class="nurture-chat-bubble assistant-bubble">
+
+                        <p>Hi Mama 💕 How can I help you today?</p>
+
+                        <p>
+                            You can talk through how you're feeling, ask about
+                            something from your Personal Check-In, find supportive
+                            resources, or prepare for an appointment.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+
+
+        <!-- render each stored conversation message in order -->
+        {% for message in messages %}
+
+            <!-- index is sent back when applying an edit generated by a particular message -->
+            {% set message_index = loop.index0 %}
+
+
+            <!-- saved edits can only target the currently editable saved entry -->
+            {% set editable_saved_message =
+                saved_editing_allowed
+                and message.saved_entry_type == editable_saved_entry_type
+                and message.saved_entry_id == editable_saved_entry_id
+            %}
+
+
+            <!-- user messages use the right-aligned chat style -->
+            {% if message.role == "user" %}
+
+                <div class="nurture-chat-row user-row">
+
+                    <div class="nurture-chat-content">
+                        <span class="nurture-chat-name">You</span>
+
+                        <div class="nurture-chat-bubble user-bubble">
+                            <p class="nurture-chat-text">{{ message.content }}</p>
+                        </div>
+                    </div>
+
+                    <div class="nurture-chat-avatar user-avatar">👩🏻</div>
+
+                </div>
+
+
+            <!-- all non-user messages are rendered as Assistant responses -->
+            {% else %}
+
+                <div class="nurture-chat-row assistant-row">
+                    <div class="nurture-chat-avatar">👩‍🍼</div>
+
+                    <div class="nurture-chat-content">
+                        <span class="nurture-chat-name">Nurture AI</span>
+
+
+                        <!-- normal conversational response from the Assistant -->
+                        {% if message.assistant_reply %}
+
+                            <div class="nurture-chat-bubble assistant-bubble">
+                                <div class="nurture-chat-text">
+                                    {{ message.assistant_reply }}
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- optional Personal Summary content returned by the Assistant -->
+                        {% if message.summary_draft %}
+
+                            <div class="nurture-assistant-extra">
+
+                                <!-- distinguish saved content from newly generated drafts -->
+                                <span class="nurture-extra-label">
+                                    {% if message.is_saved_view %}
+                                        Saved summary
+                                    {% else %}
+                                        Summary draft
+                                    {% endif %}
+                                </span>
+
+                                <h3>Personal summary</h3>
+                                <p>{{ message.summary_draft }}</p>
+
+
+                                <!-- guidance changes depending on where the summary came from -->
+                                {% if message.is_saved_view %}
+
+                                    <small>
+                                        This is your currently saved Personal Summary.
+                                        Ask me to add, remove, rewrite or shorten it
+                                        if you would like to make a change.
+                                    </small>
+
+                                {% elif message.is_edit_response %}
+
+                                    <small>
+                                        Review this edited draft before updating
+                                        the saved version.
+                                    </small>
+
+                                {% else %}
+
+                                    <small>
+                                        Ask me to add, remove, rewrite or shorten
+                                        this summary if you would like to change it.
+                                    </small>
+
+                                {% endif %}
+
+
+                                <!-- update controls appear only for an Assistant edit response -->
+                                {% if message.is_edit_response %}
+
+                                    <!-- allow direct update when this is the currently editable saved entry -->
+                                    {% if editable_saved_message %}
+
+                                        <!-- after applying an update, disable repeat application and offer undo -->
+                                        {% if message.saved_update_state == "applied" %}
+
+                                            <div
+                                                class="nurture-edit-actions"
+                                                style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="nurture-extra-button"
+                                                    disabled
+                                                    style="opacity:.55;cursor:not-allowed;"
+                                                >
+                                                    Updated
+                                                </button>
+
+
+                                                <!-- restores the previous saved Personal Summary -->
+                                                <form
+                                                    method="POST"
+                                                    action="{{ url_for('assistant.undo_saved_summary') }}"
+                                                >
+                                                    <input
+                                                        type="hidden"
+                                                        name="message_index"
+                                                        value="{{ message_index }}"
+                                                    >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="nurture-extra-button"
+                                                    >
+                                                        Undo
+                                                    </button>
+                                                </form>
+
+                                            </div>
+
+
+                                        {% else %}
+
+                                            <!-- explicit user action is required before changing saved content -->
+                                            <form
+                                                method="POST"
+                                                action="{{ url_for('assistant.use_summary_on_dashboard') }}"
+                                            >
+                                                <input
+                                                    type="hidden"
+                                                    name="message_index"
+                                                    value="{{ message_index }}"
+                                                >
+
+                                                <button
+                                                    type="submit"
+                                                    class="nurture-extra-button"
+                                                >
+                                                    Update Saved Summary
+                                                </button>
+                                            </form>
+
+                                        {% endif %}
+
+
+                                    <!-- current unsaved Dashboard content can receive the edited draft -->
+                                    {% elif current_dashboard_editing_allowed
+                                            and message.context_source in [
+                                                "current_checkin",
+                                                "current_reflection"
+                                            ] %}
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for('assistant.use_summary_on_dashboard') }}"
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="message_index"
+                                                value="{{ message_index }}"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="nurture-extra-button"
+                                            >
+                                                Use in Wellbeing Summary
+                                            </button>
+
+                                        </form>
+
+                                    {% endif %}
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- optional appointment discussion points returned by the Assistant -->
+                        {% if message.appointment_points %}
+
+                            <div class="nurture-assistant-extra">
+
+                                <span class="nurture-extra-label">
+                                    Appointment preparation
+                                </span>
+
+                                <h3>Discussion points</h3>
+
+
+                                <!-- appointment points are already provided as separate items -->
+                                <ul>
+                                    {% for point in message.appointment_points %}
+                                        <li>{{ point }}</li>
+                                    {% endfor %}
+                                </ul>
+
+
+                                <!-- explain whether these points are saved, edited or newly drafted -->
+                                {% if message.is_saved_view %}
+
+                                    <small>
+                                        These are your currently saved Appointment
+                                        Discussion Points. Ask me to add, remove,
+                                        rewrite or shorten them if you would like
+                                        to make a change.
+                                    </small>
+
+                                {% elif message.is_edit_response %}
+
+                                    <small>
+                                        Review these edited points before updating
+                                        the saved version.
+                                    </small>
+
+                                {% else %}
+
+                                    <small>
+                                        Ask me to add, remove, rewrite or shorten
+                                        these points if you would like to change them.
+                                    </small>
+
+                                {% endif %}
+
+
+                                <!-- edited appointment points require explicit approval before applying -->
+                                {% if message.is_edit_response %}
+
+                                    {% if editable_saved_message %}
+
+                                        <!-- applied saved edit can be undone -->
+                                        {% if message.saved_update_state == "applied" %}
+
+                                            <div
+                                                class="nurture-edit-actions"
+                                                style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="nurture-extra-button"
+                                                    disabled
+                                                    style="opacity:.55;cursor:not-allowed;"
+                                                >
+                                                    Updated
+                                                </button>
+
+
+                                                <!-- restores the previous saved appointment points -->
+                                                <form
+                                                    method="POST"
+                                                    action="{{ url_for('assistant.undo_saved_appointment_points') }}"
+                                                >
+                                                    <input
+                                                        type="hidden"
+                                                        name="message_index"
+                                                        value="{{ message_index }}"
+                                                    >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="nurture-extra-button"
+                                                    >
+                                                        Undo
+                                                    </button>
+                                                </form>
+
+                                            </div>
+
+
+                                        {% else %}
+
+                                            <!-- applies the Assistant proposal to the latest editable saved entry -->
+                                            <form
+                                                method="POST"
+                                                action="{{ url_for('assistant.use_appointment_points_on_dashboard') }}"
+                                            >
+                                                <input
+                                                    type="hidden"
+                                                    name="message_index"
+                                                    value="{{ message_index }}"
+                                                >
+
+                                                <button
+                                                    type="submit"
+                                                    class="nurture-extra-button"
+                                                >
+                                                    Update Saved Appointment Points
+                                                </button>
+                                            </form>
+
+                                        {% endif %}
+
+
+                                    <!-- current unsaved Dashboard points can also be replaced explicitly -->
+                                    {% elif current_dashboard_editing_allowed
+                                            and message.context_source in [
+                                                "current_checkin",
+                                                "current_reflection"
+                                            ] %}
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for('assistant.use_appointment_points_on_dashboard') }}"
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="message_index"
+                                                value="{{ message_index }}"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="nurture-extra-button"
+                                            >
+                                                Use Appointment Points
+                                            </button>
+
+                                        </form>
+
+                                    {% endif %}
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- curated resources retrieved for this Assistant response -->
+                        {% if message.retrieved_resources %}
+
+                            <div class="nurture-assistant-resources">
+
+                                <span class="nurture-extra-label">
+                                    Supportive resources
+                                </span>
+
+
+                                {% for resource in message.retrieved_resources %}
+
+                                    <article class="nurture-assistant-resource">
+
+                                        <!-- descriptive resource information -->
+                                        <div>
+                                            <h3>{{ resource.title }}</h3>
+
+
+                                            <div class="nurture-resource-meta">
+
+                                                {% if resource.source %}
+                                                    <span>{{ resource.source }}</span>
+                                                {% endif %}
+
+                                                {% if resource.resource_type %}
+                                                    <span>
+                                                        {{ resource.resource_type | title }}
+                                                    </span>
+                                                {% endif %}
+
+                                            </div>
+
+
+                                            {% if resource.content %}
+                                                <p>{{ resource.content }}</p>
+                                            {% endif %}
+
+                                        </div>
+
+
+                                        <!-- resource open and bookmark controls -->
+                                        <div class="nurture-resource-actions">
+
+                                            <!-- external resources open in a separate tab -->
+                                            {% if resource.url %}
+                                                <a
+                                                    href="{{ resource.url }}"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    Open →
+                                                </a>
+                                            {% endif %}
+
+
+                                            <!-- bookmark actions require a resource id -->
+                                            {% if resource.id %}
+
+                                                <!-- already-bookmarked resources can be removed -->
+                                                {% if resource.id in bookmarked_resource_ids %}
+
+                                                    <form
+                                                        method="POST"
+                                                        action="{{ url_for('assistant.remove_saved_resource') }}"
+                                                    >
+                                                        <input
+                                                            type="hidden"
+                                                            name="resource_id"
+                                                            value="{{ resource.id }}"
+                                                        >
+
+                                                        <button type="submit">
+                                                            ♥ Saved
+                                                        </button>
+                                                    </form>
+
+
+                                                <!-- saving is available when the privacy preference allows it -->
+                                                {% elif bookmark_saving_allowed %}
+
+                                                    <form
+                                                        method="POST"
+                                                        action="{{ url_for('assistant.save_resource') }}"
+                                                    >
+                                                        <input
+                                                            type="hidden"
+                                                            name="resource_id"
+                                                            value="{{ resource.id }}"
+                                                        >
+
+                                                        <button type="submit">
+                                                            ♡ Save
+                                                        </button>
+                                                    </form>
+
+
+                                                <!-- otherwise direct the user to Settings -->
+                                                {% else %}
+
+                                                    <a href="{{ url_for('settings.settings_page') }}">
+                                                        Enable saving
+                                                    </a>
+
+                                                {% endif %}
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </article>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- supportive closing text shown after retrieved resources -->
+                            <p class="assistant-resource-closing">
+                                You’re doing well to reflect on these moments.
+                                Remember to take care of yourself and lean on your
+                                support system when you need it.
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+    </section>
+
+
+    <!-- message composer for the next Assistant request -->
+    <section class="nurture-composer">
+
+        <form
+            method="POST"
+            action="{{ url_for('assistant.send_message') }}"
+            id="assistant-form"
+        >
+
+            <label for="assistant-message">Your message</label>
+
+
+            <div class="nurture-composer-box">
+
+                <!-- limit keeps individual Assistant requests reasonably bounded -->
+                <textarea
+                    id="assistant-message"
+                    name="message"
+                    rows="3"
+                    maxlength="3000"
+                    placeholder="Write what you'd like help with..."
+                    required
+                ></textarea>
+
+
+                <div class="nurture-composer-bottom">
+
+                    <!-- conversation history is temporary application state -->
+                    <span>♡ This conversation is temporary.</span>
+
+                    <button type="submit" id="assistant-send-button">
+                        Send
+                    </button>
+
+                </div>
+            </div>
+
+        </form>
+    </section>
+
+
+    <!-- explain how historical saved context is being used -->
+    {% if historical_context %}
+
+        <!-- only the latest eligible saved entry can be directly amended -->
+        {% if saved_editing_allowed %}
+
+            <p class="nurture-history-note">
+                This is your latest saved entry from today. You can update its
+                Personal Summary and Appointment Discussion Points directly
+                through the Assistant today.
+            </p>
+
+
+        {% else %}
+
+            <!-- older saved entries remain available only as read-only context -->
+            <p class="nurture-history-note">
+                Using read-only information from your latest saved entry.
+                Previous-day entries cannot be amended.
+            </p>
+
+        {% endif %}
+
+    {% endif %}
+
+    </main>
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // main composer controls
+    const form = document.getElementById("assistant-form");
+    const button = document.getElementById("assistant-send-button");
+    const input = document.getElementById("assistant-message");
+    const chat = document.querySelector(".nurture-chat");
+
+
+    // use JavaScript submission so the user immediately sees their message
+    if (form && button && input && chat) {
+
+        form.addEventListener("submit", async event => {
+
+            // stop the browser from performing the normal immediate form navigation
+            event.preventDefault();
+
+
+            // ignore messages containing only whitespace
+            const message = input.value.trim();
+            if (!message) return;
+
+
+            // capture the form before clearing the visible text box
+            const formData = new FormData(form);
+
+
+            // immediately add the user's message to the visible conversation
+            const userRow = document.createElement("div");
+            userRow.className = "nurture-chat-row user-row";
+
+            userRow.innerHTML = `
+                <div class="nurture-chat-content">
+                    <span class="nurture-chat-name">You</span>
+                    <div class="nurture-chat-bubble user-bubble">
+                        <p class="nurture-chat-text"></p>
+                    </div>
+                </div>
+                <div class="nurture-chat-avatar user-avatar">👩🏻</div>
+            `;
+
+
+            // textContent avoids inserting the user's message as HTML
+            userRow.querySelector(".nurture-chat-text").textContent = message;
+            chat.appendChild(userRow);
+
+
+            // temporary Assistant row provides feedback during backend processing
+            const processingRow = document.createElement("div");
+            processingRow.className = "nurture-chat-row assistant-row";
+
+            processingRow.innerHTML = `
+                <div class="nurture-chat-avatar">👩‍🍼</div>
+                <div class="nurture-chat-content">
+                    <span class="nurture-chat-name">Nurture AI</span>
+                    <div class="nurture-chat-bubble assistant-bubble">
+                        <p class="nurture-chat-text">Processing…</p>
+                    </div>
+                </div>
+            `;
+
+            chat.appendChild(processingRow);
+
+
+            // clear and disable the composer while the request is running
+            input.value = "";
+            input.disabled = true;
+            button.disabled = true;
+
+
+            // keep the temporary processing response visible
+            processingRow.scrollIntoView({
+                behavior: "smooth",
+                block: "end"
+            });
+
+
+            try {
+
+                // send the same form data to the normal Flask Assistant route
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: formData
+                });
+
+
+                // non-success responses are handled by the local error state
+                if (!response.ok) {
+                    throw new Error("Request failed.");
+                }
+
+
+                // Flask returns the updated page containing the completed Assistant response
+                window.location.href = response.url;
+
+
+            } catch (error) {
+
+                // replace Processing with a simple recoverable error message
+                processingRow.querySelector(".nurture-chat-text").textContent =
+                    "Something went wrong. Please try again.";
+
+
+                // let the user type and submit again
+                input.disabled = false;
+                button.disabled = false;
+                input.focus();
+            }
+
+        });
+
+    }
+
+
+    // place the cursor in the composer when the page opens
+    if (input) {
+        input.focus();
+    }
+
+
+    // when conversation history exists, move the page towards the latest messages
+    if (document.querySelectorAll(".nurture-chat-row").length > 1) {
+
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth"
+        });
+
+    }
+
+});
+</script>
+
+{% endblock %}

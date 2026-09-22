@@ -1,0 +1,1082 @@
+{% extends "base.html" %}
+
+{% block title %}Personal Check-In | Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- main authenticated application layout -->
+<div class="app-shell">
+
+    <!-- shared sidebar navigation -->
+    <aside class="sidebar">
+        <div>
+
+            <!-- application branding -->
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">👩‍🍼</div>
+
+                <div>
+                    <strong>Nurture Space</strong>
+                    <small>Postpartum wellbeing</small>
+                </div>
+            </div>
+
+            <!-- main application pages -->
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('home.home') }}" class="sidebar-link"><span>🌸</span> Today</a>
+                <a href="{{ url_for('questions.core_questions') }}" class="sidebar-link"><span>✔️</span> Questionnaire</a>
+
+                <!-- active because the user is currently completing a Personal Check-In -->
+                <a href="{{ url_for('reflection.reflection_page', standalone=1) }}"
+                   class="sidebar-link active">
+                    <span>📕</span> Personal Check-In
+                </a>
+
+                <a href="{{ url_for('assistant.assistant_page') }}" class="sidebar-link"><span>🤖</span> Assistant</a>
+                <a href="{{ url_for('resources.saved_resources') }}" class="sidebar-link"><span>❤️</span> Saved Resources</a>
+                <a href="{{ url_for('history.history_page') }}" class="sidebar-link"><span>🗓️</span> History & Patterns</a>
+                <a href="{{ url_for('settings.settings_page') }}" class="sidebar-link"><span>⚙️</span> Settings</a>
+            </nav>
+        </div>
+
+
+        <!-- current signed-in user -->
+        <div class="sidebar-bottom">
+            <div class="sidebar-profile">
+
+                <!-- fall back to username or U if no display name exists -->
+                <div class="profile-avatar">
+                    {{ (session.get('display_name') or session.get('username') or 'U')[0] | upper }}
+                </div>
+
+                <div>
+                    <strong>{{ session.get('display_name') or session.get('username') or 'User' }}</strong>
+                    <small>Signed in</small>
+                </div>
+            </div>
+
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-link logout-link">
+                <span>➜]</span> Log out
+            </a>
+        </div>
+    </aside>
+
+
+    <!-- main Personal Check-In area -->
+    <main class="personal-checkin-page">
+
+        <!-- return link and optional questionnaire-completion indicator -->
+        <div class="personal-checkin-topbar">
+            <a href="{{ url_for('home.home') }}">← Today</a>
+
+            {% if checkin_status %}
+                <span>Questionnaire completed</span>
+            {% endif %}
+        </div>
+
+
+        <!-- page introduction before the user selects a reflection mode -->
+        <header class="personal-checkin-header">
+            <span class="personal-checkin-kicker">Personal Check-In</span>
+            <h1>How would you like to check in?</h1>
+
+            <p>
+                Write, speak or record what feels important today.
+                Choose whichever option feels easiest.
+            </p>
+
+            <!-- questionnaire status remains separate from reflection context -->
+            {% if checkin_status %}
+                <small>
+                    Your Personal Check-In adds context but does not change
+                    your Today's Wellbeing Status.
+                </small>
+            {% endif %}
+        </header>
+
+
+        <!-- available reflection modes are controlled by Flask feature flags -->
+        <nav class="checkin-mode-tabs" aria-label="Personal Check-In type">
+
+            {% if enable_text %}
+                <a href="{{ url_for('reflection.reflection_page', mode='text') }}"
+                   class="checkin-mode-tab{% if selected_mode == 'text' %} active{% endif %}">
+                    <span>✎</span>
+                    <strong>Text</strong>
+                    <small>Write freely</small>
+                </a>
+            {% endif %}
+
+            {% if enable_voice %}
+                <a href="{{ url_for('reflection.reflection_page', mode='voice') }}"
+                   class="checkin-mode-tab{% if selected_mode == 'voice' %} active{% endif %}">
+                    <span>♪</span>
+                    <strong>Voice</strong>
+                    <small>Speak naturally</small>
+                </a>
+            {% endif %}
+
+            {% if enable_video %}
+                <a href="{{ url_for('reflection.reflection_page', mode='video') }}"
+                   class="checkin-mode-tab{% if selected_mode == 'video' %} active{% endif %}">
+                    <span>◉</span>
+                    <strong>Video</strong>
+                    <small>Speak on camera</small>
+                </a>
+            {% endif %}
+
+        </nav>
+
+
+        <!-- shown after the selected reflection input has been prepared successfully -->
+        {% if ready %}
+            <div class="checkin-ready">
+                <span>✓</span>
+
+                <div>
+                    <strong>Your check-in is ready.</strong>
+
+                    <!-- voice and video require transcript review before analysis -->
+                    {% if selected_mode in ["voice", "video"] %}
+                        <p>You can review and correct the transcript next.</p>
+                    {% else %}
+                        <p>Your written check-in is ready for review.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+
+        <!-- text reflection pathway -->
+        {% if selected_mode == "text" %}
+
+            <section class="checkin-content-card">
+
+                <div class="checkin-content-heading">
+                    <div>
+                        <span>Text Check-In</span>
+                        <h2>What's on your mind today?</h2>
+                    </div>
+
+                    <small>Up to 5,000 characters</small>
+                </div>
+
+
+                <!-- written reflection is posted directly to the text-reflection route -->
+                <form method="POST"
+                      action="{{ url_for('reflection.submit_text') }}"
+                      class="checkin-form"
+                      id="text-form">
+
+                    <textarea
+                        id="reflection-text"
+                        name="reflection_text"
+                        rows="8"
+                        maxlength="5000"
+                        placeholder="Write whatever feels important to you today..."
+                        required
+                    >{{ typed_reflection }}</textarea>
+
+                    <div class="checkin-form-bottom">
+
+                        <!-- reflection data is reviewed before anything can later be saved -->
+                        <p>Only information you later approve can be saved.</p>
+
+                        <button type="submit"
+                                class="checkin-primary-button"
+                                id="text-submit">
+                            Continue to Review
+                        </button>
+                    </div>
+
+                </form>
+            </section>
+
+
+        <!-- voice reflection pathway -->
+        {% elif selected_mode == "voice" %}
+
+            <section class="checkin-content-card">
+
+                <div class="checkin-content-heading">
+                    <div>
+                        <span>Voice Check-In</span>
+                        <h2>Speak in your own words.</h2>
+                    </div>
+
+                    <small>Maximum {{ max_seconds }} seconds</small>
+                </div>
+
+
+                <!-- multipart form supports both recorded audio and uploaded files -->
+                <form id="voice-form"
+                      method="POST"
+                      enctype="multipart/form-data"
+                      action="{{ url_for('reflection.submit_voice') }}"
+                      class="checkin-form">
+
+                    <!-- keeps track of whether the user chose recording or upload -->
+                    <input type="hidden"
+                           id="voice-source"
+                           name="voice_source"
+                           value="record">
+
+
+                    <!-- lets the user switch between live recording and file upload -->
+                    <div class="checkin-source-toggle">
+                        <button type="button"
+                                id="voice-record-choice"
+                                class="checkin-source-button active">
+                            Record
+                        </button>
+
+                        <button type="button"
+                                id="voice-upload-choice"
+                                class="checkin-source-button">
+                            Upload
+                        </button>
+                    </div>
+
+
+                    <!-- browser microphone recording area -->
+                    <div id="voice-record-area" class="checkin-media-area">
+                        <div class="checkin-media-icon">♪</div>
+
+                        <h3>Record a voice check-in</h3>
+                        <p>Allow microphone access, then press Record when you're ready.</p>
+
+                        <div class="checkin-record-actions">
+                            <button type="button"
+                                    id="start-voice-recording"
+                                    class="checkin-record-button">
+                                ● Record
+                            </button>
+
+                            <button type="button"
+                                    id="stop-voice-recording"
+                                    class="checkin-stop-button"
+                                    disabled>
+                                Stop
+                            </button>
+                        </div>
+
+                        <!-- updated by JavaScript while recording -->
+                        <p id="voice-recording-status" class="checkin-recording-status">
+                            No recording yet.
+                        </p>
+
+                        <!-- recorded audio can be played back before submission -->
+                        <audio id="voice-preview"
+                               class="checkin-audio-preview"
+                               controls
+                               hidden>
+                        </audio>
+
+                        <!-- removes the temporary browser recording -->
+                        <button type="button"
+                                id="delete-voice-recording"
+                                class="checkin-delete-icon"
+                                title="Delete audio"
+                                aria-label="Delete audio"
+                                hidden>
+                            🗑️
+                        </button>
+
+                        <!-- JavaScript places the recorded Blob into this file input -->
+                        <input type="file"
+                               id="voice-recorded-file"
+                               name="voice_recorded_file"
+                               accept="audio/*"
+                               hidden>
+                    </div>
+
+
+                    <!-- alternative existing-file upload area -->
+                    <div id="voice-upload-area"
+                         class="checkin-media-area"
+                         hidden>
+
+                        <div class="checkin-media-icon">↑</div>
+
+                        <h3>Upload an audio file</h3>
+                        <p>Choose an existing voice recording from your device.</p>
+
+                        <label class="checkin-file-control"
+                               for="voice-upload-file">
+                            Choose audio file
+                        </label>
+
+                        <!-- supported formats are also validated later by the backend -->
+                        <input
+                            id="voice-upload-file"
+                            name="voice_upload_file"
+                            type="file"
+                            accept=".wav,.mp4,.mp3,.m4a,.ogg,.webm,.flac,.aac,audio/*"
+                            class="hidden-file-input"
+                        >
+
+                        <button type="button"
+                                id="delete-voice-upload"
+                                class="checkin-delete-icon"
+                                title="Delete audio"
+                                aria-label="Delete audio"
+                                hidden>
+                            🗑️
+                        </button>
+                    </div>
+
+
+                    <!-- privacy reminder for raw media processing -->
+                    <div class="checkin-privacy-note">
+                        <span>♡</span>
+                        <p>Your audio is processed temporarily and is not stored with your account.</p>
+                    </div>
+
+
+                    <div class="checkin-form-bottom">
+                        <span></span>
+
+                        <button type="submit"
+                                id="voice-submit"
+                                class="checkin-primary-button">
+                            Continue to Review
+                        </button>
+                    </div>
+
+                </form>
+            </section>
+
+
+        <!-- video reflection pathway -->
+        {% elif selected_mode == "video" %}
+
+            <section class="checkin-content-card">
+
+                <div class="checkin-content-heading">
+                    <div>
+                        <span>Video Check-In</span>
+                        <h2>Talk through how today has felt.</h2>
+                    </div>
+
+                    <small>Maximum {{ max_seconds }} seconds</small>
+                </div>
+
+
+                <!-- multipart form supports browser recording and existing video upload -->
+                <form id="video-form"
+                      method="POST"
+                      enctype="multipart/form-data"
+                      action="{{ url_for('reflection.submit_video') }}"
+                      class="checkin-form">
+
+                    <!-- stores the currently selected input source -->
+                    <input type="hidden"
+                           id="video-source"
+                           name="video_source"
+                           value="record">
+
+
+                    <!-- lets the user choose between recording and upload -->
+                    <div class="checkin-source-toggle">
+                        <button type="button"
+                                id="video-record-choice"
+                                class="checkin-source-button active">
+                            Record
+                        </button>
+
+                        <button type="button"
+                                id="video-upload-choice"
+                                class="checkin-source-button">
+                            Upload
+                        </button>
+                    </div>
+
+
+                    <!-- live browser camera recording area -->
+                    <div id="video-record-area" class="checkin-media-area">
+                        <div class="checkin-media-icon">◉</div>
+
+                        <h3>Record a video check-in</h3>
+                        <p>Allow camera and microphone access, then record when you're ready.</p>
+
+                        <!-- shows live camera preview first, then recorded playback -->
+                        <video
+                            id="video-preview"
+                            class="checkin-video-preview"
+                            playsinline
+                            muted
+                        ></video>
+
+                        <div class="checkin-record-actions">
+                            <button type="button"
+                                    id="start-video-recording"
+                                    class="checkin-record-button">
+                                ● Record
+                            </button>
+
+                            <button type="button"
+                                    id="stop-video-recording"
+                                    class="checkin-stop-button"
+                                    disabled>
+                                Stop
+                            </button>
+                        </div>
+
+                        <p id="video-recording-status" class="checkin-recording-status">
+                            No recording yet.
+                        </p>
+
+                        <!-- recorded video Blob is placed here before form submission -->
+                        <input type="file"
+                               id="video-recorded-file"
+                               name="video_recorded_file"
+                               accept="video/*"
+                               hidden>
+
+                        <button type="button"
+                                id="delete-video-recording"
+                                class="checkin-delete-icon"
+                                title="Delete video"
+                                aria-label="Delete video"
+                                hidden>
+                            🗑️
+                        </button>
+                    </div>
+
+
+                    <!-- upload pathway for an existing video -->
+                    <div id="video-upload-area"
+                         class="checkin-media-area"
+                         hidden>
+
+                        <div class="checkin-media-icon">↑</div>
+
+                        <h3>Upload a video</h3>
+                        <p>Choose an existing video from your device.</p>
+
+                        <label class="checkin-file-control"
+                               for="video-upload-file">
+                            Choose video file
+                        </label>
+
+                        <input
+                            id="video-upload-file"
+                            name="video_upload_file"
+                            type="file"
+                            accept=".mp4,.mov,.avi,.mkv,.webm,.m4v,video/*"
+                            class="hidden-file-input"
+                        >
+
+                        <button type="button"
+                                id="delete-video-upload"
+                                class="checkin-delete-icon"
+                                title="Delete video"
+                                aria-label="Delete video"
+                                hidden>
+                            🗑️
+                        </button>
+                    </div>
+
+
+                    <!-- raw video and extracted processing files remain temporary -->
+                    <div class="checkin-privacy-note">
+                        <span>♡</span>
+                        <p>Raw video, audio and sampled frames are temporary and removed after processing.</p>
+                    </div>
+
+
+                    <div class="checkin-form-bottom">
+                        <span></span>
+
+                        <button type="submit"
+                                id="video-submit"
+                                class="checkin-primary-button">
+                            Continue to Review
+                        </button>
+                    </div>
+
+                </form>
+            </section>
+
+        {% endif %}
+
+    </main>
+</div>
+
+
+<!-- passes the backend recording limit safely into JavaScript -->
+<div
+    id="reflection-config"
+    data-max-seconds="{{ max_seconds | default(60) | int }}"
+    hidden
+></div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // read the configured recording limit passed from Flask
+    const config = document.getElementById("reflection-config");
+    const maxRecordingMs = Number(config?.dataset.maxSeconds || 60) * 1000;
+
+    // small helper keeps repeated element lookups shorter
+    const byId = id => document.getElementById(id);
+
+
+    // switches a media form between its Record and Upload interfaces
+    function setSourceToggle(prefix) {
+        const source = byId(`${prefix}-source`);
+        const recordButton = byId(`${prefix}-record-choice`);
+        const uploadButton = byId(`${prefix}-upload-choice`);
+        const recordArea = byId(`${prefix}-record-area`);
+        const uploadArea = byId(`${prefix}-upload-area`);
+
+        // some controls do not exist when a different reflection mode is open
+        if (!source || !recordButton || !uploadButton || !recordArea || !uploadArea) return;
+
+        recordButton.addEventListener("click", () => {
+            source.value = "record";
+            recordArea.hidden = false;
+            uploadArea.hidden = true;
+
+            recordButton.classList.add("active");
+            uploadButton.classList.remove("active");
+        });
+
+        uploadButton.addEventListener("click", () => {
+            source.value = "upload";
+            recordArea.hidden = true;
+            uploadArea.hidden = false;
+
+            uploadButton.classList.add("active");
+            recordButton.classList.remove("active");
+        });
+    }
+
+
+    // stops all active microphone or camera tracks
+    function stopStream(stream) {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+    }
+
+
+    // initialise both controls; missing elements are safely ignored
+    setSourceToggle("voice");
+    setSourceToggle("video");
+
+
+    // voice recording controls
+    const startVoice = byId("start-voice-recording");
+    const stopVoice = byId("stop-voice-recording");
+    const voiceStatus = byId("voice-recording-status");
+    const voicePreview = byId("voice-preview");
+    const voiceRecordedFile = byId("voice-recorded-file");
+    const voiceUploadFile = byId("voice-upload-file");
+    const deleteVoiceRecording = byId("delete-voice-recording");
+    const deleteVoiceUpload = byId("delete-voice-upload");
+
+    // temporary browser state for the current voice recording
+    let voiceRecorder = null;
+    let voiceStream = null;
+    let voiceChunks = [];
+    let voiceTimer = null;
+    let voicePreviewUrl = null;
+
+
+    // clears the current recorded voice preview and attached temporary file
+    function clearVoiceRecording() {
+        if (voicePreview) {
+            voicePreview.pause();
+            voicePreview.removeAttribute("src");
+            voicePreview.load();
+            voicePreview.hidden = true;
+        }
+
+        // object URLs are released when they are no longer needed
+        if (voicePreviewUrl) {
+            URL.revokeObjectURL(voicePreviewUrl);
+            voicePreviewUrl = null;
+        }
+
+        if (voiceRecordedFile) voiceRecordedFile.value = "";
+
+        voiceChunks = [];
+
+        if (voiceStatus) {
+            voiceStatus.textContent = "No recording yet.";
+        }
+
+        if (deleteVoiceRecording) {
+            deleteVoiceRecording.hidden = true;
+        }
+    }
+
+
+    // starts microphone recording through the browser MediaRecorder API
+    async function startVoiceRecording() {
+        try {
+
+            // stop early on browsers without media-device recording support
+            if (!navigator.mediaDevices?.getUserMedia) {
+                throw new Error("Microphone recording is not supported.");
+            }
+
+            // request microphone permission from the browser
+            voiceStream = await navigator.mediaDevices.getUserMedia({
+                audio: true
+            });
+
+            clearVoiceRecording();
+            voiceChunks = [];
+
+            // use WebM when the current browser reports support for it
+            const options = {};
+
+            if (
+                window.MediaRecorder &&
+                MediaRecorder.isTypeSupported("audio/webm")
+            ) {
+                options.mimeType = "audio/webm";
+            }
+
+            voiceRecorder = new MediaRecorder(
+                voiceStream,
+                options
+            );
+
+
+            // MediaRecorder can return the recording in several small chunks
+            voiceRecorder.ondataavailable = event => {
+                if (event.data?.size) {
+                    voiceChunks.push(event.data);
+                }
+            };
+
+
+            // build the final temporary file after recording stops
+            voiceRecorder.onstop = () => {
+                clearTimeout(voiceTimer);
+
+                const mimeType = voiceRecorder.mimeType || "audio/webm";
+                const blob = new Blob(
+                    voiceChunks,
+                    { type: mimeType }
+                );
+
+                const file = new File(
+                    [blob],
+                    "voice_recording.webm",
+                    { type: mimeType }
+                );
+
+                // DataTransfer allows the recorded Blob to be submitted as a normal file
+                const transfer = new DataTransfer();
+                transfer.items.add(file);
+
+                if (voiceRecordedFile) {
+                    voiceRecordedFile.files = transfer.files;
+                }
+
+
+                // create an in-browser preview without uploading anything yet
+                if (voicePreview) {
+                    if (voicePreviewUrl) {
+                        URL.revokeObjectURL(voicePreviewUrl);
+                    }
+
+                    voicePreviewUrl = URL.createObjectURL(blob);
+                    voicePreview.src = voicePreviewUrl;
+                    voicePreview.hidden = false;
+                }
+
+                if (deleteVoiceRecording) {
+                    deleteVoiceRecording.hidden = false;
+                }
+
+                if (voiceStatus) {
+                    voiceStatus.textContent = "Recording ready.";
+                }
+
+                // microphone access is no longer needed once recording finishes
+                stopStream(voiceStream);
+
+                if (startVoice) startVoice.disabled = false;
+                if (stopVoice) stopVoice.disabled = true;
+            };
+
+
+            voiceRecorder.start();
+
+            startVoice.disabled = true;
+            stopVoice.disabled = false;
+            voiceStatus.textContent = "Recording…";
+
+
+            // automatically stop when the configured recording limit is reached
+            voiceTimer = setTimeout(() => {
+                if (voiceRecorder?.state === "recording") {
+                    voiceRecorder.stop();
+                }
+            }, maxRecordingMs);
+
+        } catch (error) {
+            console.error("Voice recording error:", error);
+
+            if (voiceStatus) {
+                voiceStatus.textContent = "Microphone access was not available.";
+            }
+        }
+    }
+
+
+    // voice recording button events
+    startVoice?.addEventListener(
+        "click",
+        startVoiceRecording
+    );
+
+    stopVoice?.addEventListener("click", () => {
+        if (voiceRecorder?.state === "recording") {
+            voiceRecorder.stop();
+        }
+    });
+
+    deleteVoiceRecording?.addEventListener(
+        "click",
+        clearVoiceRecording
+    );
+
+
+    // show the delete control when an uploaded audio file has been selected
+    voiceUploadFile?.addEventListener("change", () => {
+        if (deleteVoiceUpload) {
+            deleteVoiceUpload.hidden = !voiceUploadFile.files.length;
+        }
+    });
+
+
+    // remove the selected uploaded audio file
+    deleteVoiceUpload?.addEventListener("click", () => {
+        if (voiceUploadFile) {
+            voiceUploadFile.value = "";
+        }
+
+        deleteVoiceUpload.hidden = true;
+    });
+
+
+
+    // video recording controls
+    const startVideo = byId("start-video-recording");
+    const stopVideo = byId("stop-video-recording");
+    const videoStatus = byId("video-recording-status");
+    const videoPreview = byId("video-preview");
+    const videoRecordedFile = byId("video-recorded-file");
+    const videoUploadFile = byId("video-upload-file");
+    const deleteVideoRecording = byId("delete-video-recording");
+    const deleteVideoUpload = byId("delete-video-upload");
+
+    // temporary browser state for one video recording
+    let videoRecorder = null;
+    let videoStream = null;
+    let videoChunks = [];
+    let videoTimer = null;
+    let videoPreviewUrl = null;
+
+
+    // clears the recorded video and resets the preview
+    function clearVideoRecording() {
+        if (videoPreview) {
+            videoPreview.pause();
+            videoPreview.srcObject = null;
+            videoPreview.removeAttribute("src");
+            videoPreview.load();
+
+            videoPreview.controls = false;
+            videoPreview.muted = true;
+        }
+
+        if (videoPreviewUrl) {
+            URL.revokeObjectURL(videoPreviewUrl);
+            videoPreviewUrl = null;
+        }
+
+        if (videoRecordedFile) {
+            videoRecordedFile.value = "";
+        }
+
+        videoChunks = [];
+
+        if (videoStatus) {
+            videoStatus.textContent = "No recording yet.";
+        }
+
+        if (deleteVideoRecording) {
+            deleteVideoRecording.hidden = true;
+        }
+    }
+
+
+    // starts camera and microphone recording in the browser
+    async function startVideoRecording() {
+        try {
+
+            if (!navigator.mediaDevices?.getUserMedia) {
+                throw new Error("Camera recording is not supported.");
+            }
+
+            // request the front-facing camera and microphone
+            videoStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "user" },
+                audio: true
+            });
+
+            clearVideoRecording();
+
+
+            // show the live camera stream while recording
+            if (videoPreview) {
+                videoPreview.srcObject = videoStream;
+                videoPreview.controls = false;
+                videoPreview.muted = true;
+
+                await videoPreview.play();
+            }
+
+            videoChunks = [];
+
+            const options = {};
+
+            // WebM is preferred when MediaRecorder supports it
+            if (
+                window.MediaRecorder &&
+                MediaRecorder.isTypeSupported("video/webm")
+            ) {
+                options.mimeType = "video/webm";
+            }
+
+            videoRecorder = new MediaRecorder(
+                videoStream,
+                options
+            );
+
+
+            // collect each recorded media chunk
+            videoRecorder.ondataavailable = event => {
+                if (event.data?.size) {
+                    videoChunks.push(event.data);
+                }
+            };
+
+
+            // turn the completed recording into a file that Flask can receive
+            videoRecorder.onstop = () => {
+                clearTimeout(videoTimer);
+
+                const mimeType = videoRecorder.mimeType || "video/webm";
+
+                const blob = new Blob(
+                    videoChunks,
+                    { type: mimeType }
+                );
+
+                const file = new File(
+                    [blob],
+                    "video_recording.webm",
+                    { type: mimeType }
+                );
+
+                const transfer = new DataTransfer();
+                transfer.items.add(file);
+
+                if (videoRecordedFile) {
+                    videoRecordedFile.files = transfer.files;
+                }
+
+
+                // camera and microphone are no longer needed after recording
+                stopStream(videoStream);
+
+
+                // replace the live stream with playback of the completed recording
+                if (videoPreview) {
+                    videoPreview.srcObject = null;
+
+                    if (videoPreviewUrl) {
+                        URL.revokeObjectURL(videoPreviewUrl);
+                    }
+
+                    videoPreviewUrl = URL.createObjectURL(blob);
+                    videoPreview.src = videoPreviewUrl;
+                    videoPreview.controls = true;
+                    videoPreview.muted = false;
+                }
+
+                if (deleteVideoRecording) {
+                    deleteVideoRecording.hidden = false;
+                }
+
+                if (videoStatus) {
+                    videoStatus.textContent = "Recording ready.";
+                }
+
+                if (startVideo) startVideo.disabled = false;
+                if (stopVideo) stopVideo.disabled = true;
+            };
+
+
+            videoRecorder.start();
+
+            startVideo.disabled = true;
+            stopVideo.disabled = false;
+            videoStatus.textContent = "Recording…";
+
+
+            // stop recording automatically at the configured maximum duration
+            videoTimer = setTimeout(() => {
+                if (videoRecorder?.state === "recording") {
+                    videoRecorder.stop();
+                }
+            }, maxRecordingMs);
+
+        } catch (error) {
+            console.error("Video recording error:", error);
+
+            if (videoStatus) {
+                videoStatus.textContent =
+                    "Camera or microphone access was not available.";
+            }
+        }
+    }
+
+
+    // video recording button events
+    startVideo?.addEventListener(
+        "click",
+        startVideoRecording
+    );
+
+    stopVideo?.addEventListener("click", () => {
+        if (videoRecorder?.state === "recording") {
+            videoRecorder.stop();
+        }
+    });
+
+    deleteVideoRecording?.addEventListener(
+        "click",
+        clearVideoRecording
+    );
+
+
+    // display the delete button when an uploaded video exists
+    videoUploadFile?.addEventListener("change", () => {
+        if (deleteVideoUpload) {
+            deleteVideoUpload.hidden = !videoUploadFile.files.length;
+        }
+    });
+
+
+    // clear the selected uploaded video
+    deleteVideoUpload?.addEventListener("click", () => {
+        if (videoUploadFile) {
+            videoUploadFile.value = "";
+        }
+
+        deleteVideoUpload.hidden = true;
+    });
+
+
+
+    // shared submission validation for the voice and video forms
+    function setupMediaForm(
+        prefix,
+        recordedInputId,
+        uploadInputId
+    ) {
+        const form = byId(`${prefix}-form`);
+        const submit = byId(`${prefix}-submit`);
+        const source = byId(`${prefix}-source`);
+        const status = byId(`${prefix}-recording-status`);
+
+        const recordedFile = byId(recordedInputId);
+        const uploadFile = byId(uploadInputId);
+
+        if (!form || !submit) return;
+
+
+        form.addEventListener("submit", event => {
+            const mode = source?.value || "record";
+
+
+            // recorded mode requires a browser-created media file
+            if (
+                mode === "record" &&
+                (!recordedFile || !recordedFile.files.length)
+            ) {
+                event.preventDefault();
+
+                if (status) {
+                    status.textContent =
+                        `Please record a ${prefix} check-in first.`;
+                }
+
+                return;
+            }
+
+
+            // upload mode requires the user to choose an existing file
+            if (
+                mode === "upload" &&
+                (!uploadFile || !uploadFile.files.length)
+            ) {
+                event.preventDefault();
+
+                if (status) {
+                    status.textContent =
+                        `Please choose a ${prefix} file first.`;
+                }
+
+                return;
+            }
+
+
+            // prevent repeated submissions while backend processing is running
+            submit.disabled = true;
+            submit.textContent = "Processing…";
+        });
+    }
+
+
+    // apply the same submit validation to both media modes
+    setupMediaForm(
+        "voice",
+        "voice-recorded-file",
+        "voice-upload-file"
+    );
+
+    setupMediaForm(
+        "video",
+        "video-recorded-file",
+        "video-upload-file"
+    );
+
+
+    // text submission also disables the button to avoid duplicate requests
+    const textForm = byId("text-form");
+    const textSubmit = byId("text-submit");
+
+    textForm?.addEventListener("submit", () => {
+        textSubmit.disabled = true;
+        textSubmit.textContent = "Processing…";
+    });
+
+});
+</script>
+
+{% endblock %}

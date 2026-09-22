@@ -1,0 +1,8 @@
+,Pred sadness,Pred joy,Pred love,Pred anger,Pred fear,Pred surprise,Pred other
+True sadness,54,0,0,1,1,0,0
+True joy,0,63,2,0,0,2,0
+True love,0,5,15,0,0,0,0
+True anger,0,0,0,28,0,0,0
+True fear,0,0,0,0,17,3,0
+True surprise,1,1,0,0,0,7,0
+True other,0,0,0,0,0,0,0

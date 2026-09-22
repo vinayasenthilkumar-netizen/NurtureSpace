@@ -1,0 +1,1109 @@
+{% extends "base.html" %}
+
+{% block title %}Personal Pattern Analysis | Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- main authenticated application layout -->
+<div class="app-shell">
+
+    <!-- shared sidebar navigation -->
+    <aside class="sidebar">
+        <div>
+
+            <!-- application branding -->
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">👩‍🍼</div>
+
+                <div>
+                    <strong>Nurture Space</strong>
+                    <small>Postpartum wellbeing</small>
+                </div>
+            </div>
+
+
+            <!-- navigation links available to the signed-in user -->
+            <nav class="sidebar-nav">
+
+                <a href="{{ url_for('home.home') }}" class="sidebar-link">
+                    <span>🌸</span> Today
+                </a>
+
+                <a href="{{ url_for('questions.core_questions') }}" class="sidebar-link">
+                    <span>✔️</span> Questionnaire
+                </a>
+
+                <a href="{{ url_for('reflection.reflection_page', standalone=1) }}" class="sidebar-link">
+                    <span>📕</span> Personal Check-In
+                </a>
+
+                <a href="{{ url_for('assistant.assistant_page') }}" class="sidebar-link">
+                    <span>🤖</span> Assistant
+                </a>
+
+                <a href="{{ url_for('resources.saved_resources') }}" class="sidebar-link">
+                    <span>❤️</span> Saved Resources
+                </a>
+
+                <!-- active because the user is currently viewing History & Patterns -->
+                <a href="{{ url_for('history.history_page') }}" class="sidebar-link active">
+                    <span>🗓️</span> History & Patterns
+                </a>
+
+                <a href="{{ url_for('settings.settings_page') }}" class="sidebar-link">
+                    <span>⚙️</span> Settings
+                </a>
+
+            </nav>
+        </div>
+
+
+        <!-- signed-in profile information and logout -->
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-profile">
+
+                <!-- avatar uses the first letter of the welcome name -->
+                <div class="profile-avatar">
+                    {{ welcome_name[0] | upper }}
+                </div>
+
+                <div>
+                    <strong>{{ welcome_name }}</strong>
+                    <small>Signed in</small>
+                </div>
+
+            </div>
+
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-link logout-link">
+                <span>➜]</span> Log out
+            </a>
+
+        </div>
+    </aside>
+
+
+    <!-- main saved-history and Personal Pattern Analysis page -->
+    <main class="patterns-main">
+
+        <!-- introduces the history and longer-term pattern view -->
+        <header class="patterns-header">
+            <span class="patterns-kicker">Your history</span>
+            <h1>Personal Pattern Analysis</h1>
+
+            <p>
+                Look back at what you chose to save and notice how your wellbeing
+                responses have changed over time.
+            </p>
+        </header>
+
+
+        <!-- history tools are shown only after the user has saved at least one entry -->
+        {% if has_history %}
+
+            <!-- calendar and selected-day information -->
+            <section class="patterns-overview">
+
+                <!-- monthly calendar for navigating saved entries -->
+                <div class="patterns-calendar-card">
+
+                    <div class="patterns-calendar-top">
+
+                        <!-- opens the previous month -->
+                        <a
+                            href="{{ url_for('history.history_page', month=previous_month_key) }}"
+                            aria-label="Previous month"
+                        >
+                            ←
+                        </a>
+
+                        <h2>{{ month_name }} {{ calendar_year }}</h2>
+
+                        <!-- opens the next month -->
+                        <a
+                            href="{{ url_for('history.history_page', month=next_month_key) }}"
+                            aria-label="Next month"
+                        >
+                            →
+                        </a>
+
+                    </div>
+
+
+                    <!-- fixed weekday headings -->
+                    <div class="patterns-weekdays">
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                        <span>Sun</span>
+                    </div>
+
+
+                    <!-- calendar weeks and days are prepared by the Flask route -->
+                    <div class="patterns-calendar-grid">
+
+                        {% for week in calendar_weeks %}
+                            {% for day in week %}
+
+                                {% if day.day %}
+
+                                    <!-- selecting a date reloads the page with that day's entries -->
+                                    <a
+                                        href="{{ url_for(
+                                            'history.history_page',
+                                            month=current_month_key,
+                                            date=day.date_key
+                                        ) }}"
+                                        class="patterns-calendar-day{% if day.selected %} selected{% endif %}{% if day.entry_count %} has-entry{% endif %}"
+                                    >
+                                        <span>{{ day.day }}</span>
+
+                                        <!-- markers identify which kinds of entries exist on the date -->
+                                        <div class="patterns-day-markers">
+
+                                            {% if day.has_checkin %}
+                                                <i
+                                                    class="patterns-questionnaire-dot"
+                                                    title="Saved Questionnaire"
+                                                ></i>
+                                            {% endif %}
+
+                                            {% if day.has_reflection %}
+                                                <i
+                                                    class="patterns-reflection-dot"
+                                                    title="Personal Check-In only"
+                                                ></i>
+                                            {% endif %}
+
+                                        </div>
+                                    </a>
+
+                                {% else %}
+
+                                    <!-- blank cells preserve the normal calendar layout -->
+                                    <span class="patterns-calendar-day blank"></span>
+
+                                {% endif %}
+
+                            {% endfor %}
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- key explaining the two calendar markers -->
+                    <div class="patterns-calendar-key">
+
+                        <span>
+                            <i class="patterns-questionnaire-dot"></i>
+                            Full Check-in ( Questionnaire + Personal Check-in )
+                        </span>
+
+                        <span>
+                            <i class="patterns-reflection-dot"></i>
+                            Personal Check-In only
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- saved entries belonging to the currently selected day -->
+                <div class="patterns-selected-card">
+
+                    <div class="patterns-selected-heading">
+
+                        <div>
+                            <span class="patterns-kicker">Selected day</span>
+                            <h2>{{ selected_date_text }}</h2>
+                        </div>
+
+                        <!-- show how many entries were saved on this date -->
+                        {% if selected_entries %}
+                            <span class="patterns-entry-count">
+
+                                {{ selected_entries | length }}
+
+                                {% if selected_entries | length == 1 %}
+                                    entry
+                                {% else %}
+                                    entries
+                                {% endif %}
+
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if selected_entries %}
+
+                        <!-- each saved entry can be expanded independently -->
+                        <div class="patterns-entry-list">
+
+                            {% for entry in selected_entries %}
+
+                                <details class="patterns-entry">
+
+                                    <!-- compact overview before the user expands the entry -->
+                                    <summary class="patterns-entry-top">
+
+                                        <div class="patterns-entry-heading">
+
+                                            <!-- distinguish full check-ins from reflection-only entries -->
+                                            {% if entry.entry_type == "checkin" %}
+                                                <span class="patterns-entry-type questionnaire">
+                                                    ☑️ Full Check-in
+                                                </span>
+                                            {% else %}
+                                                <span class="patterns-entry-type reflection">
+                                                    📕 Personal Check-In only
+                                                </span>
+                                            {% endif %}
+
+                                            <!-- main saved indicator for this entry -->
+                                            {% if entry.indicator %}
+                                                <span class="patterns-entry-indicator">
+                                                    {{ entry.indicator }}
+                                                </span>
+                                            {% endif %}
+
+                                        </div>
+
+
+                                        <div class="patterns-entry-summary-right">
+
+                                            <span class="patterns-entry-time">
+                                                {{ entry.time_text }}
+                                            </span>
+
+                                            <span class="patterns-entry-arrow">
+                                                ▾
+                                            </span>
+
+                                        </div>
+
+                                    </summary>
+
+
+                                    <!-- full saved entry details -->
+                                    <div class="patterns-entry-body">
+
+
+                                    <!-- records which reflection mode was used -->
+                                    {% if entry.reflection_mode %}
+                                        <p class="patterns-reflection-mode">
+                                            Reflection: {{ entry.reflection_mode }}
+                                        </p>
+                                    {% endif %}
+
+
+                                    <!-- main saved result -->
+                                    {% if entry.indicator %}
+
+                                        <div class="patterns-status patterns-status-main">
+
+                                            <span>
+                                                {{ entry.indicator_label }}
+                                            </span>
+
+                                            <strong>
+                                                {{ entry.indicator }}
+                                            </strong>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- full check-ins can show the questionnaire and reflection indicators -->
+                                    {% if entry.entry_type == "checkin" %}
+
+                                        <div class="patterns-indicator-breakdown">
+
+                                            <span class="patterns-indicator-based-on">
+                                                Based on:
+                                            </span>
+
+
+                                            <div class="patterns-indicator-components">
+
+                                                <!-- indicator calculated from the four core questionnaire responses -->
+                                                {% if entry.questionnaire_indicator %}
+
+                                                    <div class="patterns-status patterns-status-secondary">
+
+                                                        <span>
+                                                            Questionnaire Indicator
+                                                        </span>
+
+                                                        <strong>
+                                                            {{ entry.questionnaire_indicator }}
+                                                        </strong>
+
+                                                    </div>
+
+                                                {% endif %}
+
+
+                                                <!-- indicator calculated from reflection analysis -->
+                                                {% if entry.reflection_indicator %}
+
+                                                    <div class="patterns-status patterns-status-secondary">
+
+                                                        <span>
+                                                            Personal Check-In Indicator
+                                                        </span>
+
+                                                        <strong>
+                                                            {{ entry.reflection_indicator }}
+                                                        </strong>
+
+                                                    </div>
+
+                                                {% endif %}
+
+                                            </div>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- structured question responses are available only for full check-ins -->
+                                    {% if entry.entry_type == "checkin" %}
+
+                                        <!-- four core questionnaire responses -->
+                                        <div class="patterns-core-grid">
+
+                                            {% for response in entry.core_responses %}
+                                                <div>
+                                                    <span>{{ response.label }}</span>
+                                                    <strong>{{ response.value }}</strong>
+                                                </div>
+                                            {% endfor %}
+
+                                        </div>
+
+
+                                        <!-- six context responses remain collapsed until requested -->
+                                        <details class="patterns-context-details">
+                                            <summary>View context responses</summary>
+
+                                            <div class="patterns-context-grid">
+
+                                                {% for response in entry.context_responses %}
+                                                    <div>
+                                                        <span>{{ response.label }}</span>
+                                                        <strong>{{ response.value }}</strong>
+                                                    </div>
+                                                {% endfor %}
+
+                                            </div>
+                                        </details>
+
+                                    {% endif %}
+
+
+                                    <!-- only observations previously approved by the user are shown -->
+                                    {% if entry.approved_emotions
+                                          or entry.approved_supportive
+                                          or entry.approved_strain
+                                          or entry.approved_audio
+                                          or entry.approved_expression %}
+
+                                        <div class="patterns-summary">
+                                            <span>Reflection analysis</span>
+
+
+                                            <!-- approved text-emotion categories -->
+                                            {% if entry.approved_emotions %}
+
+                                                <div class="summary-approved-group">
+                                                    <strong>Emotion themes</strong>
+
+                                                    <div class="summary-tags">
+
+                                                        {% for item in entry.approved_emotions %}
+                                                            <span>{{ item }}</span>
+                                                        {% endfor %}
+
+                                                    </div>
+                                                </div>
+
+                                            {% endif %}
+
+
+                                            <!-- approved supportive practical factors -->
+                                            {% if entry.approved_supportive %}
+
+                                                <div class="summary-approved-group">
+                                                    <strong>Supportive factors</strong>
+
+                                                    <div class="summary-tags">
+
+                                                        {% for item in entry.approved_supportive %}
+                                                            <span>{{ item }}</span>
+                                                        {% endfor %}
+
+                                                    </div>
+                                                </div>
+
+                                            {% endif %}
+
+
+                                            <!-- approved practical strain factors -->
+                                            {% if entry.approved_strain %}
+
+                                                <div class="summary-approved-group">
+                                                    <strong>Areas of strain</strong>
+
+                                                    <div class="summary-tags">
+
+                                                        {% for item in entry.approved_strain %}
+                                                            <span>{{ item }}</span>
+                                                        {% endfor %}
+
+                                                    </div>
+                                                </div>
+
+                                            {% endif %}
+
+
+                                            <!-- approved vocal observation from voice or video -->
+                                            {% if entry.approved_audio %}
+
+                                                <div class="summary-approved-group">
+                                                    <strong>Vocal observation</strong>
+                                                    <p>{{ entry.approved_audio }}</p>
+                                                </div>
+
+                                            {% endif %}
+
+
+                                            <!-- approved visible-expression observation from video -->
+                                            {% if entry.approved_expression %}
+
+                                                <div class="summary-approved-group">
+                                                    <strong>Visible-expression observation</strong>
+                                                    <p>{{ entry.approved_expression }}</p>
+                                                </div>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- confirmed Personal Summary saved with the entry -->
+                                    {% if entry.summary %}
+
+                                        <div class="patterns-summary">
+                                            <span>Personal summary</span>
+                                            <p>{{ entry.summary }}</p>
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- confirmed appointment discussion points -->
+                                    {% if entry.appointment_points %}
+
+                                        <div class="patterns-appointment">
+                                            <span>Appointment discussion points</span>
+
+                                            <ul>
+                                                {% for point in entry.appointment_points %}
+                                                    <li>{{ point }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- saved entries can be removed individually -->
+                                    <div class="patterns-delete">
+
+                                        {% if entry.entry_type == "checkin" %}
+
+                                            <!-- full check-ins use their own deletion route -->
+                                            <form
+                                                method="POST"
+                                                action="{{ url_for(
+                                                    'history.delete_checkin_entry',
+                                                    checkin_id=entry.id
+                                                ) }}"
+                                                onsubmit="return confirm('Delete this saved questionnaire? This cannot be undone.');"
+                                            >
+                                                <button type="submit">
+                                                    🗑️ Remove Check-in
+                                                </button>
+                                            </form>
+
+                                        {% else %}
+
+                                            <!-- reflection-only records use a separate deletion route -->
+                                            <form
+                                                method="POST"
+                                                action="{{ url_for(
+                                                    'history.delete_reflection_entry',
+                                                    reflection_id=entry.id
+                                                ) }}"
+                                                onsubmit="return confirm('Delete this saved Personal Check-In? This cannot be undone.');"
+                                            >
+                                                <button type="submit">
+                                                    🗑️ Remove Check-in
+                                                </button>
+                                            </form>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </details>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                    {% else %}
+
+                        <!-- shown when the selected date contains no saved entry -->
+                        <div class="patterns-no-entry">
+                            <span>♡</span>
+                            <strong>Nothing saved on this day</strong>
+
+                            <p>
+                                Choose a date marked in the calendar
+                                to view an entry.
+                            </p>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+            <!-- interactive trend chart for the four core questionnaire measures -->
+            <section class="patterns-trends-card">
+
+                <div class="patterns-section-heading">
+
+                    <div>
+                        <span class="patterns-kicker">Over time</span>
+                        <h2>Wellbeing trends</h2>
+
+                        <p>
+                            See how your saved questionnaire responses
+                            have changed.
+                        </p>
+                    </div>
+
+
+                    <!-- controls how much history is displayed -->
+                    <div class="patterns-range-buttons">
+
+                        <button
+                            type="button"
+                            class="trend-range active"
+                            data-range="4weeks"
+                        >
+                            4 weeks
+                        </button>
+
+                        <button
+                            type="button"
+                            class="trend-range"
+                            data-range="3months"
+                        >
+                            3 months
+                        </button>
+
+                        <button
+                            type="button"
+                            class="trend-range"
+                            data-range="all"
+                        >
+                            All
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- allows one core questionnaire measure to be viewed at a time -->
+                <div class="patterns-metric-buttons">
+
+                    <button
+                        type="button"
+                        class="trend-metric active"
+                        data-metric="sleep"
+                    >
+                        Sleep
+                    </button>
+
+                    <button
+                        type="button"
+                        class="trend-metric"
+                        data-metric="mood"
+                    >
+                        Mood
+                    </button>
+
+                    <button
+                        type="button"
+                        class="trend-metric"
+                        data-metric="stress"
+                    >
+                        Stress
+                    </button>
+
+                    <button
+                        type="button"
+                        class="trend-metric"
+                        data-metric="support"
+                    >
+                        Support
+                    </button>
+
+                </div>
+
+
+                <!-- scale description changes with the selected metric -->
+                <div class="patterns-chart-info">
+                    <span id="trend-scale-note">
+                        1 = Very poorly · 5 = Very well
+                    </span>
+                </div>
+
+
+                <!-- Chart.js renders the current trend in this canvas -->
+                <div class="patterns-chart">
+                    <canvas id="checkinTrendChart"></canvas>
+                </div>
+
+
+                <!-- shown instead of the graph when the selected period has no data -->
+                <div
+                    id="trend-empty"
+                    class="patterns-trend-empty"
+                    hidden
+                >
+                    No saved questionnaires are available for this period.
+                </div>
+
+                <!-- explains how many saved questionnaires are currently displayed -->
+                <p
+                    id="trend-message"
+                    class="patterns-trend-message"
+                ></p>
+
+            </section>
+
+
+            <!-- selected Personal Pattern Analysis observations -->
+            <section class="patterns-insights">
+
+                <div class="patterns-section-heading">
+
+                    <div>
+                        <span class="patterns-kicker">
+                            Longer-term view
+                        </span>
+
+                        <h2>Patterns noticed</h2>
+
+                        <p>
+                            These observations describe changes or repeated
+                            patterns in your saved questionnaire history.
+                            They are not diagnoses.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- surface selected patterns only when analysis has enough history -->
+                {% if pattern_summary.available and pattern_summary.cards %}
+
+                    <div class="patterns-insight-grid">
+
+                        {% for card in pattern_summary.cards %}
+
+                            <article class="patterns-insight-card">
+
+                                <!-- two-digit number keeps pattern cards easy to scan -->
+                                <div class="patterns-insight-number">
+                                    {{ "%02d"|format(loop.index) }}
+                                </div>
+
+                                <div>
+                                    <h3>{{ card.title }}</h3>
+                                    <p>{{ card.text }}</p>
+                                </div>
+
+                            </article>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- only the most relevant patterns are surfaced to avoid overloading the page -->
+                    <p class="patterns-insight-note">
+                        Only selected patterns are shown to keep this page clear.
+                    </p>
+
+
+                {% else %}
+
+                    <!-- fallback message when there is not yet a useful pattern to show -->
+                    <div class="patterns-insight-empty">
+                        <span>⌁</span>
+                        <p>{{ pattern_summary.message }}</p>
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+        {% else %}
+
+            <!-- empty state before the user has saved any history -->
+            <section class="patterns-empty">
+
+                <div>♡</div>
+
+                <span class="patterns-kicker">
+                    Your history
+                </span>
+
+                <h2>No saved history yet</h2>
+
+                <p>
+                    Saved questionnaires and Personal Check-Ins will appear
+                    here when you choose to keep them.
+                </p>
+
+                <a href="{{ url_for('home.home') }}">
+                    Return to Today
+                </a>
+
+            </section>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+
+<!-- chart scripts are only needed when saved history exists -->
+{% if has_history %}
+
+<!-- loads Chart.js for the interactive questionnaire trend graph -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<!-- graph points are safely passed from Flask into JavaScript as JSON -->
+<script id="trend-data-json" type="application/json">
+    {{ graph_points | tojson }}
+</script>
+
+
+<!-- questionnaire wording for each 1-5 value is also supplied by Flask -->
+<script id="trend-labels-json" type="application/json">
+    {{ trend_labels | tojson }}
+</script>
+
+
+<script>
+    // read the trend data prepared by the backend
+    const trendData = JSON.parse(
+        document.getElementById("trend-data-json").textContent
+    );
+
+    // read the user-facing labels used in chart tooltips
+    const trendLabels = JSON.parse(
+        document.getElementById("trend-labels-json").textContent
+    );
+
+
+    // display names for the four questionnaire measures
+    const metricNames = {
+        sleep: "Sleep",
+        mood: "Mood",
+        stress: "Stress",
+        support: "Support"
+    };
+
+
+    // each questionnaire measure has its own wording for the 1-5 scale
+    const scaleNotes = {
+        sleep: "1 = Very poorly · 5 = Very well",
+        mood: "1 = Very low · 5 = Very good",
+        stress: "1 = Not stressed · 5 = Extremely stressed",
+        support: "1 = Not supported · 5 = Very well supported"
+    };
+
+
+    // default chart selection when the page first loads
+    let selectedMetric = "sleep";
+    let selectedRange = "4weeks";
+
+
+    // chart and supporting message elements
+    const canvas = document.getElementById("checkinTrendChart");
+    const message = document.getElementById("trend-message");
+    const emptyMessage = document.getElementById("trend-empty");
+    const scaleNote = document.getElementById("trend-scale-note");
+
+
+    // convert backend YYYY-MM-DD values into JavaScript Date objects
+    function makeDate(value) {
+        const [year, month, day] = value.split("-").map(Number);
+        return new Date(year, month - 1, day);
+    }
+
+
+    // return only graph points that belong to the selected time range
+    function getFilteredData() {
+
+        // all keeps the full saved questionnaire history
+        if (selectedRange === "all") {
+            return trendData;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const startDate = new Date(today);
+
+
+        // current day plus the previous 27 days
+        if (selectedRange === "4weeks") {
+            startDate.setDate(startDate.getDate() - 27);
+        }
+
+
+        // broader view beginning three calendar months earlier
+        if (selectedRange === "3months") {
+            startDate.setMonth(startDate.getMonth() - 3);
+        }
+
+
+        return trendData.filter(
+            item => makeDate(item.date) >= startDate
+        );
+    }
+
+
+    // create one reusable Chart.js line chart
+    const trendChart = new Chart(canvas, {
+        type: "line",
+
+        data: {
+            labels: [],
+
+            datasets: [{
+                data: [],
+                borderColor: "#c77b92",
+                backgroundColor: "#c77b92",
+                borderWidth: 2.5,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: "#c77b92",
+                pointBorderColor: "#fff8f6",
+                pointBorderWidth: 2,
+                tension: 0.28,
+                fill: false
+            }]
+        },
+
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: false,
+
+
+            plugins: {
+
+                // only one metric is displayed at a time, so a legend is unnecessary
+                legend: {
+                    display: false
+                },
+
+
+                tooltip: {
+                    backgroundColor: "#43363b",
+                    padding: 10,
+
+                    callbacks: {
+
+                        // replace the raw score with its questionnaire wording
+                        label(context) {
+                            const score = context.raw;
+                            const labels = trendLabels[selectedMetric] || {};
+                            const wording = labels[String(score)] || "";
+
+                            return `${metricNames[selectedMetric]}: ${wording}`;
+                        }
+                    }
+                }
+            },
+
+
+            scales: {
+
+                // all four core questions use the same 1-5 numerical scale
+                y: {
+                    min: 1,
+                    max: 5,
+
+                    ticks: {
+                        stepSize: 1,
+                        precision: 0,
+                        color: "#8e7b82"
+                    },
+
+                    grid: {
+                        color: "#f0e4e8"
+                    },
+
+                    border: {
+                        display: false
+                    }
+                },
+
+
+                // x-axis displays the saved questionnaire dates
+                x: {
+                    ticks: {
+                        color: "#8e7b82"
+                    },
+
+                    grid: {
+                        display: false
+                    },
+
+                    border: {
+                        color: "#eadde2"
+                    }
+                }
+
+            }
+        }
+    });
+
+
+    // refresh the chart whenever the metric or date range changes
+    function updateTrendChart() {
+
+        // ignore entries where the selected metric has no stored value
+        const usable = getFilteredData().filter(
+            item =>
+                item[selectedMetric] !== null &&
+                item[selectedMetric] !== undefined
+        );
+
+
+        // use the shorter display dates supplied by the backend
+        trendChart.data.labels = usable.map(
+            item => item.display_date
+        );
+
+
+        // plot only the currently selected questionnaire measure
+        trendChart.data.datasets[0].data = usable.map(
+            item => item[selectedMetric]
+        );
+
+
+        trendChart.data.datasets[0].label =
+            metricNames[selectedMetric];
+
+
+        // update the explanation above the chart
+        scaleNote.textContent =
+            scaleNotes[selectedMetric];
+
+
+        // hide the chart when the selected period contains no usable data
+        if (!usable.length) {
+            canvas.style.display = "none";
+            emptyMessage.hidden = false;
+            message.textContent = "";
+
+        } else {
+            canvas.style.display = "block";
+            emptyMessage.hidden = true;
+
+
+            // one saved point cannot yet show a meaningful trend over time
+            message.textContent = usable.length === 1
+                ? "One saved questionnaire is shown. Save another questionnaire to begin seeing a trend."
+                : `${usable.length} saved questionnaires shown.`;
+        }
+
+
+        trendChart.update();
+    }
+
+
+    // switch between Sleep, Mood, Stress and Support
+    document.querySelectorAll(".trend-metric").forEach(button => {
+
+        button.addEventListener("click", () => {
+            selectedMetric = button.dataset.metric;
+
+
+            // remove the active state from the previously selected metric
+            document.querySelectorAll(".trend-metric")
+                .forEach(item => item.classList.remove("active"));
+
+
+            button.classList.add("active");
+            updateTrendChart();
+        });
+
+    });
+
+
+    // switch between 4 weeks 3 months and all saved history
+    document.querySelectorAll(".trend-range").forEach(button => {
+
+        button.addEventListener("click", () => {
+            selectedRange = button.dataset.range;
+
+
+            // only one date-range button should remain active
+            document.querySelectorAll(".trend-range")
+                .forEach(item => item.classList.remove("active"));
+
+
+            button.classList.add("active");
+            updateTrendChart();
+        });
+
+    });
+
+
+    // render the default Sleep / 4-week view when the page opens
+    updateTrendChart();
+</script>
+
+{% endif %}
+
+{% endblock %}

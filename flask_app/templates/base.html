@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- basic page metadata shared by every template -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- child templates can replace the page title -->
+    <title>{% block title %}Nurture Space{% endblock %}</title>
+
+    <!-- main application stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+
+
+<body>
+
+<!-- public header is shown only when no user is signed in -->
+{% if not session.get("user_id") %}
+
+<header class="public-header">
+    <div class="public-header-inner">
+
+        <!-- brand link returns visitors to the landing page -->
+        <a href="{{ url_for('home.home') }}" class="public-brand">
+            <span class="public-brand-mark">N</span>
+            <span>Nurture Space</span>
+        </a>
+
+        <span class="public-header-tagline">Postpartum wellbeing</span>
+    </div>
+</header>
+
+{% endif %}
+
+
+<!-- pages in this list already provide their own sidebar navigation -->
+{% set sidebar_blueprints = [
+    "home",
+    "questions",
+    "reflection",
+    "review",
+    "dashboard",
+    "assistant",
+    "resources",
+    "history",
+    "settings"
+] %}
+
+
+<!-- fallback top navigation for signed-in pages that do not use the sidebar -->
+{% if session.get("user_id") and session.get("consent_accepted")
+      and request.blueprint not in sidebar_blueprints %}
+
+<header class="logged-in-topnav">
+    <div class="logged-in-topnav-inner">
+
+        <!-- application brand links back to Today -->
+        <a href="{{ url_for('home.home') }}" class="logged-in-brand">
+            👩‍🍼 Nurture Space
+        </a>
+
+
+        <!-- navigation for authenticated pages outside the sidebar layout -->
+        <nav class="logged-in-nav-links">
+
+            <a href="{{ url_for('home.home') }}"
+               class="logged-in-nav-link{% if request.blueprint == 'home' %} active{% endif %}">
+                Today
+            </a>
+
+            <a href="{{ url_for('questions.core_questions') }}"
+               class="logged-in-nav-link{% if request.blueprint == 'questions' %} active{% endif %}">
+                Questions
+            </a>
+
+            <a href="{{ url_for('reflection.reflection_page', standalone=1) }}"
+               class="logged-in-nav-link{% if request.blueprint == 'reflection' %} active{% endif %}">
+                Reflection
+            </a>
+
+            <a href="{{ url_for('assistant.assistant_page') }}"
+               class="logged-in-nav-link{% if request.blueprint == 'assistant' %} active{% endif %}">
+                Assistant
+            </a>
+
+            <a href="{{ url_for('resources.saved_resources') }}"
+               class="logged-in-nav-link{% if request.blueprint == 'resources' %} active{% endif %}">
+                Saved Resources
+            </a>
+
+            <a href="{{ url_for('history.history_page') }}"
+               class="logged-in-nav-link{% if request.blueprint == 'history' %} active{% endif %}">
+                History & Patterns
+            </a>
+
+            <a href="{{ url_for('settings.settings_page') }}"
+               class="logged-in-nav-link{% if request.blueprint == 'settings' %} active{% endif %}">
+                Settings
+            </a>
+
+            <a href="{{ url_for('auth.logout') }}" class="logged-in-nav-link">
+                Log out
+            </a>
+
+        </nav>
+    </div>
+</header>
+
+{% endif %}
+
+
+<!-- main wrapper changes styling depending on whether the user is signed in -->
+<main class="{% if session.get('user_id') %}authenticated-main{% else %}public-main{% endif %}">
+
+    <!-- Flask flash messages are available to all child pages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+            <div class="flash-container public-flashes">
+
+                <!-- category controls the alert styling, such as success or error -->
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+            </div>
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- child templates place their main page content here -->
+    {% block content %}{% endblock %}
+
+</main>
+
+
+<!-- child templates can add page-specific JavaScript here -->
+{% block scripts %}{% endblock %}
+
+</body>
+
+</html>

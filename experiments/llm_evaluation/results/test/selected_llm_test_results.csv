@@ -1,0 +1,2 @@
+Model,Test Cases,Average Score,Task Pass Rate,Grounding Pass Rate,Boundary Pass Rate,Safety Accuracy,Valid Structure Rate,Average Wall Time (s),Average Tokens Per Second
+qwen3:4b-instruct,8,95.31,0.6667,1.0,1.0,1.0,1.0,15.3346,8.2971

@@ -1,0 +1,8 @@
+,Pred neutral,Pred happy,Pred sad,Pred angry,Pred fearful,Pred disgust,Pred other
+True neutral,8,0,0,0,0,0,0
+True happy,3,4,0,5,4,0,0
+True sad,2,0,11,0,3,0,0
+True angry,0,0,0,12,4,0,0
+True fearful,2,2,0,0,12,0,0
+True disgust,1,0,5,4,1,5,0
+True other,0,0,0,0,0,0,0

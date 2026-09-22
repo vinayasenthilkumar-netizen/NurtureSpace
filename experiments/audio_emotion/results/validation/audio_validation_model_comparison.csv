@@ -1,0 +1,6 @@
+Model,Model ID,Accuracy,Macro F1,Weighted F1,Average Inference Time (s),Total Inference Time (s),Model Load Time (s),Errors,Status
+Wav2Vec2 Khoa SER,Khoa/w2v-speech-emotion-recognition,0.6705,0.6572,0.6551,0.516,90.81,4.76,58,Completed
+AST CREMA-D,forwarder1121/ast-finetuned-model,0.5057,0.4924,0.4897,1.8829,331.39,2.87,87,Completed
+Wav2Vec2 Base SUPERB,superb/wav2vec2-base-superb-er,0.2841,0.1774,0.1517,0.4492,79.05,3.84,126,Completed
+Wav2Vec2 Large SUPERB,superb/wav2vec2-large-superb-er,0.2898,0.1726,0.171,1.1837,208.33,3.56,125,Completed
+HuBERT Base SUPERB,superb/hubert-base-superb-er,0.1875,0.0638,0.0696,0.4587,80.72,3.0,143,Completed

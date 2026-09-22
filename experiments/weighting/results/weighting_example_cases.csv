@@ -1,0 +1,9 @@
+Reflection Score,Question Score,Score Difference,60:40 Internal Combined Value,60:40 Overall Check-In Indicator,70:30 Internal Combined Value,70:30 Overall Check-In Indicator,80:20 Internal Combined Value,80:20 Overall Check-In Indicator,60:40 vs 70:30 Difference,80:20 vs 70:30 Difference,60:40 Changed Indicator,80:20 Changed Indicator
+2.0,2.5,0.5,2.2,Significant strain,2.15,Significant strain,2.1,Significant strain,0.05,0.05,False,False
+2.0,4.5,2.5,3.0,Some strain,2.75,Some strain,2.5,Some strain,0.25,0.25,False,False
+2.5,2.0,0.5,2.3,Significant strain,2.35,Some strain,2.4,Some strain,0.05,0.05,True,False
+3.0,3.75,0.75,3.3,Some strain,3.225,Some strain,3.15,Some strain,0.075,0.075,False,False
+3.5,4.0,0.5,3.7,Relatively steady,3.65,Some strain,3.6,Some strain,0.05,0.05,True,False
+3.75,3.0,0.75,3.45,Some strain,3.525,Some strain,3.6,Some strain,0.075,0.075,False,False
+4.0,3.5,0.5,3.8,Relatively steady,3.85,Relatively steady,3.9,Relatively steady,0.05,0.05,False,False
+4.5,2.0,2.5,3.5,Some strain,3.75,Relatively steady,4.0,Relatively steady,0.25,0.25,True,False

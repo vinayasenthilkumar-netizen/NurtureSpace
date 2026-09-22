@@ -1,0 +1,2 @@
+Model,Test Speakers,Test Recordings,WER,CER,Average Transcription Time (s),Total Transcription Time (s),Failed Files
+small.en,8,96,0.0359,0.02,6.6516,638.55,0

@@ -1,0 +1,6 @@
+Model,Status,WER,CER,Average Transcription Time (s),Total Transcription Time (s),Model Load Time (s),Failed Files
+turbo,Completed,0.0241,0.0079,23.0538,2305.38,17.06,0
+medium.en,Completed,0.0369,0.0188,21.9701,2197.01,8.53,0
+small.en,Completed,0.041,0.018,3.8701,387.01,2.52,0
+base.en,Completed,0.0534,0.0253,1.2315,123.15,0.83,0
+tiny.en,Completed,0.0677,0.0326,0.5823,58.23,0.46,0

@@ -1,0 +1,2 @@
+Model,Test Actor,Test Videos,Accuracy,Macro F1,Weighted F1,Average Inference Time (s),Total Inference Time (s),Model Load Time (s),Average Frame Agreement,No Face Videos,Failed Videos,Other Predictions
+enet_b0_8_va_mtl,04,60,0.6,0.5757,0.5374,0.1062,6.37,0.27,0.6917,0,0,0

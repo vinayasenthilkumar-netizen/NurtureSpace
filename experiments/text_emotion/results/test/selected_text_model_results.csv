@@ -1,0 +1,2 @@
+Model,Model ID,Test Examples,Accuracy,Macro F1,Weighted F1,Average Inference Time (s),Total Evaluation Time (s),Errors
+DistilBERT GoEmotions joeddav,joeddav/distilbert-base-uncased-go-emotions-student,2000,0.5535,0.469,0.5802,0.05,99.9,893

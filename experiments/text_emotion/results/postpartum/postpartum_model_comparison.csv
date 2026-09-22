@@ -1,0 +1,6 @@
+Model,Model ID,Top 1 Accuracy,Top 3 Coverage,Macro F1,Weighted F1,Average Inference Time (s),Total Time (s),Status
+DistilBERT GoEmotions joeddav,joeddav/distilbert-base-uncased-go-emotions-student,0.8333,0.9667,0.8228,0.8228,0.0232,0.7,Completed
+RoBERTa GoEmotions SamLowe,SamLowe/roberta-base-go_emotions,0.8,0.9667,0.7858,0.7858,0.0445,1.33,Completed
+DistilRoBERTa j-hartmann,j-hartmann/emotion-english-distilroberta-base,0.7,0.8333,0.6283,0.6283,0.0224,0.67,Completed
+DistilBERT bhadresh,bhadresh-savani/distilbert-base-uncased-emotion,0.6667,0.7667,0.6142,0.6142,0.0237,0.71,Completed
+Twitter RoBERTa CardiffNLP,cardiffnlp/twitter-roberta-base-emotion-multilabel-latest,0.5667,0.8667,0.4687,0.4687,0.0395,1.18,Completed

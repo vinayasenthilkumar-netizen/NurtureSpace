@@ -1,0 +1,6 @@
+Model,Accuracy,Macro F1,Weighted F1,Average Inference Time (s),Total Inference Time (s),Model Load Time (s),Average Frame Agreement,No Face Videos,Failed Videos,Other Predictions,Status
+enet_b0_8_va_mtl,0.6167,0.6168,0.5979,0.1197,21.55,0.21,0.7715,0,0,2,Completed
+enet_b2_7,0.5778,0.5805,0.5717,0.2664,47.95,0.4,0.7389,0,0,0,Completed
+enet_b2_8,0.5,0.5288,0.5084,0.2411,43.39,0.35,0.7056,0,0,21,Completed
+enet_b0_8_best_vgaf,0.5056,0.4783,0.4711,0.1209,21.77,0.26,0.7361,0,0,3,Completed
+enet_b0_8_best_afew,0.4611,0.4527,0.4304,0.1395,25.11,0.25,0.7479,0,0,0,Completed

@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+
+{% block title %}Settings | Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- main application shell containing the persistent sidebar and settings content -->
+<div class="app-shell">
+
+    <!-- shared left navigation used across the authenticated application -->
+    <aside class="sidebar">
+        <div>
+
+            <!-- application branding shown at the top of the sidebar -->
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">👩‍🍼</div>
+
+                <div>
+                    <strong>Nurture Space</strong>
+                    <small>Postpartum wellbeing</small>
+                </div>
+            </div>
+
+            <!-- main navigation links for the signed-in user -->
+            <nav class="sidebar-nav">
+
+                <!-- returns the user to today's home page -->
+                <a href="{{ url_for('home.home') }}" class="sidebar-link">
+                    <span>🌸</span> Today
+                </a>
+
+                <!-- opens the structured wellbeing questionnaire -->
+                <a href="{{ url_for('questions.core_questions') }}" class="sidebar-link">
+                    <span>✔️</span> Questionnaire
+                </a>
+
+                <!-- opens reflection directly rather than as part of another page flow -->
+                <a href="{{ url_for('reflection.reflection_page', standalone=1) }}" class="sidebar-link">
+                    <span>📕</span> Personal Check-In
+                </a>
+
+                <!-- opens the separate bounded AI Assistant -->
+                <a href="{{ url_for('assistant.assistant_page') }}" class="sidebar-link">
+                    <span>🤖</span> Assistant
+                </a>
+
+                <!-- displays resources that the user has bookmarked -->
+                <a href="{{ url_for('resources.saved_resources') }}" class="sidebar-link">
+                    <span>❤️</span> Saved Resources
+                </a>
+
+                <!-- opens saved check-ins and personal pattern information -->
+                <a href="{{ url_for('history.history_page') }}" class="sidebar-link">
+                    <span>🗓️</span> History & Patterns
+                </a>
+
+                <!-- settings is marked active because this is the current page -->
+                <a href="{{ url_for('settings.settings_page') }}" class="sidebar-link active">
+                    <span>⚙️</span> Settings
+                </a>
+            </nav>
+        </div>
+
+
+        <!-- signed-in user information and logout action stay at the bottom -->
+        <div class="sidebar-bottom">
+
+            <!-- simple profile summary using the first letter of the user's name -->
+            <div class="sidebar-profile">
+                <div class="profile-avatar">{{ welcome_name[0] | upper }}</div>
+
+                <div>
+                    <strong>{{ welcome_name }}</strong>
+                    <small>Signed in</small>
+                </div>
+            </div>
+
+            <!-- ends the current authenticated session -->
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-link logout-link">
+                <span>➜]</span> Log out
+            </a>
+        </div>
+    </aside>
+
+
+    <!-- main settings page content -->
+    <main class="settings-simple-main">
+
+        <!-- page heading introduces the account and privacy controls -->
+        <header class="settings-simple-header">
+            <span class="settings-kicker">Your account</span>
+            <h1>Settings</h1>
+            <p>Manage your account, privacy and security in one place.</p>
+        </header>
+
+
+        <!-- account summary card shown before the individual settings sections -->
+        <section class="settings-profile-card">
+
+            <!-- avatar uses the first character of the current welcome name -->
+            <div class="settings-profile-avatar">
+                {{ welcome_name[0] | upper }}
+            </div>
+
+            <div class="settings-profile-copy">
+                <span>Account</span>
+
+                <!-- display name is preferred, with username used as a fallback -->
+                <h2>{{ user.display_name or user.username }}</h2>
+                <p>{{ user.email }}</p>
+            </div>
+        </section>
+
+
+        <!-- quick settings cards for privacy and session controls -->
+        <div class="settings-grid">
+
+            <!-- privacy settings are handled on their own dedicated page -->
+            <section class="settings-simple-card">
+                <div class="settings-card-icon">❤️</div>
+
+                <div class="settings-card-copy">
+                    <span class="settings-card-label">Privacy</span>
+                    <h2>Your privacy choices</h2>
+
+                    <p>
+                        Choose whether approved entries, saved history and
+                        bookmarked resources may be stored or used.
+                    </p>
+
+                    <!-- opens the user's editable privacy preferences -->
+                    <a href="{{ url_for('privacy.privacy_settings') }}"
+                       class="settings-secondary-button">
+                        Review Privacy Settings
+                    </a>
+                </div>
+            </section>
+
+
+            <!-- provides another clear logout option from the settings page -->
+            <section class="settings-simple-card">
+                <div class="settings-card-icon">➜]</div>
+
+                <div class="settings-card-copy">
+                    <span class="settings-card-label">Session</span>
+                    <h2>Log out</h2>
+
+                    <p>End your current Nurture Space session on this device.</p>
+
+                    <a href="{{ url_for('auth.logout') }}"
+                       class="settings-secondary-button">
+                        Log Out
+                    </a>
+                </div>
+            </section>
+
+        </div>
+
+
+        <!-- password-change section requires the existing password first -->
+        <section class="settings-password-card">
+
+            <div class="settings-section-heading">
+                <div>
+                    <span class="settings-kicker">Security</span>
+                    <h2>Change password</h2>
+                    <p>Enter your current password before choosing a new one.</p>
+                </div>
+
+                <div class="settings-lock-icon">🛡️</div>
+            </div>
+
+
+            <!-- submitted to the settings password-change Flask route -->
+            <form method="post"
+                  action="{{ url_for('settings.change_password') }}"
+                  class="settings-simple-form">
+
+                <div class="settings-form-grid">
+
+                    <!-- current password is verified before any update is allowed -->
+                    <div class="form-group">
+                        <label for="current_password">Current password</label>
+
+                        <input
+                            type="password"
+                            id="current_password"
+                            name="current_password"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+
+                    <!-- browser validation enforces the same basic password length -->
+                    <div class="form-group">
+                        <label for="new_password">New password</label>
+
+                        <input
+                            type="password"
+                            id="new_password"
+                            name="new_password"
+                            autocomplete="new-password"
+                            minlength="8"
+                            maxlength="128"
+                            required
+                        >
+
+                        <small>Use between 8 and 128 characters.</small>
+                    </div>
+
+
+                    <!-- confirmation field helps prevent accidental password typos -->
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm new password</label>
+
+                        <input
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            autocomplete="new-password"
+                            minlength="8"
+                            maxlength="128"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <!-- password is changed only when the user explicitly submits the form -->
+                <div class="settings-form-action">
+                    <button type="submit" class="settings-primary-button">
+                        Change Password
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+
+        <!-- read-only account information currently stored for the signed-in user -->
+        <section class="settings-account-details">
+
+            <div class="settings-section-heading">
+                <div>
+                    <span class="settings-kicker">Account details</span>
+                    <h2>Your information</h2>
+                </div>
+            </div>
+
+
+            <div class="settings-detail-grid">
+
+                <!-- username used for the account -->
+                <div>
+                    <span>Username</span>
+                    <strong>{{ user.username }}</strong>
+                </div>
+
+                <!-- registered account email -->
+                <div>
+                    <span>Email</span>
+                    <strong>{{ user.email }}</strong>
+                </div>
+
+                <!-- show a clear fallback when no display name has been set -->
+                <div>
+                    <span>Display name</span>
+                    <strong>{{ user.display_name or "Not set" }}</strong>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- destructive account action is visually separated from normal settings -->
+        <section class="settings-delete-card">
+
+            <div class="settings-delete-heading">
+                <div>
+                    <span>Permanent action</span>
+                    <h2>Delete account</h2>
+
+                    <p>
+                        This permanently removes your account and cannot be undone.
+                        Your current password is required.
+                    </p>
+                </div>
+
+                <div class="settings-delete-icon">‼️</div>
+            </div>
+
+
+            <!-- details keeps the destructive form collapsed until the user opens it -->
+            <details class="settings-delete-details">
+                <summary>Delete my account</summary>
+
+                <!-- deletion is handled by a separate protected Flask route -->
+                <form method="post"
+                      action="{{ url_for('settings.delete_account') }}"
+                      class="settings-delete-form">
+
+                    <!-- password must be re-entered before account deletion -->
+                    <div class="form-group">
+                        <label for="delete_password">Current password</label>
+
+                        <input
+                            type="password"
+                            id="delete_password"
+                            name="delete_password"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+
+                    <!-- explicit confirmation helps prevent accidental deletion -->
+                    <label class="settings-delete-confirm-simple">
+                        <input
+                            type="checkbox"
+                            name="confirm_delete"
+                            value="yes"
+                            required
+                        >
+
+                        <span>
+                            I understand that deleting my account is permanent.
+                        </span>
+                    </label>
+
+
+                    <!-- final destructive action is only sent after both checks -->
+                    <button type="submit" class="settings-danger-button">
+                        Permanently Delete Account
+                    </button>
+
+                </form>
+            </details>
+
+        </section>
+
+    </main>
+
+</div>
+
+{% endblock %}

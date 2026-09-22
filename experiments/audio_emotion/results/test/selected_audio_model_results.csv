@@ -1,0 +1,2 @@
+Model,Model ID,Test Actors,Test Recordings,Accuracy,Macro F1,Weighted F1,Average Inference Time (s),Total Inference Time (s),Errors
+Wav2Vec2 Khoa SER,Khoa/w2v-speech-emotion-recognition,"05, 06",88,0.5909,0.5738,0.5653,0.422,37.14,36

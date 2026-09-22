@@ -1,0 +1,16 @@
+Case ID,Query,Relevant Resource IDs,Held-out Version
+H01,My newborn's skin looks yellow. Where can I read about jaundice and when to get help?,"22, 96, 357",heldout_v1
+H02,Why does my newborn need a hearing screening test and what happens if the result is abnormal?,354,heldout_v1
+H03,What is newborn metabolic screening and why is it done soon after birth?,356,heldout_v1
+H04,"What contraception or family-planning options can I consider after giving birth, including while breastfeeding?","39, 41, 64, 81, 84, 233, 355",heldout_v1
+H05,"I want information about my newborn's vaccinations, including BCG and routine immunisations.","104, 119, 360",heldout_v1
+H06,How should I clean and look after my baby's umbilical cord stump?,"248, 351, 372",heldout_v1
+H07,How is my baby's growth measured and monitored during the first year?,"103, 118, 373",heldout_v1
+H08,When can I gradually start exercising again after giving birth?,"26, 31, 37, 57",heldout_v1
+H09,Is bleeding after childbirth expected and what physical changes should I know about?,"30, 54, 87",heldout_v1
+H10,I want practical ideas for bonding and connecting with my newborn in the early days.,"24, 91, 320",heldout_v1
+H11,How can I make my home and everyday travel safer for my young baby?,"19, 89",heldout_v1
+H12,Can I drink coffee while breastfeeding and what food or hydration guidance should I follow?,361,heldout_v1
+H13,I want to stop breastfeeding gradually. How can I wean and replace feeds safely?,364,heldout_v1
+H14,When might my periods and fertility return while I am breastfeeding?,"39, 64, 81, 84, 355",heldout_v1
+H15,My breast is painful while breastfeeding and I am worried about a blocked duct or mastitis.,"70, 80, 85",heldout_v1

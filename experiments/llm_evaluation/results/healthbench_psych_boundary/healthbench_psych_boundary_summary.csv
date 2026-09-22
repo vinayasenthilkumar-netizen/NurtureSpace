@@ -1,0 +1,2 @@
+Model,Dataset,Evaluation,Cases,Completed Cases,Truncated Responses,Average Response Characters,Average Generated Tokens,Average Wall Time (s),Average Tokens Per Second
+qwen3:4b-instruct,HealthBench-Psych perinatal subset,External boundary robustness,20,20,15,1359.35,283.65,87.84,7.15

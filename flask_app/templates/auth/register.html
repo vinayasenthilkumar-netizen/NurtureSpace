@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up | Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- registration page for creating a new authenticated account -->
+<div class="auth-screen">
+
+    <!-- short explanation of the account and privacy approach -->
+    <section class="auth-copy">
+
+        <span class="landing-kicker">Your space, your choices</span>
+
+        <h1>Create your Nurture Space.</h1>
+
+        <p class="auth-lead">
+            Keep the check-ins and resources you choose while staying in control
+            of your privacy.
+        </p>
+
+
+        <!-- explains that registration and check-in saving are separate choices -->
+        <div class="auth-soft-note">
+
+            <strong>Your choices come first.</strong>
+
+            <p>
+                Creating an account does not automatically save your check-ins.
+                You will choose your privacy preferences after registration.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- account registration form -->
+    <section class="auth-panel">
+
+        <div class="auth-card-header">
+            <h2>Sign up</h2>
+            <p>Create your account to continue.</p>
+        </div>
+
+
+        <form method="POST" class="auth-form">
+
+            <!-- username is used as the main account identifier -->
+            <div class="form-group">
+
+                <label for="username">Username</label>
+
+                <!-- keep the entered value if backend validation returns the form -->
+                <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    value="{{ username }}"
+                    placeholder="Choose a username"
+                    autocomplete="username"
+                    required
+                >
+
+                <small>Letters, numbers and underscores only.</small>
+
+            </div>
+
+
+            <!-- optional name shown inside the application interface -->
+            <div class="form-group">
+
+                <label for="display_name">
+                    Display name <span class="optional">Optional</span>
+                </label>
+
+                <input
+                    id="display_name"
+                    name="display_name"
+                    type="text"
+                    value="{{ display_name }}"
+                    placeholder="Name shown inside the application"
+                >
+
+            </div>
+
+
+            <!-- email is required as part of the account information -->
+            <div class="form-group">
+
+                <label for="email">Email address</label>
+
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value="{{ email }}"
+                    placeholder="name@example.com"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <!-- password must contain at least eight characters -->
+            <div class="form-group">
+
+                <label for="password">Password</label>
+
+                <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Minimum 8 characters"
+                    autocomplete="new-password"
+                    minlength="8"
+                    required
+                >
+
+            </div>
+
+
+            <!-- confirmation field helps catch password entry mistakes -->
+            <div class="form-group">
+
+                <label for="confirm_password">Confirm password</label>
+
+                <input
+                    id="confirm_password"
+                    name="confirm_password"
+                    type="password"
+                    placeholder="Enter your password again"
+                    autocomplete="new-password"
+                    minlength="8"
+                    required
+                >
+
+            </div>
+
+
+            <!-- submit registration details to the current Flask route -->
+            <button
+                type="submit"
+                class="button landing-primary button-full"
+            >
+                Sign Up
+            </button>
+
+        </form>
+
+
+        <!-- existing users can return to the login page -->
+        <div class="auth-switch">
+
+            Already have an account?
+
+            <a href="{{ url_for('auth.login') }}">
+                Log in
+            </a>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

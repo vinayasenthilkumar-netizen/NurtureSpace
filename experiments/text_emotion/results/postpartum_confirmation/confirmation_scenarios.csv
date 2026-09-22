@@ -1,0 +1,61 @@
+Scenario,Text,Expected,Type
+1,I felt refreshed after getting enough time to eat and rest.,Positive,Clear
+2,I was proud of how I managed the baby's routine today.,Positive,Clear
+3,I felt cheerful after taking a short walk outside.,Positive,Clear
+4,The morning went smoothly and I felt hopeful about the rest of the day.,Positive,Clear
+5,I felt more capable today than I did yesterday.,Positive,Clear
+6,"I was exhausted, but I still felt pleased with how feeding went.",Positive,Mixed
+7,"The night was difficult, but I felt good about getting through it.",Positive,Mixed
+8,"There were stressful moments, although I still felt optimistic.",Positive,Mixed
+9,"Nothing special happened, but overall I felt a little lighter.",Positive,Ambiguous
+10,"I cannot really explain it, but today felt encouraging.",Positive,Ambiguous
+11,My partner took time to listen and I felt cared for.,Warmth,Clear
+12,Holding my baby quietly made me feel very close to them.,Warmth,Clear
+13,My mother helped with dinner and I felt supported.,Warmth,Clear
+14,Talking with a friend made me feel understood.,Warmth,Clear
+15,I felt comforted when my sister checked on me.,Warmth,Clear
+16,"I was having a hard day, but my partner stayed beside me.",Warmth,Mixed
+17,"I felt tired, although spending time with my baby felt comforting.",Warmth,Mixed
+18,"I was stressed, but having family around made me feel less alone.",Warmth,Mixed
+19,"We did not talk much, but having someone nearby felt reassuring.",Warmth,Ambiguous
+20,"I cannot describe it clearly, but I felt connected during feeding.",Warmth,Ambiguous
+21,I felt sad and tearful for much of today.,Low Mood,Clear
+22,I did not enjoy anything today and felt very low.,Low Mood,Clear
+23,I felt discouraged and withdrawn from everyone around me.,Low Mood,Clear
+24,The whole day felt heavy and I struggled to feel interested in anything.,Low Mood,Clear
+25,I felt empty even though people were around me.,Low Mood,Clear
+26,"My family helped today, but I still felt down.",Low Mood,Mixed
+27,"The baby slept well, although I still felt unusually sad.",Low Mood,Mixed
+28,"Some parts of the day were fine, but I kept feeling low.",Low Mood,Mixed
+29,"I cannot put my finger on it, but everything felt a bit heavy.",Low Mood,Ambiguous
+30,"Nothing was particularly wrong, yet I did not feel like myself today.",Low Mood,Ambiguous
+31,I kept worrying about whether the baby was getting enough milk.,Worry,Clear
+32,I feel anxious about managing everything tomorrow.,Worry,Clear
+33,I was nervous about the baby's appointment.,Worry,Clear
+34,My mind kept thinking about things that could go wrong.,Worry,Clear
+35,I feel uneasy about returning to work soon.,Worry,Clear
+36,"I had some rest, but I still worried about the baby's feeding.",Worry,Mixed
+37,"My partner reassured me, although I remained anxious.",Worry,Mixed
+38,"Today went well, but I am nervous about tonight.",Worry,Mixed
+39,"I am not sure why, but I keep feeling uneasy about tomorrow.",Worry,Ambiguous
+40,"Nothing specific is wrong, but I cannot stop thinking about what might happen.",Worry,Ambiguous
+41,I felt irritated because I could not get anything done.,Frustration,Clear
+42,I became angry when the same problem happened again.,Frustration,Clear
+43,The constant interruptions frustrated me all afternoon.,Frustration,Clear
+44,I felt annoyed that I could not get even a few minutes alone.,Frustration,Clear
+45,I was impatient when everything seemed to take longer than expected.,Frustration,Clear
+46,"I love spending time with my baby, but today I felt very frustrated.",Frustration,Mixed
+47,"I was grateful for the help, although I still felt irritated.",Frustration,Mixed
+48,"Things eventually worked out, but I was angry about how difficult they became.",Frustration,Mixed
+49,"I am not exactly angry, but everything seemed to bother me today.",Frustration,Ambiguous
+50,"I cannot explain why, but small things kept getting on my nerves.",Frustration,Ambiguous
+51,Today was fairly ordinary and I do not feel strongly about it.,Neutral,Clear
+52,I feel neither particularly good nor particularly bad today.,Neutral,Clear
+53,The day has been normal so far.,Neutral,Clear
+54,"I noticed how I felt today, but there was no strong emotion.",Neutral,Clear
+55,Things happened as usual and I feel quite neutral about them.,Neutral,Clear
+56,"There were good and difficult moments, so I do not have one clear feeling.",Neutral,Mixed
+57,I felt different things at different times and none really stood out.,Neutral,Mixed
+58,"Part of the day was pleasant and part was stressful, so it feels mixed.",Neutral,Mixed
+59,I am not really sure what emotion describes today.,Neutral,Ambiguous
+60,"Something felt different today, but I cannot tell what I was feeling.",Neutral,Ambiguous

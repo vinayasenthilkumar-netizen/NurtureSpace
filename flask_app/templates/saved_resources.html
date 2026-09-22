@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Saved Resources | Nurture Space{% endblock %}
+
+{% block content %}
+
+<!-- main application shell containing the shared sidebar and saved-resource content -->
+<div class="app-shell">
+
+    <!-- persistent navigation for signed-in users -->
+    <aside class="sidebar">
+        <div>
+
+            <!-- application identity shown at the top of the sidebar -->
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">👩‍🍼</div>
+
+                <div>
+                    <strong>Nurture Space</strong>
+                    <small>Postpartum wellbeing</small>
+                </div>
+            </div>
+
+            <!-- main authenticated navigation -->
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('home.home') }}" class="sidebar-link">
+                    <span>🌸</span> Today
+                </a>
+
+                <a href="{{ url_for('questions.core_questions') }}" class="sidebar-link">
+                    <span>✔️</span> Questionnaire
+                </a>
+
+                <!-- standalone=1 opens reflection directly from the sidebar -->
+                <a href="{{ url_for('reflection.reflection_page', standalone=1) }}" class="sidebar-link">
+                    <span>📕</span> Personal Check-In
+                </a>
+
+                <a href="{{ url_for('assistant.assistant_page') }}" class="sidebar-link">
+                    <span>🤖</span> Assistant
+                </a>
+
+                <!-- active class shows that the user is currently on Saved Resources -->
+                <a href="{{ url_for('resources.saved_resources') }}" class="sidebar-link active">
+                    <span>❤️</span> Saved Resources
+                </a>
+
+                <a href="{{ url_for('history.history_page') }}" class="sidebar-link">
+                    <span>🗓️</span> History & Patterns
+                </a>
+
+                <a href="{{ url_for('settings.settings_page') }}" class="sidebar-link">
+                    <span>⚙️</span> Settings
+                </a>
+            </nav>
+        </div>
+
+
+        <!-- signed-in profile summary and logout option -->
+        <div class="sidebar-bottom">
+            <div class="sidebar-profile">
+
+                <!-- avatar uses the first letter of the current welcome name -->
+                <div class="profile-avatar">{{ welcome_name[0] | upper }}</div>
+
+                <div>
+                    <strong>{{ welcome_name }}</strong>
+                    <small>Signed in</small>
+                </div>
+            </div>
+
+            <a href="{{ url_for('auth.logout') }}" class="sidebar-link logout-link">
+                <span>➜]</span> Log out
+            </a>
+        </div>
+    </aside>
+
+
+    <!-- saved-resource page content -->
+    <main class="saved-simple-main">
+
+        <!-- page heading and optional saved-resource count -->
+        <header class="saved-simple-header">
+            <div>
+                <span class="saved-kicker">Your collection</span>
+                <h1>Saved Resources</h1>
+                <p>Helpful information you've chosen to keep in one quiet space.</p>
+            </div>
+
+            <!-- count badge is shown only when at least one resource has been saved -->
+            {% if saved_resources %}
+                <div class="saved-count-badge">
+                    <strong>{{ saved_resource_count }}</strong>
+
+                    <!-- use the correct singular or plural label -->
+                    <span>
+                        {% if saved_resource_count == 1 %}
+                            resource
+                        {% else %}
+                            resources
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
+        </header>
+
+
+        <!-- display the saved collection when bookmarked resources are available -->
+        {% if saved_resources %}
+
+            <!-- short explanation of where saved resources may have come from -->
+            <div class="saved-intro-strip">
+                <span>❤️</span>
+                <p>
+                    These are resources you saved from Today or the Wellbeing Assistant.
+                    Remove anything you no longer need.
+                </p>
+            </div>
+
+
+            <!-- each saved database resource is displayed as its own card -->
+            <section class="saved-card-grid">
+
+                {% for resource in saved_resources %}
+                    <article class="saved-resource-card">
+
+                        <!-- card header contains the media icon and resource type -->
+                        <div class="saved-card-top">
+
+                            <div class="saved-resource-icon">
+
+                                <!-- choose a simple visual icon from the stored resource type -->
+                                {% if resource.resource_type %}
+                                    {% set type_name = resource.resource_type | lower %}
+
+                                    {% if type_name == "video" %}
+                                        ⏯️
+                                    {% elif type_name == "podcast" %}
+                                        🎧
+                                    {% elif type_name == "guide" %}
+                                        💻
+                                    {% elif type_name == "blog" %}
+                                        ✍️
+                                    {% else %}
+                                        🌐
+                                    {% endif %}
+
+                                <!-- generic saved icon is used when no type is available -->
+                                {% else %}
+                                    ❤️
+                                {% endif %}
+                            </div>
+
+                            <!-- show the resource type only when it exists -->
+                            {% if resource.resource_type %}
+                                <span class="saved-resource-type">
+                                    {{ resource.resource_type | title }}
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- main descriptive information stored for the resource -->
+                        <div class="saved-card-content">
+
+                            <!-- resource title is the main card heading -->
+                            <h2>{{ resource.title }}</h2>
+
+                            <!-- source is optional and hidden when no value is stored -->
+                            {% if resource.source %}
+                                <p class="saved-card-source">{{ resource.source }}</p>
+                            {% endif %}
+
+                            <!-- curated description/content is also optional -->
+                            {% if resource.content %}
+                                <p class="saved-card-description">{{ resource.content }}</p>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- actions let the user open or remove the saved resource -->
+                        <div class="saved-card-actions">
+
+                            <!-- external button is shown only when the resource has a URL -->
+                            {% if resource.url %}
+                                <a
+                                    href="{{ resource.url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="saved-open-button"
+                                >
+                                    Open Resource →
+                                </a>
+                            {% endif %}
+
+
+                            <!-- removing a resource sends its database id back to Flask -->
+                            <form method="POST"
+                                  action="{{ url_for('resources.remove_resource') }}">
+
+                                <!-- identifies exactly which bookmark should be removed -->
+                                <input
+                                    type="hidden"
+                                    name="resource_id"
+                                    value="{{ resource.id }}"
+                                >
+
+                                <!-- tells the route to return the user to this saved page -->
+                                <input
+                                    type="hidden"
+                                    name="return_to"
+                                    value="saved"
+                                >
+
+                                <button type="submit" class="saved-remove-button">
+                                    🗑️
+                                </button>
+                            </form>
+
+                        </div>
+
+                    </article>
+                {% endfor %}
+
+            </section>
+
+
+        <!-- separate empty state is shown when the user has no saved resources -->
+        {% else %}
+
+            <section class="saved-empty-state">
+                <div class="saved-empty-icon">♡</div>
+
+                <span class="saved-kicker">Your collection</span>
+                <h2>Nothing saved yet</h2>
+
+                <p>
+                    When you find a useful resource on Today or through the
+                    Wellbeing Assistant, you can save it here for later.
+                </p>
+
+                <!-- returns the user to Today where curated resources can be explored -->
+                <a href="{{ url_for('home.home') }}" class="saved-open-button">
+                    Explore Today's Resources
+                </a>
+            </section>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+{% endblock %}

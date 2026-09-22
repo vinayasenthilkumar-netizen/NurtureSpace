@@ -1,0 +1,422 @@
+
+
+{
+  "strain_factors": [
+    {
+      "name": "Sleep difficulty",
+      "phrases": [
+        "could not sleep",
+        "couldn't sleep",
+        "did not sleep well",
+        "didn't sleep well",
+        "not sleeping well",
+        "poor sleep",
+        "not able to sleep",
+        "wasnt able to sleep",
+        "unable to sleep",
+        "difficulty sleeping",
+        "hard to sleep",
+        "kept waking up",
+        "keep waking up",
+        "awake all night",
+        "broken sleep",
+        "barely slept",
+        "no sleep"
+      ],
+      "exclude_phrases": [
+        "slept well",
+        "good sleep",
+        "restful sleep",
+        "sleep was good",
+        "sleeping better",
+        "not having trouble sleeping"
+      ]
+    },
+    {
+      "name": "Exhaustion or low energy",
+      "phrases": [
+        "exhausted",
+        "very tired",
+        "so tired",
+        "too tired",
+        "no energy",
+        "low energy",
+        "drained",
+        "worn out",
+        "fatigued"
+      ],
+      "exclude_phrases": [
+        "not tired",
+        "not exhausted",
+        "more energy",
+        "energetic",
+        "energy is better",
+        "feeling energetic"
+      ]
+    },
+    {
+      "name": "Feeling overwhelmed",
+      "phrases": [
+        "overwhelmed",
+        "too much to handle",
+        "cannot cope",
+        "can't cope",
+        "struggling to cope",
+        "everything feels too much",
+        "too many things to deal with",
+        "soo many things to deal with",
+        "soo many things",
+        "too much for me",
+        "much to deal with",
+        "too much on my plate",
+        "too many things on my plate",
+        "soo much to do",
+        "too many things to do"
+      ],
+      "exclude_phrases": [
+        "not overwhelmed",
+        "can cope",
+        "coping well",
+        "feels manageable",
+        "things are manageable"
+      ]
+    },
+    {
+      "name": "Limited emotional or practical support",
+      "phrases": [
+        "not supported",
+        "not enough support",
+        "not getting enough support",
+        "don't feel supported",
+        "do not feel supported",
+        "dont feel supported",
+        "not getting supported",
+        "not being supported",
+        "unsupported",
+        "limited support",
+        "feel supported but not enough",
+        "supported but its not enough",
+        "supported but it is not enough",
+        "not enough supposed",
+        "not getting enough support",
+        "doing everything on my own",
+        "could be more supportive",
+        "could be supported better",
+        "no one helps",
+        "no help",
+        "little help",
+        "lack of support",
+        "unsupported",
+        "on my own",
+        "not getting supported",
+        "alone with everything"
+      ],
+      "exclude_phrases": [
+        "feel supported",
+        "well supported",
+        "getting help",
+        "have support",
+        "family helped",
+        "partner helped",
+        "friends helped"
+      ]
+    },
+    {
+      "name": "Childcare pressure",
+      "phrases": [
+        "baby won't settle",
+        "baby will not settle",
+        "childcare is hard",
+        "difficult taking care of the baby",
+        "difficult caring for the baby",
+        "struggling with the baby",
+        "hard to care for the baby",
+        "baby care is overwhelming",
+        "looking after the baby is hard",
+        "constant crying",
+        "baby cries all the time"
+      ],
+      "exclude_phrases": [
+        "baby care is manageable",
+        "baby settled well",
+        "coping with childcare",
+        "childcare is going well"
+      ]
+    },
+    {
+      "name": "Household or work pressure",
+      "phrases": [
+        "too much housework",
+        "household responsibilities",
+        "household pressure",
+        "work pressure",
+        "job pressure",
+        "returning to work",
+        "back to work",
+        "balancing work and baby",
+        "too many things to do in the house",
+        "too many chores"
+      ],
+      "exclude_phrases": [
+        "managing the housework",
+        "work is manageable",
+        "chores are manageable"
+      ]
+    },
+    {
+      "name": "Physical recovery or discomfort",
+      "phrases": [
+        "physical pain",
+        "postpartum pain",
+        "body hurts",
+        "feeling sore",
+        "physical discomfort",
+        "healing slowly",
+        "recovery is hard",
+        "still recovering",
+        "pain still there",
+        "painful recovery"
+      ],
+      "exclude_phrases": [
+        "recovery is improving",
+        "feeling physically better",
+        "pain is better",
+        "no pain",
+        "not in pain"
+      ]
+    },
+    {
+      "name": "Feeding-related concerns",
+      "phrases": [
+        "feeding problem",
+        "feeding concerns",
+        "breastfeeding is hard",
+        "struggling to breastfeed",
+        "baby won't latch",
+        "baby did not eat much",
+        "baby didnt latch",
+        "baby wont latch",
+        "baby didn't latch",
+        "baby will not latch",
+        "latching problem",
+        "baby didnt eat",
+        "baby won't eat",
+        "baby didn't eat",
+        "baby wont eat",
+        "baby isnt latching",
+        "baby isnt eating",
+        "baby is not latching",
+        "baby is not eating",
+        "bottle feeding problem",
+        "feeding is stressful"
+      ],
+      "exclude_phrases": [
+        "feeding went well",
+        "feeding is going well",
+        "baby latched well",
+        "feeding is easier"
+      ]
+    },
+    {
+      "name": "Relationship or family tension",
+      "phrases": [
+        "arguing with my partner",
+        "relationship tension",
+        "family tension",
+        "conflict at home",
+        "partner does not understand",
+        "partner doesn't understand",
+        "family pressure",
+        "relationship problems"
+      ],
+      "exclude_phrases": [
+        "getting along",
+        "partner understands",
+        "family is supportive",
+        "positive family communication"
+      ]
+    },
+    {
+      "name": "Lack of personal time or self-care",
+      "phrases": [
+        "no time for myself",
+        "not getting any personal time",
+        "no time to do what i want",
+        "no time to take a break",
+        "no personal time",
+        "cannot take a break",
+        "can't take a break",
+        "no time to rest",
+        "no self care",
+        "no time for self care",
+        "never get a break",
+        "soo many things to do",
+        "too many things to do"
+      ],
+      "exclude_phrases": [
+        "had time for myself",
+        "had alot of time for myself",
+        "took a break",
+        "self care time",
+        "self-care time",
+        "personal time",
+        "i had personal time",
+        "i managed to get personal time",    
+        "i managed to get some personal time"
+      ]
+    }
+  ],
+
+
+  "supportive_factors": [
+    {
+      "name": "Restful sleep",
+      "phrases": [
+        "slept well",
+        "i feel fresh",
+        "good sleep",
+        "restful sleep",
+        "sleep was good",
+        "sleeping better",
+        "well rested",
+        "amazing sleep",
+        "i felt fresh",
+        "am feeling fresh"
+      ],
+      "exclude_phrases": [
+        "did not sleep well",
+        "didn't sleep well",
+        "not sleeping well"
+      ]
+    },
+    {
+      "name": "Improved energy",
+      "phrases": [
+        "more energy",
+        "more active",
+        "energy is better",
+        "feeling energetic",
+        "less tired",
+        "not as tired",
+        "energetic"
+      ],
+      "exclude_phrases": [
+        "no energy",
+        "low energy",
+        "very tired"
+      ]
+    },
+    {
+      "name": "Feeling supported",
+      "phrases": [
+        "feel supported",
+        "felt supported",
+        "feeling supported",
+        "was supportive",
+        "well supported",
+        "getting help",
+        "have support",
+        "supported by my family",
+        "supported by family",
+        "getting support from my family",
+        "getting supported by my family",
+        "my family supports me",
+        "family helped",
+        "my family helped",
+        "partner helped",
+        "friends helped",
+        "someone helped me",
+        "was taken care",
+        "helped me"
+      ],
+      "exclude_phrases": [
+        "not supported",
+        "no one helps"
+      ]
+    },
+    {
+      "name": "Managing responsibilities",
+      "phrases": [
+        "coping well",
+        "things are manageable",
+        "managing my responsibilities",
+        "managing the housework",
+        "coping with childcare",
+        "work is manageable"
+      ],
+      "exclude_phrases": [
+        "cannot cope",
+        "can't cope",
+        "too much to handle"
+      ]
+    },
+    {
+      "name": "Positive family communication",
+      "phrases": [
+        "getting along",
+        "partner understands",
+        "family is supportive",
+        "positive family communication",
+        "talked things through"
+      ],
+      "exclude_phrases": [
+        "arguing with my partner",
+        "family tension",
+        "conflict at home"
+      ]
+    },
+    {
+      "name": "Personal care time",
+      "phrases": [
+        "had time for myself",
+        "had alot of time for myself",
+        "had soo much time for myself",
+        "took a break",
+        "self care time",
+        "self-care time",
+        "personal time",
+        "time to rest",
+        "had time to care for myself"
+      ],
+      "exclude_phrases": [
+        "no time for myself",
+        "no personal time",
+        "never get a break"
+      ]
+    },
+    {
+      "name": "Feeding went well",
+      "phrases": [
+        "feeding went well",
+        "feeding is going well",
+        "baby latched",
+        "baby ate",
+        "feeding is easier",
+        "baby ate well"
+      ],
+      "exclude_phrases": [
+        "feeding is stressful",
+        "baby won't latch",
+        "baby will not latch"
+      ]
+    },
+    {
+      "name": "Physical recovery improving",
+      "phrases": [
+        "recovery is improving",
+        "feeling physically better",
+        "pain is better",
+        "healing well",
+        "getting stronger",
+        "less pain",
+        "pain is managable"
+      ],
+      "exclude_phrases": [
+        "recovery is hard",
+        "healing slowly",
+        "body hurts",
+        "painfull"
+      ]
+    }
+  ]
+}
