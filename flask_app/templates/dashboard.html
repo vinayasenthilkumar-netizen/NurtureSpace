@@ -38,7 +38,7 @@
                     {% if wellbeing_source == "combined" %}
                         <span>Overall Wellbeing Indicator</span>
                     {% else %}
-                        <span>Reflection Result</span>
+                        <span>Reflection Indicator</span>
                     {% endif %}
 
                     <strong>{{ wellbeing_indicator }}</strong>
@@ -66,7 +66,7 @@
             <section class="summary-card">
                 <div class="summary-card-heading">
                     <div>
-                        <span>Personal Check-In</span>
+                        <span>Personal Reflection Check-In</span>
                         <h2>What you shared</h2>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                     </div>
                 {% else %}
                     <p class="summary-empty">
-                        No confirmed Personal Check-In text is available.
+                        No confirmed Personal Reflection Check-In text is available.
                     </p>
                 {% endif %}
             </section>
@@ -469,7 +469,7 @@
                 {% if structured_complete %}
                     <h2>Keep this wellbeing summary?</h2>
                 {% else %}
-                    <h2>Keep this Personal Check-In?</h2>
+                    <h2>Keep this Personal Reflection Check-In?</h2>
                 {% endif %}
 
 
@@ -529,7 +529,7 @@
                         <!-- reflection-only entries use their own saved id -->
                         {% if saved_reflection_id %}
                             <p>
-                                This Personal Check-In is already saved.
+                                This Personal Reflection Check-In is already saved.
                                 You can update it after making changes.
                             </p>
                         {% else %}
@@ -567,7 +567,7 @@
                                 {% if saved_reflection_id %}
                                     Update Saved Check-In
                                 {% else %}
-                                    Save Personal Check-In
+                                    Save Personal Reflection Check-In
                                 {% endif %}
 
                             {% endif %}

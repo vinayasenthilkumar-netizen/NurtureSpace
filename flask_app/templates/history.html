@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Personal Pattern Analysis | Nurture Space{% endblock %}
+{% block title %}History and Patterns | Nurture Space{% endblock %}
 
 {% block content %}
 
@@ -34,7 +34,7 @@
                 </a>
 
                 <a href="{{ url_for('reflection.reflection_page', standalone=1) }}" class="sidebar-link">
-                    <span>📕</span> Personal Check-In
+                    <span>📕</span> Personal Reflection Check-In
                 </a>
 
                 <a href="{{ url_for('assistant.assistant_page') }}" class="sidebar-link">
@@ -89,7 +89,7 @@
         <!-- introduces the history and longer-term pattern view -->
         <header class="patterns-header">
             <span class="patterns-kicker">Your history</span>
-            <h1>Personal Pattern Analysis</h1>
+            <h1>History and Patterns</h1>
 
             <p>
                 Look back at what you chose to save and notice how your wellbeing
@@ -174,7 +174,7 @@
                                             {% if day.has_reflection %}
                                                 <i
                                                     class="patterns-reflection-dot"
-                                                    title="Personal Check-In only"
+                                                    title="Personal Reflection Check-In only"
                                                 ></i>
                                             {% endif %}
 
@@ -199,12 +199,12 @@
 
                         <span>
                             <i class="patterns-questionnaire-dot"></i>
-                            Full Check-in ( Questionnaire + Personal Check-in )
+                            Full Check-in ( Questions & Reflection )
                         </span>
 
                         <span>
                             <i class="patterns-reflection-dot"></i>
-                            Personal Check-In only
+                            Personal Reflection Check-In only
                         </span>
 
                     </div>
@@ -555,7 +555,7 @@
                                                     'history.delete_reflection_entry',
                                                     reflection_id=entry.id
                                                 ) }}"
-                                                onsubmit="return confirm('Delete this saved Personal Check-In? This cannot be undone.');"
+                                                onsubmit="return confirm('Delete this saved Personal Reflection Check-In? This cannot be undone.');"
                                             >
                                                 <button type="submit">
                                                     🗑️ Remove Check-in
@@ -792,7 +792,7 @@
                 <h2>No saved history yet</h2>
 
                 <p>
-                    Saved questionnaires and Personal Check-Ins will appear
+                    Saved questionnaires and Personal Reflection Check-Ins will appear
                     here when you choose to keep them.
                 </p>
 

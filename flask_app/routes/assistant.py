@@ -179,7 +179,6 @@ def clean_text_list(values):
 
 
 def is_edit_request(user_message):
-    """Return True when the user is asking to edit generated content."""
     text = clean_text(user_message).lower()
 
     return any(
@@ -189,7 +188,6 @@ def is_edit_request(user_message):
 
 
 def detect_saved_content_view_request(user_message):
-    """Detect a request to view saved Summary or Appointment Points."""
     text = clean_text(user_message).lower()
 
     if not text or is_edit_request(text):
@@ -530,7 +528,6 @@ def get_editable_saved_entry(user_id):
 
 
 def get_saved_entry_for_direct_view(user_id):
-    """Return the latest saved entry allowed for exact direct display."""
     if not user_id:
         return None
 
@@ -571,7 +568,6 @@ def get_saved_entry_for_direct_view(user_id):
 
 
 def build_saved_content_view_message(view_type, user_id):
-    """Build an exact saved Summary/Appointment response without the LLM."""
     saved_entry = get_saved_entry_for_direct_view(user_id)
 
     if not saved_entry:
@@ -906,13 +902,6 @@ def get_assistant_message(message_index):
 
 
 def current_dashboard_context_available():
-    """
-    True only for an unsaved current workflow.
-
-    Once the current check-in/reflection has already been saved, Assistant
-    edits should update that saved record directly instead of sending the
-    user back to Dashboard.
-    """
     current_state = build_current_assistant_state()
     context_source = clean_text(
         current_state.get("context_source", "")
@@ -970,7 +959,6 @@ def sync_saved_content_to_session(
     summary=None,
     appointment_points=None,
 ):
-    """Keep the active session consistent with a direct saved-entry update."""
     if summary is not None:
         session["personal_summary"] = clean_text(summary)
 
@@ -987,7 +975,6 @@ def sync_saved_content_to_session(
 
 
 def _store_saved_undo(key, editable, value, message_index):
-    """Store the previous saved value for one-level undo."""
     try:
         message_index = int(message_index)
     except (TypeError, ValueError):
@@ -1030,7 +1017,6 @@ def _undo_matches_message(undo_state, message_index):
 
 
 def _set_message_update_state(message_index, intent, state):
-    """Mark which generated edit is currently applied to the saved entry."""
     messages = list(session.get("assistant_messages", []) or [])
 
     try:

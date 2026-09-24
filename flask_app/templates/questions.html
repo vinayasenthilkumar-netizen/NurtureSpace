@@ -2,7 +2,7 @@
 
 {% block title %}
     {% if part == "result" %}
-        Today's Wellbeing Status
+        Today's Questionnaire Indicator
     {% else %}
         Wellbeing Questionnaire
     {% endif %}
@@ -45,7 +45,7 @@
 
                 <a href="{{ url_for('reflection.reflection_page', standalone=1) }}"
                    class="sidebar-link">
-                    <span>📕</span> Personal Check-In
+                    <span>📕</span> Personal Reflection Check-In
                 </a>
 
                 <a href="{{ url_for('assistant.assistant_page') }}"
@@ -118,10 +118,7 @@
         <!-- return link and the current check-in type -->
         <div class="questionnaire-topbar">
 
-            <a href="{{ url_for('home.home') }}"
-               class="questionnaire-back">
-                ← Today
-            </a>
+            
 
             <span>{{ checkin_type.label }}</span>
 
@@ -139,7 +136,7 @@
 
                 <p>
                     These four questions are used to calculate your
-                    Today's Wellbeing Status.
+                    Questionnaire Indicator.
                 </p>
 
             </header>
@@ -221,9 +218,9 @@
                 <h1>A little more context</h1>
 
                 <p>
-                    These six questions add helpful context for your Personal Check-In,
+                    These six questions add helpful context for your Personal Reflection Check-In,
                     summary and appointment discussion points. They do not change your
-                    Today's Wellbeing Status.
+                    Today's Questionnaire Indicator.
                 </p>
 
             </header>
@@ -304,7 +301,7 @@
                     Questionnaire complete
                 </span>
 
-                <h2>Questionnaire Status</h2>
+                <h2>Questionnaire Indicator</h2>
 
                 <!-- makes clear which four answers were used for the status -->
                 <p class="questionnaire-result-intro">
@@ -325,7 +322,7 @@
 
                     <p>
                         Your other six questionnaire responses provide context only.
-                        Your Personal Check-In and AI-supported analysis do not change this status.
+                        Your Personal Reflection Check-In and AI-supported analysis do not change this status.
                     </p>
 
                 </div>
@@ -336,13 +333,9 @@
 
                     <a href="{{ url_for('reflection.reflection_page') }}"
                        class="questionnaire-primary">
-                        Continue to Personal Check-In
+                        Continue to Personal Reflection Check-In
                     </a>
 
-                    <a href="{{ url_for('home.home') }}"
-                       class="questionnaire-secondary">
-                        Return to Today
-                    </a>
 
                 </div>
 

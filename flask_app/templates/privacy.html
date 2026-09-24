@@ -1,38 +1,32 @@
 {% extends "base.html" %}
 
-{% block title %}Privacy | Nurture Space{% endblock %}
+{% block title %}Privacy | Nuture Space{% endblock %}
 
 {% block content %}
 
-<!-- main privacy page used during first setup and later settings changes -->
+<!-- main privacy page -->
 <section class="privacy-simple-page">
 
-    <!-- heading changes depending on whether this is the user's first privacy setup -->
+    <!-- page heading changes slightly during first-time setup -->
     <header class="privacy-simple-header">
         <span class="landing-kicker">Your information</span>
 
         {% if first_setup %}
             <h1>How your information is handled</h1>
-
             <p>
-                Nurture Space saves your completed check-in information and reviewed
+                Nuture Space saves your completed check-in information and reviewed
                 results to support your history and personalised features.
             </p>
-
         {% else %}
             <h1>Privacy</h1>
-
-            <p>
-                Review how information from your check-ins and reflections is handled.
-            </p>
+            <p>Review how information from your check-ins and reflections is handled.</p>
         {% endif %}
     </header>
 
 
-    <!-- short privacy reminders before the user chooses any settings -->
+    <!-- short reminders about user control and temporary media -->
     <div class="privacy-reassurance">
 
-        <!-- approved information is controlled by the user's privacy choices -->
         <div>
             <span class="privacy-reassurance-icon">✓</span>
 
@@ -44,7 +38,6 @@
             </p>
         </div>
 
-        <!-- raw reflection media is temporary regardless of the selected preferences -->
         <div>
             <span class="privacy-reassurance-icon">♡</span>
 
@@ -58,7 +51,7 @@
     </div>
 
 
-    <!-- all privacy choices are submitted together -->
+    <!-- privacy preferences are submitted to the current route -->
     <form method="POST" class="privacy-simple-card">
 
         <div class="privacy-choice-heading">
@@ -72,15 +65,13 @@
         </div>
 
 
-        <!-- controls whether approved check-in information may be persisted -->
+        <!-- controls whether approved check-in information can be saved -->
         <label class="privacy-choice">
 
             <input
                 type="checkbox"
                 name="save_approved_checkins"
-                {% if preferences.get("save_approved_checkins", false) %}
-                    checked
-                {% endif %}
+                {% if preferences.get("save_approved_checkins", false) %}checked{% endif %}
             >
 
             <span>
@@ -97,18 +88,13 @@
         </label>
 
 
-        <!-- controls whether previously saved history may be used for personalisation -->
+        <!-- controls whether saved history can be used for personalisation -->
         <label class="privacy-choice">
 
             <input
                 type="checkbox"
                 name="use_saved_history_for_personalisation"
-                {% if preferences.get(
-                    "use_saved_history_for_personalisation",
-                    false
-                ) %}
-                    checked
-                {% endif %}
+                {% if preferences.get("use_saved_history_for_personalisation", false) %}checked{% endif %}
             >
 
             <span>
@@ -124,15 +110,13 @@
         </label>
 
 
-        <!-- controls whether bookmarked resources remain saved to the account -->
+        <!-- controls whether bookmarked resources stay saved to the account -->
         <label class="privacy-choice">
 
             <input
                 type="checkbox"
                 name="save_bookmarked_resources"
-                {% if preferences.get("save_bookmarked_resources", false) %}
-                    checked
-                {% endif %}
+                {% if preferences.get("save_bookmarked_resources", false) %}checked{% endif %}
             >
 
             <span>
@@ -147,7 +131,99 @@
         </label>
 
 
-        <!-- gives the user a clearer breakdown of saved and temporary information -->
+        <!-- gives more detail about stored and temporary information -->
         <div class="privacy-more-content">
 
-            <!-- information
+            <!-- information that may be saved when the relevant preference is enabled -->
+            <section>
+                <span class="privacy-detail-tag saved">Saved when enabled</span>
+
+                <h3>Check-in and reviewed information</h3>
+
+                <p>
+                    If you enable approved check-in saving, completed
+                    check-in information and reviewed results may be stored
+                    with your account for history and Personal Pattern Analysis.
+                </p>
+
+                <ul>
+                    <li>Your structured question responses</li>
+                    <li>Today's Check-In Status</li>
+                    <li>Question, Reflection and Combined wellbeing scores</li>
+                    <li>Reviewed text-emotion suggestions</li>
+                    <li>Supportive factors and areas of strain</li>
+                    <li>Vocal-pattern observations when available</li>
+                    <li>Visible-expression observations when available</li>
+                    <li>Your confirmed personal summary</li>
+                    <li>Confirmed appointment discussion points</li>
+                    <li>Resources you bookmark</li>
+                </ul>
+
+                <!-- reflection-only entries do not have a questionnaire status -->
+                <p class="privacy-detail-footnote">
+                    A reflection-only entry does not create a Today's Check-In Status
+                    because that status requires the four core questions.
+                </p>
+            </section>
+
+
+            <!-- media used during reflection processing is not kept permanently -->
+            <section>
+                <span class="privacy-detail-tag temporary">Temporary only</span>
+
+                <h3>Not permanently saved</h3>
+
+                <p>
+                    Reflection media and processing files are used only while the
+                    reflection is being processed.
+                </p>
+
+                <ul>
+                    <li>Raw voice recordings</li>
+                    <li>Raw video recordings</li>
+                    <li>Extracted audio</li>
+                    <li>Sampled video frames and face crops</li>
+                    <li>Voice and video transcripts</li>
+                    <li>Temporary media-processing files</li>
+                </ul>
+            </section>
+
+        </div>
+
+
+        <!-- remind users that saved information can still be removed -->
+        <div class="privacy-soft-warning">
+            <span>!</span>
+
+            <p>
+                <strong>You remain in control of your account</strong>
+                You can delete individual saved check-ins or delete your account
+                through the application settings.
+            </p>
+        </div>
+
+
+        <!-- user must acknowledge the privacy information before submitting -->
+        <label class="privacy-understanding">
+            <input type="checkbox" name="understands_privacy" required>
+
+            <span>
+                I have read and understand how my information will be handled.
+            </span>
+        </label>
+
+
+        <!-- button wording depends on whether this is first-time setup -->
+        <button type="submit" class="button privacy-pink-button">
+            {% if first_setup %}
+                Agree and Continue
+            {% else %}
+                Confirm
+            {% endif %}
+        </button>
+
+    </form>
+
+</section>
+
+{% endblock %}

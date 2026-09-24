@@ -10,7 +10,7 @@
     <!-- simple top navigation back to the selected reflection mode -->
     <div class="review-simple-topbar">
         <a href="{{ url_for('reflection.reflection_page', mode=mode_slug) }}">
-            ← Personal Check-In
+            ← Personal Reflection Check-In
         </a>
 
         <span>Review</span>
@@ -23,7 +23,7 @@
         <h1>Your reflection analysis</h1>
 
         <p>
-            Review the information identified from your Personal Check-In
+            Review the information identified from your Personal Reflection Check-In
             before continuing to your Wellbeing Summary.
         </p>
 
@@ -37,20 +37,12 @@
     <!-- show the overall result only after reflection analysis is complete -->
     {% if analysis_complete %}
 
-        <!-- combined result takes priority when questionnaire and reflection are available -->
-        {% if overall_checkin_indicator %}
-            <div class="review-wellbeing-strip">
-                <span>Overall Check-In Indicator</span>
-                <strong>{{ overall_checkin_indicator }}</strong>
-            </div>
-
-        <!-- otherwise show the reflection-only result -->
-        {% elif reflection_indicator %}
-            <div class="review-wellbeing-strip">
-                <span>Reflection Result</span>
-                <strong>{{ reflection_indicator }}</strong>
-            </div>
-        {% endif %}
+        
+        <div class="review-wellbeing-strip">
+            <span>Reflection Indicator</span>
+            <strong>{{ reflection_indicator }}</strong>
+        </div>
+        
 
     {% endif %}
 
@@ -60,7 +52,7 @@
 
         <div class="review-card-heading">
             <div>
-                <span>Your Personal Check-In</span>
+                <span>Your Personal Reflection Check-In</span>
 
                 <!-- heading changes depending on text, voice or video reflection -->
                 {% if reflection_mode == text_reflection %}
@@ -185,7 +177,7 @@
             <div>
                 <p>
                     <strong>Your reflection analysis is not ready yet.</strong>
-                    Analyse your Personal Check-In when you are ready.
+                    Analyse your Personal Reflection Check-In when you are ready.
                 </p>
 
                 <!-- manually starts or repeats the temporary review analysis -->

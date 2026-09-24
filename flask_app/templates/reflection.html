@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Personal Check-In | Nurture Space{% endblock %}
+{% block title %}Personal Reflection Check-In | Nurture Space{% endblock %}
 
 {% block content %}
 
@@ -29,7 +29,7 @@
                 <!-- active because the user is currently completing a Personal Check-In -->
                 <a href="{{ url_for('reflection.reflection_page', standalone=1) }}"
                    class="sidebar-link active">
-                    <span>📕</span> Personal Check-In
+                    <span>📕</span> Personal Reflection Check-In
                 </a>
 
                 <a href="{{ url_for('assistant.assistant_page') }}" class="sidebar-link"><span>🤖</span> Assistant</a>
@@ -77,7 +77,7 @@
 
         <!-- page introduction before the user selects a reflection mode -->
         <header class="personal-checkin-header">
-            <span class="personal-checkin-kicker">Personal Check-In</span>
+            <span class="personal-checkin-kicker">Personal Reflection Check-In</span>
             <h1>How would you like to check in?</h1>
 
             <p>
@@ -88,8 +88,8 @@
             <!-- questionnaire status remains separate from reflection context -->
             {% if checkin_status %}
                 <small>
-                    Your Personal Check-In adds context but does not change
-                    your Today's Wellbeing Status.
+                    Your Personal Reflection Check-In adds context but does not change
+                    your Today's Questionnaire Indicator.
                 </small>
             {% endif %}
         </header>

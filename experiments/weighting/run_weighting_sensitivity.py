@@ -1,4 +1,3 @@
-
 # pathlib keeps the output folder relative to this script
 from pathlib import Path
 
@@ -23,13 +22,13 @@ WEIGHTS = {
 }
 
 
-# thresholds used to turn the internal combined value into a category
+# thresholds used to turn the internal combined value into an indicator
 STEADY_THRESHOLD = 3.67
 STRAIN_THRESHOLD = 2.34
 
 
-# convert one internal combined value into the user-facing indicator
-def overall_checkin_indicator(value):
+# convert one internal combined value into the user-facing Combined Indicator
+def combined_indicator(value):
     if value >= STEADY_THRESHOLD:
         return "Relatively steady"
 
@@ -39,17 +38,17 @@ def overall_checkin_indicator(value):
     return "Significant strain"
 
 
-# calculate the weighted value before it is converted into a category
-def internal_combined_value(reflection, questions, weights):
-    reflection_weight, question_weight = weights
+# calculate the weighted value before it is converted into an indicator
+def internal_combined_value(reflection, questionnaire, weights):
+    reflection_weight, questionnaire_weight = weights
 
     return (
         reflection * reflection_weight
-        + questions * question_weight
+        + questionnaire * questionnaire_weight
     )
 
 
-# test every possible Reflection and Question score pairing used in this analysis
+# test every possible Reflection and Questionnaire Score pairing
 def build_results():
 
     # scores move from 1 to 5 in steps of 0.25
@@ -57,26 +56,26 @@ def build_results():
     values = np.arange(1.0, 5.01, 0.25)
     rows = []
 
-    # test each Reflection score against every Question score
+    # test each Reflection Score against every Questionnaire Score
     for reflection in values:
-        for questions in values:
+        for questionnaire in values:
 
             # keep the original scores and their distance apart
             # the difference is useful later when grouping disagreement levels
             row = {
                 "Reflection Score": round(reflection, 2),
-                "Question Score": round(questions, 2),
+                "Questionnaire Score": round(questionnaire, 2),
                 "Score Difference": round(
-                    abs(reflection - questions),
+                    abs(reflection - questionnaire),
                     2,
                 ),
             }
 
-            # calculate the internal value and category for every weighting
+            # calculate the internal value and indicator for every weighting
             for name, weights in WEIGHTS.items():
                 value = internal_combined_value(
                     reflection,
-                    questions,
+                    questionnaire,
                     weights,
                 )
 
@@ -85,8 +84,8 @@ def build_results():
                     4,
                 )
 
-                row[f"{name} Overall Check-In Indicator"] = (
-                    overall_checkin_indicator(value)
+                row[f"{name} Combined Indicator"] = (
+                    combined_indicator(value)
                 )
 
             # measure how far 60:40 moves away from the selected 70:30 value
@@ -107,15 +106,15 @@ def build_results():
                 4,
             )
 
-            # a weighting change matters more when it changes the final category
+            # a weighting change matters more when it changes the final indicator
             row["60:40 Changed Indicator"] = (
-                row["60:40 Overall Check-In Indicator"]
-                != row["70:30 Overall Check-In Indicator"]
+                row["60:40 Combined Indicator"]
+                != row["70:30 Combined Indicator"]
             )
 
             row["80:20 Changed Indicator"] = (
-                row["80:20 Overall Check-In Indicator"]
-                != row["70:30 Overall Check-In Indicator"]
+                row["80:20 Combined Indicator"]
+                != row["70:30 Combined Indicator"]
             )
 
             rows.append(row)
@@ -150,18 +149,18 @@ def create_summary(results):
                 4,
             ),
 
-            # proportion of cases where the user-facing indicator stays the same
+            # proportion of cases where the Combined Indicator stays the same
             "Indicator Agreement": round(
                 1 - changed.mean(),
                 4,
             ),
 
-            # raw number of combinations where the category changes
+            # raw number of combinations where the Combined Indicator changes
             "Indicator Changes": int(
                 changed.sum()
             ),
 
-            # proportion of all combinations where the category changes
+            # proportion of all combinations where the Combined Indicator changes
             "Indicator Change Rate": round(
                 changed.mean(),
                 4,
@@ -171,10 +170,10 @@ def create_summary(results):
     return pd.DataFrame(rows)
 
 
-# check whether weighting matters more when Reflection and Question scores disagree
+# check whether weighting matters more when Reflection and Questionnaire Scores disagree
 def disagreement_summary(results):
 
-    # score pairs are grouped by the distance between Reflection and Questions
+    # score pairs are grouped by the distance between Reflection and Questionnaire Scores
     groups = [
         (
             "Similar scores",
@@ -232,20 +231,20 @@ def save_example_cases(results):
     # these include cases where one score is much higher than the other
     # as well as cases where the two scores are fairly close
     examples = pd.DataFrame([
-        {"Reflection Score": 4.5, "Question Score": 2.0},
-        {"Reflection Score": 2.0, "Question Score": 4.5},
-        {"Reflection Score": 4.0, "Question Score": 3.5},
-        {"Reflection Score": 3.5, "Question Score": 4.0},
-        {"Reflection Score": 2.5, "Question Score": 2.0},
-        {"Reflection Score": 2.0, "Question Score": 2.5},
-        {"Reflection Score": 3.75, "Question Score": 3.0},
-        {"Reflection Score": 3.0, "Question Score": 3.75},
+        {"Reflection Score": 4.5, "Questionnaire Score": 2.0},
+        {"Reflection Score": 2.0, "Questionnaire Score": 4.5},
+        {"Reflection Score": 4.0, "Questionnaire Score": 3.5},
+        {"Reflection Score": 3.5, "Questionnaire Score": 4.0},
+        {"Reflection Score": 2.5, "Questionnaire Score": 2.0},
+        {"Reflection Score": 2.0, "Questionnaire Score": 2.5},
+        {"Reflection Score": 3.75, "Questionnaire Score": 3.0},
+        {"Reflection Score": 3.0, "Questionnaire Score": 3.75},
     ])
 
     # pull the full calculated results for only these selected combinations
     selected = results.merge(
         examples,
-        on=["Reflection Score", "Question Score"],
+        on=["Reflection Score", "Questionnaire Score"],
         how="inner",
     )
 
@@ -259,21 +258,22 @@ def save_example_cases(results):
 # create the figures used to visually compare the weighting options
 def save_graphs(results, summary):
 
-    # use the two alternative weighting names on the x-axis
-    labels = summary["Weighting"]
+    # the summary contains only the two alternatives
+    alternative_labels = summary["Weighting"]
 
 
     # graph 1: average numerical movement away from 70:30
     fig, ax = plt.subplots(figsize=(7, 5))
 
     ax.bar(
-        labels,
+        alternative_labels,
         summary["Mean Absolute Internal Value Difference"],
     )
 
     ax.set_title(
         "Average Internal Value Difference from 70:30"
     )
+
     ax.set_ylabel(
         "Mean Absolute Difference"
     )
@@ -286,27 +286,53 @@ def save_graphs(results, summary):
         bbox_inches="tight",
     )
 
-    # close each figure after saving so repeated runs do not keep it in memory
     plt.close(fig)
 
 
-    # graph 2: percentage of combinations that change wellbeing category
+    # graph 2: percentage of combinations whose Combined Indicator changes
+    # 70:30 is included visually as the zero-change baseline
     fig, ax = plt.subplots(figsize=(7, 5))
 
-    ax.bar(
+    change_rates = {
+        "60:40": (
+            results["60:40 Changed Indicator"].mean()
+            * 100
+        ),
+        "70:30\nBaseline": 0.0,
+        "80:20": (
+            results["80:20 Changed Indicator"].mean()
+            * 100
+        ),
+    }
+
+    labels = list(change_rates.keys())
+    values = list(change_rates.values())
+
+    bars = ax.bar(
         labels,
-        summary["Indicator Change Rate"] * 100,
+        values,
     )
 
     ax.set_title(
-        "Overall Check-In Indicator Changes"
-    )
-    ax.set_ylabel(
-        "Cases Changing Indicator (%)"
+        "Combined Indicator Changes Relative to 70:30 Baseline"
     )
 
-    # percentage scale is kept consistent from 0 to 100
-    ax.set_ylim(0, 100)
+    ax.set_ylabel(
+        "Cases with Changed Combined Indicator (%)"
+    )
+
+    # a focused scale makes the 12.46% and 9.00% changes readable
+    ax.set_ylim(0, 15)
+
+    # show the exact percentage above each bar
+    for bar, value in zip(bars, values):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            value + 0.3,
+            f"{value:.2f}%",
+            ha="center",
+            va="bottom",
+        )
 
     fig.tight_layout()
 
@@ -319,8 +345,8 @@ def save_graphs(results, summary):
     plt.close(fig)
 
 
-    # selected examples make it easier to see how the weighting behaves
-    # when Reflection and Question scores agree or conflict
+    # selected examples make it easier to see how weighting behaves
+    # when Reflection and Questionnaire Scores agree or conflict
     scenarios = [
         (1.5, 4.5),
         (2.5, 4.0),
@@ -331,27 +357,30 @@ def save_graphs(results, summary):
 
     fig, ax = plt.subplots(figsize=(8, 5))
 
-    for reflection, questions in scenarios:
+    for reflection, questionnaire in scenarios:
 
         # calculate this example under 60:40, 70:30 and 80:20
         values = [
             internal_combined_value(
                 reflection,
-                questions,
+                questionnaire,
                 WEIGHTS[name],
             )
             for name in WEIGHTS
         ]
 
-        # one line represents one fixed Reflection/Question pair
+        # one line represents one fixed Reflection/Questionnaire pair
         ax.plot(
             list(WEIGHTS.keys()),
             values,
             marker="o",
-            label=f"R={reflection}, Q={questions}",
+            label=(
+                f"R={reflection}, "
+                f"Q={questionnaire}"
+            ),
         )
 
-    # threshold lines show where a numerical shift could change category
+    # threshold lines show where a numerical shift could change indicator
     ax.axhline(
         STRAIN_THRESHOLD,
         linestyle="--",
@@ -365,6 +394,7 @@ def save_graphs(results, summary):
     ax.set_title(
         "Effect of Weighting on Internal Combined Values"
     )
+
     ax.set_ylabel(
         "Internal Combined Value"
     )
@@ -440,7 +470,7 @@ def save_table(summary):
 
 # run the complete sensitivity analysis and save every result file
 def main():
-    # simple console heading makes the script output easier to read
+
     print("=" * 60)
     print("WEIGHTING SENSITIVITY ANALYSIS")
     print("=" * 60)
@@ -448,12 +478,12 @@ def main():
     # first calculate every score combination
     results = build_results()
 
-    # then reduce the detailed results into the two main summaries
+    # then reduce the detailed results into the main summaries
     summary = create_summary(results)
     disagreement = disagreement_summary(results)
 
 
-    # full output keeps every Reflection/Question combination
+    # full output keeps every Reflection/Questionnaire combination
     results.to_csv(
         RESULTS_FOLDER / "weighting_detailed_results.csv",
         index=False,
@@ -480,7 +510,7 @@ def main():
 
     # print the main findings so they can be checked immediately after a run
     print(
-        f"\nReflection-Question combinations tested: {len(results)}"
+        f"\nReflection-Questionnaire combinations tested: {len(results)}"
     )
 
     print("\nSUMMARY")
