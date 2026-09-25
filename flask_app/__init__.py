@@ -25,10 +25,7 @@ def create_app():
 
     # main application settings
     app.config.update(
-        SECRET_KEY=os.environ.get(
-            "FLASK_SECRET_KEY",
-            "development-secret-key-change-before-deployment",
-        ),
+        SECRET_KEY = "my-dev-key",
         MAX_CONTENT_LENGTH=100 * 1024 * 1024,
     )
 
