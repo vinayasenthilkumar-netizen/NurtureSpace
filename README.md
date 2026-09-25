@@ -115,19 +115,12 @@ Main graph modules:
 ## Selected AI Models
 
 | Component | Final model | Role |
-
 |---|---|---|
-
 | Text emotion | `joeddav/distilbert-base-uncased-go-emotions-student` | Maps reflection text into application emotion categories |
-
 | Speech-to-text | Whisper `small.en` | Produces editable transcripts for voice/video reflections |
-
 | Vocal pattern | `Khoa/w2v-speech-emotion-recognition` | Provides tentative vocal-pattern evidence from audio |
-
 | Visible expression | HSEmotion `enet_b0_8_va_mtl` | Analyses sampled face crops from video |
-
 | Resource embeddings | `BAAI/bge-small-en-v1.5` | Embeds resources and queries for retrieval |
-
 | Local generative model | `qwen3:4b-instruct` via Ollama | Bounded conversation, retrieval-grounded responses, and narrative drafting/editing |
 
 The video pipeline samples **5 representative frames** per recording. Visible-expression evidence is only accepted when at least **3 usable face predictions** are available and one mapped label reaches a strict majority; otherwise it is treated as unavailable rather than neutral.
@@ -242,8 +235,8 @@ The original development environment was verified with **Python 3.11.9**, **FFmp
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repository-url>
-cd <your-repository-folder>
+git clone https://github.com/vinayasenthilkumar-netizen/NurtureSpace
+cd NurtureSpace
 ```
 
 ### 2. Create and activate the virtual environment
