@@ -4,7 +4,7 @@
 
 University of London · CM3070 Final Project
 
-> **Important:** Nurture Space is a research prototype developed for academic assessment. It does **not** diagnose postpartum depression, anxiety, or any other condition; determine clinical risk; recommend treatment; or replace a healthcare professional. Its scores, thresholds, weights and Personal Pattern rules are project-defined and technically evaluated, not clinically validated.
+> **Important:** Nurture Space does **not** diagnose postpartum depression, anxiety, or any other condition; determine clinical risk; recommend treatment; or replace a healthcare professional. Its scores, thresholds, weights and Personal Pattern rules are project-defined and technically evaluated, not clinically validated.
 
 ---
 
