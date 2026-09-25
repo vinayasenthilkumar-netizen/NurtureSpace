@@ -1,6 +1,7 @@
 # Nurture Space
 
 **A privacy-aware, non-diagnostic multimodal AI system for postpartum wellbeing support**  
+
 University of London · CM3070 Final Project
 
 > **Important:** Nurture Space is a research prototype developed for academic assessment. It does **not** diagnose postpartum depression, anxiety, or any other condition; determine clinical risk; recommend treatment; or replace a healthcare professional. Its scores, thresholds, weights and Personal Pattern rules are project-defined and technically evaluated, not clinically validated.
@@ -10,23 +11,41 @@ University of London · CM3070 Final Project
 ## Table of Contents
 
 - [Overview](#overview)
+
 - [Key Features](#key-features)
+
 - [System Architecture](#system-architecture)
+
 - [Selected AI Models](#selected-ai-models)
+
 - [Deterministic Scoring](#deterministic-scoring)
+
 - [Personal Pattern Analysis](#personal-pattern-analysis)
+
 - [Bounded Agentic AI Assistant](#bounded-agentic-ai-assistant)
+
 - [Privacy and Data Handling](#privacy-and-data-handling)
+
 - [Technology Stack](#technology-stack)
+
 - [Prerequisites](#prerequisites)
+
 - [Installation](#installation)
+
 - [Running the Application](#running-the-application)
+
 - [Running the Test Suite](#running-the-test-suite)
+
 - [Evaluation Summary](#evaluation-summary)
+
 - [Repository Structure](#repository-structure)
+
 - [Troubleshooting](#troubleshooting)
+
 - [Known Limitations](#known-limitations)
+
 - [Project Scope](#project-scope)
+
 - [Academic Project](#academic-project)
 
 ---
@@ -38,6 +57,7 @@ Nurture Space orchestrates several independently pre-trained AI models across te
 Two related check-in pathways are supported:
 
 - **Full Check-In** — a 10-question questionnaire followed by compulsory text, voice or video reflection. It is required on Mondays as the weekly snapshot and is also available on other days when the questionnaire is selected.
+
 - **Personal Reflection Check-In** — a reflection-only pathway available on non-Mondays when the questionnaire is not selected.
 
 Each modality is processed separately and transformed through deterministic scoring and fusion rules. Model-derived contextual observations are presented for user review before eligible information is persisted. User-facing results are non-clinical descriptive Indicators. A separate bounded Assistant can hold non-diagnostic conversation, retrieve curated resources, and propose edits to the current Personal Summary or Appointment Discussion Points, while application logic—not the language model—controls whether Update or Undo is permitted.
@@ -47,15 +67,25 @@ Each modality is processed separately and transformed through deterministic scor
 ## Key Features
 
 - Registered-user authentication with server-side Flask sessions.
+
 - Independent privacy controls for saving approved check-ins, using saved history for personalisation, and saving bookmarked resources.
+
 - Four scoring questions (Sleep, Mood, Stress, Perceived Support) and six contextual questions.
+
 - Text, voice and video reflections, with a 60-second limit on recorded media and an editable Whisper transcript before analysis for voice/video.
+
 - Separate text-emotion, vocal-pattern and visible-expression inference paths, with conservative missing-evidence handling.
+
 - Deterministic Questionnaire, Reflection and Combined Indicators.
+
 - Personal Pattern Analysis (baseline change, recurring themes, emerging themes, variability and reflection–check-in alignment) with Personal Pattern Relevance (PPR) prioritisation.
+
 - Curated resource retrieval via BGE embeddings + FAISS.
+
 - Bounded local AI Assistant (Qwen3 4B via Ollama) with protected narrative Update and one-level Undo.
+
 - History, trend and calendar views for eligible saved entries.
+
 - No persistent storage of raw audio/video, sampled frames, face crops or generated transcripts; these are processed temporarily only.
 
 ---
@@ -69,10 +99,15 @@ The full system architecture is shown in **Figure 3.1 of the accompanying final 
 Main graph modules:
 
 - `graphs/guided_workflow_graph.py`
+
 - `graphs/guided_checkin_graph.py`
+
 - `graphs/reflection_graph.py`
+
 - `graphs/review_graph.py`
+
 - `graphs/dashboard_graph.py`
+
 - `graphs/assistant_graph.py`
 
 ---
@@ -80,12 +115,19 @@ Main graph modules:
 ## Selected AI Models
 
 | Component | Final model | Role |
+
 |---|---|---|
+
 | Text emotion | `joeddav/distilbert-base-uncased-go-emotions-student` | Maps reflection text into application emotion categories |
+
 | Speech-to-text | Whisper `small.en` | Produces editable transcripts for voice/video reflections |
+
 | Vocal pattern | `Khoa/w2v-speech-emotion-recognition` | Provides tentative vocal-pattern evidence from audio |
+
 | Visible expression | HSEmotion `enet_b0_8_va_mtl` | Analyses sampled face crops from video |
+
 | Resource embeddings | `BAAI/bge-small-en-v1.5` | Embeds resources and queries for retrieval |
+
 | Local generative model | `qwen3:4b-instruct` via Ollama | Bounded conversation, retrieval-grounded responses, and narrative drafting/editing |
 
 The video pipeline samples **5 representative frames** per recording. Visible-expression evidence is only accepted when at least **3 usable face predictions** are available and one mapped label reaches a strict majority; otherwise it is treated as unavailable rather than neutral.
@@ -146,7 +188,9 @@ Update/Undo operations are checked by application logic and limited to the **lat
 The application has three independent user-controlled privacy settings:
 
 1. **Save Approved Check-Ins**
+
 2. **Use Saved History for Personalisation**
+
 3. **Save Bookmarked Resources**
 
 Persistent records are user-scoped.
@@ -158,7 +202,9 @@ Persistent records are user-scoped.
 ## Technology Stack
 
 - **App/orchestration:** Python 3.11.9, Flask 3.1.3, Jinja2, Flask-Session, LangGraph 1.2.10, SQLite
+
 - **ML/retrieval:** PyTorch, Hugging Face Transformers, Whisper, Sentence Transformers, FAISS, HSEmotion/HSEmotion-ONNX, MediaPipe, OpenCV, librosa
+
 - **Testing/evaluation:** Pytest, scikit-learn, pandas, NumPy, Matplotlib
 
 ---
@@ -170,9 +216,13 @@ Nurture Space was developed in **Visual Studio Code** using a Python virtual env
 Before installing, make sure you have:
 
 1. **Python 3.11** (3.11.9 used during development)
+
 2. **Git**
-3. **FFmpeg** — required for voice/video media preparation; development used **FFmpeg 8.1.1 essentials build (gyan.dev)**
+
+3. **FFmpeg** — required for voice/video media preparation. Download it from the official FFmpeg page: [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html). The development environment used **FFmpeg 8.1.1 Essentials Build (gyan.dev)**.
+
 4. **Ollama** — required for the local Qwen3 Assistant; development used **Ollama 0.34.4**
+
 5. A modern browser; microphone/camera permission is required only for in-browser recording
 
 After installation, these commands should work:
@@ -240,23 +290,34 @@ Nurture Space uses FFmpeg during voice/video media preparation. FFmpeg is a **sy
 
 #### Windows
 
-1. Open the official FFmpeg download page: [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html).
-2. Under **Get packages & executable files → Windows EXE Files**, choose one of the Windows build providers listed by FFmpeg. The **gyan.dev** build is suitable for this project.
-3. From the gyan.dev builds page, download **`ffmpeg-release-essentials.zip`**.
-4. Extract the ZIP to a permanent location, for example `C:\ffmpeg`.
-5. Locate the extracted `bin` folder containing `ffmpeg.exe`.
-6. Add that `bin` folder to your Windows **Path** environment variable:
+The development setup obtained FFmpeg through the **official FFmpeg download page**:
+
+[https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
+
+1. Open the official FFmpeg download page above.
+2. Under **Get packages & executable files**, choose **Windows EXE Files**.
+3. Follow the **gyan.dev** Windows build option listed by FFmpeg.
+4. Download the **Essentials Build** for Windows (the ZIP package is suitable). The development environment used **FFmpeg 8.1.1 Essentials Build**.
+5. Extract the ZIP to a permanent location, for example `C:\ffmpeg`.
+6. Locate the extracted `bin` folder containing `ffmpeg.exe`.
+7. Add the FFmpeg `bin` folder to your Windows **Path** environment variable:
    - Search Windows for **Edit the system environment variables**.
    - Open **Environment Variables**.
    - Under your user variables, select **Path → Edit → New**.
-   - Add the full path to the extracted FFmpeg `bin` folder.
-7. Close and reopen PowerShell/VS Code, then verify:
+   - Add the full path to the FFmpeg `bin` folder.
+8. Close and reopen PowerShell or VS Code, then verify:
 
 ```powershell
 ffmpeg -version
 ```
 
-If a version is printed, FFmpeg is available to the application. The original Windows development environment used `ffmpeg version 8.1.1-essentials_build-www.gyan.dev`.
+If version information is printed, FFmpeg is available to Nurture Space.
+
+The original Windows development environment reported:
+
+```text
+ffmpeg version 8.1.1-essentials_build-www.gyan.dev
+```
 
 #### macOS
 
@@ -286,7 +347,9 @@ Nurture Space expects Ollama's local chat API at `http://localhost:11434/api/cha
 #### Windows
 
 1. Open the official Ollama download page: [https://ollama.com/download/windows](https://ollama.com/download/windows).
+
 2. Select **Download for Windows** and run `OllamaSetup.exe`.
+
 3. Alternatively, Ollama currently provides this PowerShell installer command:
 
 ```powershell
@@ -336,7 +399,7 @@ No additional Flask secret-key command is required for the current local academi
 
 ### Note on the curated resource catalogue
 
-The SQLite schema is created automatically on startup, but the curated resource catalogue is application data rather than schema data. The development database is not committed to GitHub (`data/database/*.db` is git-ignored because it can also contain account, check-in and reflection records).
+The SQLite schema is created automatically on startup, but the curated resource catalogue is application data rather than schema data. The development database is not committed to GitHub (`data/database/\*.db` is git-ignored because it can also contain account, check-in and reflection records).
 
 A fresh clone therefore needs a **sanitised resources-only seed/import source** before Daily Resources and RAG retrieval can use the full curated catalogue. Do not publish the development database simply to provide those resources, because it may also contain user/test records.
 
@@ -446,11 +509,17 @@ Evaluation scripts/results may be kept in separate experiment folders; they are 
 ## Known Limitations
 
 - Nurture Space is a technical research prototype, not a clinical tool; the selected checkpoints were not trained specifically for postpartum wellbeing in Singapore.
+
 - Vocal and visible-expression evaluation used acted RAVDESS data, limiting real-world generalisation.
+
 - Visible expression is the weakest evaluated modality and is intentionally constrained in the fusion rules.
+
 - The 70:30 Reflection/Questionnaire weighting and score thresholds are engineering choices, not clinically validated parameters.
+
 - The local LLM can still make semantic errors even when lexical grounding checks pass; protected Update/Undo and human confirmation therefore remain necessary.
+
 - Usability testing measured general adult usability on a small, non-postpartum-restricted sample rather than target-population acceptability or clinical effectiveness.
+
 - Local CPU-only generation can introduce noticeable response latency.
 
 ---
@@ -468,6 +537,3 @@ Diagnosing postpartum depression or anxiety, determining clinical risk, prescrib
 Developed for the **University of London CM3070 Final Project**, applying the project theme of orchestrating multiple pre-trained models to achieve a goal. Full citations for the literature, model sources and evaluation datasets are provided in the accompanying final report.
 
 Main pretrained/model components include `joeddav/distilbert-base-uncased-go-emotions-student`, Whisper `small.en`, `Khoa/w2v-speech-emotion-recognition`, HSEmotion `enet_b0_8_va_mtl`, `BAAI/bge-small-en-v1.5`, FAISS and `Qwen3` through Ollama.
-
-
-
