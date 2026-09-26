@@ -514,13 +514,14 @@ def get_latest_saved_entry(user_id):
 
 
 def get_editable_saved_entry(user_id):
+    # get the user's most recently saved check-in
     latest = get_latest_saved_entry(user_id)
-
+    # return nothing if the user has no saved entries
     if not latest:
         return None
-
+    # get today's date using Singapore time
     today = datetime.now(SINGAPORE_TIMEZONE).date()
-
+    # only allow editing if the latest entry was created today
     if latest["created_at"].date() != today:
         return None
 
@@ -1054,14 +1055,16 @@ def _set_message_update_state(message_index, intent, state):
 
 
 def update_saved_summary(message, user_id, summary_draft, message_index):
+     # make sure the saved entry linked to this message can still be edited
     if not saved_message_target_is_editable(message, user_id):
         return False
-
+    # get the latest saved entry that is still editable today
     editable = get_editable_saved_entry(user_id)
+    # keep the current summary so it can be restored if the user chooses undo
     previous_summary = clean_text(
         editable["record"].get("confirmed_summary", "")
     )
-
+    # update the summary in the correct table depending on the entry type
     if editable["entry_type"] == "checkin":
         update_checkin_summary_content(
             checkin_id=editable["record"]["id"],
@@ -1074,7 +1077,7 @@ def update_saved_summary(message, user_id, summary_draft, message_index):
             user_id=user_id,
             confirmed_summary=summary_draft,
         )
-
+     # save the previous version and related details for the undo action
     _store_saved_undo(
         SUMMARY_UNDO_KEY,
         editable,
@@ -1447,9 +1450,10 @@ def use_appointment_points_on_dashboard():
 def undo_saved_summary():
     message_index = request.form.get("message_index")
     user_id = session.get("user_id")
+    # get the latest editable entry and the saved undo information
     editable = get_editable_saved_entry(user_id)
     undo_state = session.get(SUMMARY_UNDO_KEY)
-
+    # make sure the undo belongs to the current editable entry and message
     if (
         not _undo_matches_editable(undo_state, editable)
         or not _undo_matches_message(undo_state, message_index)
@@ -1459,10 +1463,11 @@ def undo_saved_summary():
             "warning",
         )
         return assistant_redirect()
-
+     # retrieve the summary that was saved before the latest update
     previous_summary = clean_text(undo_state.get("value", ""))
 
     try:
+        # restore the previous summary in the correct database table
         if editable["entry_type"] == "checkin":
             update_checkin_summary_content(
                 checkin_id=editable["record"]["id"],
