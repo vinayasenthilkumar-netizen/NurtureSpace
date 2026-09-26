@@ -1,7 +1,8 @@
 
+# date and timezone handling
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
-
+# flask tools used for routes, pages, forms and sessions
 from flask import (
     Blueprint,
     flash,
@@ -11,7 +12,7 @@ from flask import (
     session,
     url_for,
 )
-
+# labels used for the questionnaire responses
 from core.constants import (
     BABY_CARE_LABELS,
     FOOD_LABELS,
@@ -24,27 +25,32 @@ from core.constants import (
     STRESS_LABELS,
     SUPPORT_LABELS,
 )
+# database functions for saved check-ins
 from database.checkins import (
     get_checkins_for_user,
     update_checkin_summary_content,
 )
+# privacy preference checks
 from database.privacy import get_privacy_preferences, privacy_is_current
+# database functions for saved reflections
 from database.reflections import (
     get_saved_reflections_for_user,
     update_reflection_summary_content,
 )
+# resource and bookmark database functions
 from database.resources import (
     bookmark_resource,
     get_bookmarked_resource_ids,
     get_resource_by_id,
     remove_resource_bookmark,
 )
+# for accounts , assistant graph , bookmark, history and peersonal pattern relaavnece
 from flask_app.routes import account_required, can_save_bookmarks
 from graphs.assistant_graph import assistant_graph
 from patterns.history import get_all_patterns_for_user
 from patterns.relevance import select_relevant_patterns
 
-
+# assistant blueprint and route settings
 assistant_blueprint = Blueprint(
     "assistant",
     __name__,
@@ -55,12 +61,12 @@ login_required = account_required(
     "Please log in to use the Wellbeing Assistant.",
     "warning",
 )
-
+# time zone
 SINGAPORE_TIMEZONE = ZoneInfo("Asia/Singapore")
 
 SUMMARY_UNDO_KEY = "assistant_summary_undo"
 APPOINTMENT_UNDO_KEY = "assistant_appointment_undo"
-
+# assistant intent keywords and response labels
 ASSISTANT_EDIT_TERMS = (
     "add",
     "include",
@@ -148,11 +154,11 @@ NO_CONTEXT_MESSAGE = (
     "You can still ask general postpartum wellbeing questions."
 )
 
-
+# remove extra spacing and safely convert values to text
 def clean_text(value):
     return str(value or "").strip()
 
-
+# clean a list of text values and remove duplicates
 def clean_text_list(values):
     if not values:
         return []
@@ -177,7 +183,7 @@ def clean_text_list(values):
 
     return cleaned
 
-
+# check whether the user's message looks like an edit request
 def is_edit_request(user_message):
     text = clean_text(user_message).lower()
 
@@ -186,7 +192,7 @@ def is_edit_request(user_message):
         for term in ASSISTANT_EDIT_TERMS
     )
 
-
+# return saved summary and appointment points if any
 def detect_saved_content_view_request(user_message):
     text = clean_text(user_message).lower()
 
@@ -201,7 +207,7 @@ def detect_saved_content_view_request(user_message):
 
     return ""
 
-
+# return the readable label for a questionnaire response
 def get_label(value, labels):
     if value is None:
         return ""
@@ -216,18 +222,18 @@ def get_label(value, labels):
 
     return clean_text(labels.get(value, ""))
 
-
+# convert stored response values into readable labels
 def build_labelled_responses(answers, label_sets):
     return {
         field: get_label(answers.get(field), labels)
         for field, labels in label_sets.items()
     }
 
-
+# return the user to the main assistant page
 def assistant_redirect():
     return redirect(url_for("assistant.assistant_page"))
 
-
+# convert saved date values into Singapore time
 def parse_saved_datetime(value):
     text = clean_text(value)
 
@@ -252,7 +258,7 @@ def parse_saved_datetime(value):
 
     return parsed.astimezone(SINGAPORE_TIMEZONE)
 
-
+# collect the four core questionnaire answers from the session
 def get_current_core_answers():
     answers = session.get("core_answers", {}) or {}
 
@@ -266,7 +272,7 @@ def get_current_core_answers():
         "support": session.get("support_response"),
     }
 
-
+# collect the additional context answers from the session
 def get_current_context_answers():
     answers = session.get("context_answers", {}) or {}
 
@@ -284,7 +290,7 @@ def get_current_context_answers():
         "personal_care": session.get("personal_care_response"),
     }
 
-
+# collect only observations approved during the review step
 def get_approved_review_state():
     return {
         "approved_text_emotions": clean_text_list(
@@ -304,7 +310,7 @@ def get_approved_review_state():
         ),
     }
 
-
+# return dashboard content only after it has been confirmed
 def get_confirmed_dashboard_state():
     summary_confirmed = bool(
         session.get("summary_review_saved", False)
@@ -327,7 +333,7 @@ def get_confirmed_dashboard_state():
         ),
     }
 
-
+# build assistant context from the current check-in or reflection
 def build_current_assistant_state():
     status = clean_text(session.get("checkin_status", ""))
     review_complete = bool(session.get("review_complete", False))
@@ -368,7 +374,7 @@ def build_current_assistant_state():
 
     return state
 
-
+# build assistant context from the latest saved full check-in
 def build_saved_checkin_assistant_state(checkin):
     if not isinstance(checkin, dict):
         return {}
@@ -417,7 +423,7 @@ def build_saved_checkin_assistant_state(checkin):
         ),
     }
 
-
+# build assistant context from the latest saved reflection
 def build_saved_reflection_assistant_state(reflection):
     if not isinstance(reflection, dict):
         return {}
@@ -455,7 +461,7 @@ def build_saved_reflection_assistant_state(reflection):
         ),
     }
 
-
+# check if saved history can be used for personalisation
 def history_personalisation_allowed(user_id):
     if not user_id:
         return False
@@ -471,7 +477,7 @@ def history_personalisation_allowed(user_id):
         )
     )
 
-
+# find the newest saved check-in or reflection
 def get_latest_saved_entry(user_id):
     if not user_id:
         return None
@@ -512,7 +518,7 @@ def get_latest_saved_entry(user_id):
         key=lambda item: item["created_at"],
     )
 
-
+# return the latest saved entry only when it is still editable today
 def get_editable_saved_entry(user_id):
     # get the user's most recently saved check-in
     latest = get_latest_saved_entry(user_id)
@@ -527,7 +533,7 @@ def get_editable_saved_entry(user_id):
 
     return latest
 
-
+# find the saved entry that can be shown directly in the assistant
 def get_saved_entry_for_direct_view(user_id):
     if not user_id:
         return None
@@ -567,7 +573,7 @@ def get_saved_entry_for_direct_view(user_id):
 
     return None
 
-
+# prepare a saved summary or appointment-points response
 def build_saved_content_view_message(view_type, user_id):
     saved_entry = get_saved_entry_for_direct_view(user_id)
 
@@ -627,7 +633,7 @@ def build_saved_content_view_message(view_type, user_id):
 
     return message
 
-
+# choose the current or saved information available to the assistant
 def get_assistant_application_state():
     current_state = build_current_assistant_state()
 
@@ -661,7 +667,7 @@ def get_assistant_application_state():
         print("Assistant historical context error:", error)
         return {}
 
-
+# select personal patterns that are relevant to the current context
 def get_assistant_relevance_result():
     user_id = session.get("user_id")
 
@@ -679,11 +685,11 @@ def get_assistant_relevance_result():
         print("Assistant relevance error:", error)
         return {}
 
-
+# make sure assistant message storage exists in the session
 def initialise_assistant_state():
     session.setdefault("assistant_messages", [])
 
-
+# build a short conversation history for the assistant graph
 def build_assistant_chat_history():
     history = []
 
@@ -759,7 +765,7 @@ def build_assistant_chat_history():
 
     return history[-6:]
 
-
+# clean retrieved resource data before storing it in the session
 def prepare_resource_for_session(resource):
     if not isinstance(resource, dict):
         return {}
@@ -778,7 +784,7 @@ def prepare_resource_for_session(resource):
         "url": clean_text(resource.get("url", "")),
     }
 
-
+# extract bullet or numbered appointment points from assistant text
 def extract_appointment_points(assistant_reply):
     text = clean_text(assistant_reply)
 
@@ -811,7 +817,7 @@ def extract_appointment_points(assistant_reply):
 
     return points
 
-
+# convert graph output into the format expected by the interface
 def build_assistant_message(graph_result):
     error_message = clean_text(graph_result.get("error", ""))
 
@@ -879,7 +885,7 @@ def build_assistant_message(graph_result):
         "detected_intent": detected_intent,
     }
 
-
+# safely retrieve one assistant message using its index
 def get_assistant_message(message_index):
     messages = list(session.get("assistant_messages", []) or [])
 
@@ -901,7 +907,7 @@ def get_assistant_message(message_index):
 
     return message
 
-
+# check whether the current unsaved dashboard can accept assistant edits
 def current_dashboard_context_available():
     current_state = build_current_assistant_state()
     context_source = clean_text(
@@ -919,7 +925,7 @@ def current_dashboard_context_available():
 
     return not bool(session.get("saved_reflection_id"))
 
-
+# make sure an assistant edit still points to today's latest saved entry
 def saved_message_target_is_editable(message, user_id):
     if not user_id:
         return False
@@ -944,7 +950,7 @@ def saved_message_target_is_editable(message, user_id):
         and message_id == record_id
     )
 
-
+# mark assistant generated dashboard content as needing user review
 def mark_dashboard_draft_for_review():
     session.update({
         "summary_draft_generated": True,
@@ -955,7 +961,7 @@ def mark_dashboard_draft_for_review():
     })
     session.modified = True
 
-
+# keep session content in sync after a saved update
 def sync_saved_content_to_session(
     summary=None,
     appointment_points=None,
@@ -974,7 +980,7 @@ def sync_saved_content_to_session(
     session["summary_edit_mode"] = False
     session.modified = True
 
-
+# do the undo
 def _store_saved_undo(key, editable, value, message_index):
     try:
         message_index = int(message_index)
@@ -988,7 +994,6 @@ def _store_saved_undo(key, editable, value, message_index):
         "value": value,
     }
     session.modified = True
-
 
 def _undo_matches_editable(undo_state, editable):
     if not isinstance(undo_state, dict) or not editable:
@@ -1053,7 +1058,7 @@ def _set_message_update_state(message_index, intent, state):
     session.modified = True
     return True
 
-
+# apply a Personal Summary edit to the current editable saved entry
 def update_saved_summary(message, user_id, summary_draft, message_index):
      # make sure the saved entry linked to this message can still be edited
     if not saved_message_target_is_editable(message, user_id):
@@ -1086,7 +1091,7 @@ def update_saved_summary(message, user_id, summary_draft, message_index):
     )
     sync_saved_content_to_session(summary=summary_draft)
     return True
-
+# apply Appointment Discussion Point edits to the saved entry
 def update_saved_appointment_points(
     message,
     user_id,
@@ -1124,9 +1129,10 @@ def update_saved_appointment_points(
         appointment_points=appointment_points
     )
     return True
-
+# assistant page and message routes
 @assistant_blueprint.route("/")
 @login_required
+# load the assistant page with the correct context and permissions
 def assistant_page():
     initialise_assistant_state()
 
@@ -1193,6 +1199,7 @@ def assistant_page():
 
 @assistant_blueprint.route("/message", methods=["POST"])
 @login_required
+# validate the user message and run it through the assistant workflow
 def send_message():
     initialise_assistant_state()
 
@@ -1292,6 +1299,7 @@ def send_message():
 
 @assistant_blueprint.route("/use-summary", methods=["POST"])
 @login_required
+# apply an assistant summary to a saved entry or dashboard draft
 def use_summary_on_dashboard():
     message_index = request.form.get("message_index")
     message = get_assistant_message(message_index)
@@ -1371,6 +1379,7 @@ def use_summary_on_dashboard():
     methods=["POST"],
 )
 @login_required
+# apply assistant appointment points to a saved entry or dashboard draft
 def use_appointment_points_on_dashboard():
     message_index = request.form.get("message_index")
     message = get_assistant_message(message_index)
@@ -1507,6 +1516,7 @@ def undo_saved_summary():
     methods=["POST"],
 )
 @login_required
+# restore the previous saved Appointment Discussion Points
 def undo_saved_appointment_points():
     message_index = request.form.get("message_index")
     user_id = session.get("user_id")
@@ -1567,6 +1577,7 @@ def undo_saved_appointment_points():
 
 @assistant_blueprint.route("/clear", methods=["POST"])
 @login_required
+# clear assistant messages and temporary undo data
 def clear_conversation():
     session["assistant_messages"] = []
     session.pop(SUMMARY_UNDO_KEY, None)
@@ -1582,6 +1593,7 @@ def clear_conversation():
 
 @assistant_blueprint.route("/save-resource", methods=["POST"])
 @login_required
+# save a resource bookmark when privacy settings allow it
 def save_resource():
     user_id = session.get("user_id")
     resource_id = clean_text(
@@ -1637,6 +1649,7 @@ def save_resource():
 
 @assistant_blueprint.route("/remove-resource", methods=["POST"])
 @login_required
+# remove a resource from the user's saved bookmarks
 def remove_saved_resource():
     user_id = session.get("user_id")
     resource_id = clean_text(
