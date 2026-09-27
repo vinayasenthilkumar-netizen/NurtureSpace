@@ -236,7 +236,8 @@ The original development environment was verified with **Python 3.11.9**, **FFmp
 
 ```bash
 git clone https://github.com/vinayasenthilkumar-netizen/NurtureSpace
-cd NurtureSpace
+cd NurtureSpace-main
+cd NurtureSpace-main
 ```
 
 ### 2. Create and activate the virtual environment
