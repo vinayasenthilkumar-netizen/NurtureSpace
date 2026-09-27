@@ -465,6 +465,7 @@ Nurture-Space/
 ├── core/            # shared constants and labels
 ├── data/            # runtime database and temporary media
 ├── database/        # schema, accounts, privacy, check-ins and resources
+├── experiments/     # evaluations of modals, weightings and pipeline
 ├── flask_app/       # routes, templates, static assets and app factory
 ├── graphs/          # LangGraph workflow and Assistant graphs
 ├── model_adapters/  # text, Whisper, audio and visible-expression adapters
