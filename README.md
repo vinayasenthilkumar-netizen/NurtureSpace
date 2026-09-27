@@ -56,11 +56,11 @@ Nurture Space orchestrates several independently pre-trained AI models across te
 
 Two related check-in pathways are supported:
 
-- **Full Check-In** — a 10-question questionnaire followed by compulsory text, voice or video reflection. It is required on Mondays as the weekly snapshot and is also available on other days when the questionnaire is selected.
+- **Full Check-In** - a 10-question questionnaire followed by compulsory text, voice or video reflection. It is required on Mondays as the weekly snapshot and is also available on other days when the questionnaire is selected.
 
-- **Personal Reflection Check-In** — a reflection-only pathway available on non-Mondays when the questionnaire is not selected.
+- **Personal Reflection Check-In** - a reflection-only pathway available on non-Mondays when the questionnaire is not selected.
 
-Each modality is processed separately and transformed through deterministic scoring and fusion rules. Model-derived contextual observations are presented for user review before eligible information is persisted. User-facing results are non-clinical descriptive Indicators. A separate bounded Assistant can hold non-diagnostic conversation, retrieve curated resources, and propose edits to the current Personal Summary or Appointment Discussion Points, while application logic—not the language model—controls whether Update or Undo is permitted.
+Each modality is processed separately and transformed through deterministic scoring and fusion rules. Model-derived contextual observations are presented for user review before eligible information is persisted. User-facing results are non-clinical descriptive Indicators. A separate bounded Assistant can hold non-diagnostic conversation, retrieve curated resources, and propose edits to the current Personal Summary or Appointment Discussion Points, while application logic-not the language model-controls whether Update or Undo is permitted.
 
 ---
 
@@ -136,7 +136,7 @@ Reversed Stress = 6 - Stress
 Questionnaire Score = (Sleep + Mood + Reversed Stress + Support) / 4
 ```
 
-**Reflection Score** — available modalities are fused with fixed fallback weights:
+**Reflection Score** - available modalities are fused with fixed fallback weights:
 
 | Available evidence | Fusion |
 |---|---:|
@@ -212,9 +212,9 @@ Before installing, make sure you have:
 
 2. **Git**
 
-3. **FFmpeg** — required for voice/video media preparation. Download it from the official FFmpeg page: [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html). The development environment used **FFmpeg 8.1.1 Essentials Build (gyan.dev)**.
+3. **FFmpeg** - required for voice/video media preparation. Download it from the official FFmpeg page: [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html). The development environment used **FFmpeg 8.1.1 Essentials Build (gyan.dev)**.
 
-4. **Ollama** — required for the local Qwen3 Assistant; development used **Ollama 0.34.4**
+4. **Ollama** - required for the local Qwen3 Assistant; development used **Ollama 0.34.4**
 
 5. A modern browser; microphone/camera permission is required only for in-browser recording
 
@@ -484,19 +484,19 @@ Evaluation scripts/results may be kept in separate experiment folders; they are 
 
 ## Troubleshooting
 
-**`ollama` is not recognised** — close and reopen PowerShell/VS Code after installing Ollama. Verify with `ollama --version`.
+**`ollama` is not recognised** - close and reopen PowerShell/VS Code after installing Ollama. Verify with `ollama --version`.
 
-**Assistant reports a connection error / connection refused** — confirm Ollama is running and that `qwen3:4b-instruct` appears in `ollama list`. If necessary, run `ollama serve`.
+**Assistant reports a connection error / connection refused** - confirm Ollama is running and that `qwen3:4b-instruct` appears in `ollama list`. If necessary, run `ollama serve`.
 
-**FFmpeg is not recognised** — confirm the extracted FFmpeg `bin` directory was added to Windows `Path`, then open a new terminal and run `ffmpeg -version`.
+**FFmpeg is not recognised** - confirm the extracted FFmpeg `bin` directory was added to Windows `Path`, then open a new terminal and run `ffmpeg -version`.
 
-**Voice/video reflection fails during conversion** — first confirm `ffmpeg -version` works from the same terminal environment used to launch Nurture Space.
+**Voice/video reflection fails during conversion** - first confirm `ffmpeg -version` works from the same terminal environment used to launch Nurture Space.
 
-**First run is slow** — expected while pretrained model files are downloaded, loaded and cached. Subsequent runs are normally faster.
+**First run is slow** - expected while pretrained model files are downloaded, loaded and cached. Subsequent runs are normally faster.
 
-**Port 5000 is already in use** — stop the process using that port or change the local port in `run_flask.py`.
+**Port 5000 is already in use** - stop the process using that port or change the local port in `run_flask.py`.
 
-**Daily Resources / retrieval returns nothing on a fresh clone** — the resource catalogue is application data rather than schema data. Populate it from a sanitised resources-only source before testing the resource/RAG features.
+**Daily Resources / retrieval returns nothing on a fresh clone** - the resource catalogue is application data rather than schema data. Populate it from a sanitised resources-only source before testing the resource/RAG features.
 
 ---
 
